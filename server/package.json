@@ -1,0 +1,33 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "technogram",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adevaraz/webdev1-technogram.git"
+  },
+  "keywords": [
+    "technogram"
+  ],
+  "author": "kelompok 1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adevaraz/webdev1-technogram/issues"
+  },
+  "homepage": "https://github.com/adevaraz/webdev1-technogram#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pg": "^8.4.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
