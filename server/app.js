@@ -52,7 +52,7 @@ app.use(
   multer({
     storage: fileStorage,
     fileFilter: fileFilter,
-  }).single("image")
+  }).single("url_gambar")
 );
 
 /*
