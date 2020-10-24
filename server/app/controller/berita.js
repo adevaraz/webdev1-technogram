@@ -45,11 +45,17 @@ exports.recent = async (req , res , next) => {
 */
 exports.create = async (req, res, next) => {
     try{
+        let filePath=null;
+        if (req.file) {
+            filePath = req.file.path
+        }
+
+        console.log(filePath);
         // Create a news
         const berita = {
             judul: req.body.judul,
             artikel: req.body.artikel,
-            url_gambar: req.body.url_gambar,
+            url_gambar: filePath,
             kategori_berita: req.body.kategori_berita,
             jumlah_reader: 0,
             jumlah_likes: 0,
@@ -59,7 +65,7 @@ exports.create = async (req, res, next) => {
         };
         // save to database
         await Berita.create(berita)
-        res.status(200).json({
+        res.status(201).json({
             message : 'Success add new news!',
             data : berita
         });
