@@ -48,10 +48,13 @@ exports.getAllNews = async(req, res) => {
     try {
         const artikel = await Berita.findAll()
         if(artikel.length > 0) {
-            res.status(200).json(artikel)
+            res.status(200).json({
+                message : 'Success retrieve all data',
+                data : artikel
+            })
         } else {
             res.status(200).send({
-                message: "Articles not Found"
+                message: 'Articles not Found'
             })
         }
     }catch (err) {
