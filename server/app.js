@@ -12,6 +12,11 @@ const app = express();
 const Berita = require("./app/model/berita");
 const sequelize = require("./app/util/database");
  
+
+/*
+@author 14 KP
+Untuk menentukan file gambarnya ingin disimpan dimana 
+*/
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'app/public/images');
@@ -22,6 +27,10 @@ const fileStorage = multer.diskStorage({
     }
 });
 
+/*
+@author 14 KP
+Untuk memfilter tipe file
+*/
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
@@ -35,12 +44,21 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(bodyParser.json());
+/*
+@author 14 KP
+membuat middleware dengan storage dan file filter yang telah didefinisikan sebelumnya dan hanya bisa upload satu gambar
+*/
 app.use(
   multer({
     storage: fileStorage,
     fileFilter: fileFilter,
   }).single("image")
 );
+
+/*
+@author 14 KP
+membuat folder agar dapat diakses public
+*/
 app.use(
   "public/images",
   express.static(path.join(__dirname, "app", "public", "images"))
