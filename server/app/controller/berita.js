@@ -37,3 +37,50 @@ exports.recent = async (req , res , next) => {
         next(err)
     }
 }
+
+/*
+ @author 28 RA
+
+ Delete Berita dengan diketahui id nya
+*/
+exports.delete = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const result = await Berita.destroy({
+            where: { id_berita: id },
+        });
+        if (result === 1) {
+            res.status(200).json({
+                message: `Post with id=${id} was deleted successfully.`,
+                data: result
+            });
+        } else {
+            res.status(404).json({
+                message: `Cannot found post record with id=${id}. Post was not found.`,
+                data: result
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+/*
+ @author 28 RA
+
+ Delete Semua Record Berita, include restart sequence id_berita
+*/
+exports.deleteAll = async (req, res, next) => {
+    try {
+        const result = await Berita.destroy({
+            truncate: true,
+            restartIdentity: true,
+        });
+        res.status(200).json({
+            message: `All post record was deleted successfully.`,
+            data: result
+        });
+    } catch (err) {
+        next(err);
+    }
+};
