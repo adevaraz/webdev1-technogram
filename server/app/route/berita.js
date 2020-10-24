@@ -18,7 +18,7 @@ router.get("/recent" , beritaController.recent);
 
 Route untuk mendapatkan berita dengan most liked
 */
-router.get("/most-liked" , beritaController.most_liked);
+router.get("/most-liked" , beritaController.mostliked);
 
 
 

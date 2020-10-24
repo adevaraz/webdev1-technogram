@@ -45,7 +45,7 @@ exports.recent = async (req , res , next) => {
  terbanyak.
 */
 
-exports.most_liked = async (req, res, next) => {
+exports.mostliked = async (req, res, next) => {
     try{
         const key = req.query.key || ''
         const currentPage = req.query.page || 1;
