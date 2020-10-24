@@ -1,7 +1,8 @@
 const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
-
+const fs = require("fs");
+const path = require("path");
 /*
  @author 16 MN
 
@@ -44,13 +45,13 @@ exports.recent = async (req , res , next) => {
  Membuat berita
 */
 exports.create = async (req, res, next) => {
+    let filePath=null;
     try{
-        let filePath=null;
+        
         if (req.file) {
-            filePath = req.file.path
+            filePath = req.file.path.replace(/\\/gi, "/");
         }
 
-        console.log(filePath);
         // Create a news
         const berita = {
             judul: req.body.judul,
@@ -71,6 +72,17 @@ exports.create = async (req, res, next) => {
         });
 
     }catch(err){
+        if(filePath!=null){
+            deleteImage(filePath)
+        }
         next(err)
-    }
+    } 
 }
+/*
+@author 16 MN
+delete gambar
+*/
+const deleteImage = (filePath) => {
+    filePath = path.join(__dirname, "..", "..", filePath);
+    fs.unlink(filePath, (err) => console.log(err));
+  };

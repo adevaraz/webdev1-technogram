@@ -60,7 +60,7 @@ app.use(
 membuat folder agar dapat diakses public
 */
 app.use(
-  "public/images",
+  "/app/public/images",
   express.static(path.join(__dirname, "app", "public", "images"))
 );
 
