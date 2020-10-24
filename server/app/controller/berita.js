@@ -37,3 +37,34 @@ exports.recent = async (req , res , next) => {
         next(err)
     }
 }
+
+/*
+ @author 14 KP
+
+ Membuat berita
+*/
+exports.create = async (req, res, next) => {
+    try{
+        // Create a news
+        const berita = {
+            judul: req.body.judul,
+            artikel: req.body.artikel,
+            url_gambar: req.body.url_gambar,
+            kategori_berita: req.body.kategori_berita,
+            jumlah_reader: 0,
+            jumlah_likes: 0,
+            jurnalis: req.body.jurnalis,
+            deskripsi_jurnalis: req.body.deskripsi_jurnalis
+
+        };
+        // save to database
+        await Berita.create(berita)
+        res.status(200).json({
+            message : 'Success add new news!',
+            data : berita
+        });
+
+    }catch(err){
+        next(err)
+    }
+}
