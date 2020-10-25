@@ -78,6 +78,7 @@ exports.getByCat = async(req, res, next) => {
     } catch(err) {
         next(err);
     }
+}
   
 /*
  @author 23 NM
@@ -227,6 +228,13 @@ exports.mostLiked = async (req, res, next) => {
                     {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
                     {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
                 ],
+                [Op.not] : [
+                    {waktu_publikasi : null}
+                ]
+            },
+            limit : perPage,
+            offset : offset,
+            order : [
                 ['jumlah_likes' , 'DESC']
             ]
         });
