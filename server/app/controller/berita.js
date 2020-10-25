@@ -1,6 +1,8 @@
 const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
+const fs = require("fs");
+const path = require("path");
 
 /*
  @author 16 MN
@@ -46,19 +48,22 @@ exports.recent = async (req , res , next) => {
 exports.delete = async (req, res, next) => {
     try {
         const id = req.params.id;
+        const news = await Berita.findByPk(id);
         const result = await Berita.destroy({
             where: { id_berita: id },
         });
+        //jika result === 1 maka record berhasil di delete
         if (result === 1) {
+            deleteImage(news.url_gambar);
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
             });
         } else {
-            res.status(404).json({
-                message: `Cannot found post record with id=${id}. Post was not found.`,
-                data: result
-            });
+            const error = new Error("Could not find specific post");
+            error.statusCode = 404;
+            error.cause = "Invaid Post ID";
+            throw error;
         }
     } catch (err) {
         next(err);
@@ -83,4 +88,13 @@ exports.deleteAll = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+};
+
+/*
+@author 16 MN
+delete gambar
+*/
+const deleteImage = (filePath) => {
+    filePath = path.join(__dirname, "..", "..", filePath);
+    fs.unlink(filePath, (err) => console.log(err));
 };
