@@ -12,7 +12,7 @@ exports.create = async (req, res, next) => {
             password: req.body.password
         };
         // save to database
-        await Admin.create(berita)
+        await Admin.create(admin)
         res.status(201).json({
             message : 'Success add new admin!',
             data : admin
