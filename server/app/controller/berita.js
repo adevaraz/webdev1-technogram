@@ -109,3 +109,61 @@ const deleteAllFiles = (filePath) => {
     filePath = path.join(__dirname, "..", "..", filePath);
     fsExtra.emptyDir(filePath, (err) => console.log(err));
 };
+
+/**
+ * @author 31 ZV
+ * 
+ * Mengambil berita berdasarkan kategori berita
+ */
+exports.getByCat = async(req, res, next) => {
+    try {
+        const key = req.query.category;
+        const currentPage = req.query.page || 1;
+        const perPage = req.query.perpage || 10;
+        const offset = (currentPage - 1) * perPage;
+
+        const result = await Berita.findAll({
+            where: {
+                kategori_berita: sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')), key.toLowerCase()),
+                [Op.not] : [
+                    {waktu_publikasi : null}
+                ]
+            },
+            limit : perPage,
+            offset : offset,
+            order : [
+                ['waktu_publikasi' , 'DESC']
+            ]
+        });
+
+        res.status(200).json({
+            message: 'Success retrieve Posts',
+            data: result
+        });
+    } catch(err) {
+        next(err);
+    }
+  
+/*
+ @author 23 NM
+
+ Mengambil semua berita
+*/
+
+exports.getAllNews = async(req, res) => {
+    try {
+        const artikel = await Berita.findAll()
+        if(artikel.length > 0) {
+            res.status(200).json({
+                message : 'Success retrieve all data',
+                data : artikel
+            })
+        } else {
+            res.status(200).send({
+                message: 'Articles not Found'
+            })
+        }
+    }catch (err) {
+        next(err)
+    }
+}
