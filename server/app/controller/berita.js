@@ -6,42 +6,6 @@ const path = require("path");
 const fsExtra = require("fs-extra");
 
 /*
- @author 16 MN
-
- Mencari Berita terkini/paling baru dengan atau tanpa kata kunci.
-*/
-exports.recent = async (req , res , next) => {
-    try{
-        const key = req.query.key || ''
-        const currentPage = req.query.page || 1;
-        const perPage = req.query.perpage || 10;
-        const offset = (currentPage-1) * perPage;
-        const result = await Berita.findAll({
-            where : {
-                [Op.or] : [
-                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
-                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
-                ],
-                [Op.not] : [
-                    {waktu_publikasi : null}
-                ]
-            },
-            limit : perPage,
-            offset : offset,
-            order : [
-                ['waktu_publikasi' , 'DESC']
-            ]
-        });
-        res.status(200).json({
-            message : 'Success retrieve Posts',
-            data : result
-        });
-    }catch(err){
-        next(err)
-    }
-}
-
-/*
  @author 14 KP
 
  Membuat berita
@@ -81,6 +45,65 @@ exports.create = async (req, res, next) => {
     } 
 }
 
+/**
+ * @author 31 ZV
+ * 
+ * Mengambil berita berdasarkan kategori berita
+ */
+exports.getByCat = async(req, res, next) => {
+    try {
+        const key = req.query.category;
+        const currentPage = req.query.page || 1;
+        const perPage = req.query.perpage || 10;
+        const offset = (currentPage - 1) * perPage;
+
+        const result = await Berita.findAll({
+            where: {
+                kategori_berita: sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')), key.toLowerCase()),
+                [Op.not] : [
+                    {waktu_publikasi : null}
+                ]
+            },
+            limit : perPage,
+            offset : offset,
+            order : [
+                ['waktu_publikasi' , 'DESC']
+            ]
+        });
+
+        res.status(200).json({
+            message: 'Success retrieve Posts',
+            data: result
+        });
+    } catch(err) {
+        next(err);
+    }
+  
+/*
+ @author 23 NM
+
+ Mengambil semua berita
+*/
+
+exports.getAllNews = async(req, res) => {
+    try {
+        const artikel = await Berita.findAll()
+        if(artikel.length > 0) {
+            res.status(200).json({
+                message : 'Success retrieve all data',
+                data : artikel
+            })
+        } else {
+            res.status(200).send({
+                message: 'Articles not Found'
+            })
+        }
+    }catch (err) {
+        next(err)
+    }
+}
+
+/*
  @author 28 RA
 
  Delete Berita dengan diketahui id nya
@@ -149,21 +172,23 @@ const deleteAllFiles = (filePath) => {
     fsExtra.emptyDir(filePath, (err) => console.log(err));
 };
 
-/**
- * @author 31 ZV
- * 
- * Mengambil berita berdasarkan kategori berita
- */
-exports.getByCat = async(req, res, next) => {
-    try {
-        const key = req.query.category;
+/*
+ @author 16 MN
+
+ Mencari Berita terkini/paling baru dengan atau tanpa kata kunci.
+*/
+exports.recent = async (req , res , next) => {
+    try{
+        const key = req.query.key || ''
         const currentPage = req.query.page || 1;
         const perPage = req.query.perpage || 10;
-        const offset = (currentPage - 1) * perPage;
-
+        const offset = (currentPage-1) * perPage;
         const result = await Berita.findAll({
-            where: {
-                kategori_berita: sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')), key.toLowerCase()),
+            where : {
+                [Op.or] : [
+                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                ],
                 [Op.not] : [
                     {waktu_publikasi : null}
                 ]
@@ -174,35 +199,42 @@ exports.getByCat = async(req, res, next) => {
                 ['waktu_publikasi' , 'DESC']
             ]
         });
-
         res.status(200).json({
-            message: 'Success retrieve Posts',
-            data: result
+            message : 'Success retrieve Posts',
+            data : result
         });
-    } catch(err) {
-        next(err);
+    }catch(err){
+        next(err)
     }
-  
-/*
- @author 23 NM
+}
 
- Mengambil semua berita
+/*
+ @author 17 MU
+
+ Mencari Berita dengan kata kunci dan ditampilkan berdasarkan like
+ terbanyak.
 */
 
-exports.getAllNews = async(req, res) => {
-    try {
-        const artikel = await Berita.findAll()
-        if(artikel.length > 0) {
-            res.status(200).json({
-                message : 'Success retrieve all data',
-                data : artikel
-            })
-        } else {
-            res.status(200).send({
-                message: 'Articles not Found'
-            })
-        }
-    }catch (err) {
+exports.mostLiked = async (req, res, next) => {
+    try{
+        const key = req.query.key || ''
+        const currentPage = req.query.page || 1;
+        const perPage = req.query.perpage || 10;
+        const offset = (currentPage-1) * perPage;
+        const result = await Berita.findAll({
+            where : {
+                [Op.or] : [
+                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                ],
+                ['jumlah_likes' , 'DESC']
+            ]
+        });
+        res.status(200).json({
+            message : 'Success retrieve Posts',
+            data : result
+        });
+    }catch(err){
         next(err)
     }
 }
