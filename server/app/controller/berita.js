@@ -37,3 +37,30 @@ exports.recent = async (req , res , next) => {
         next(err)
     }
 }
+
+exports.update = async (req, res) => {
+    const id = req.params.id;
+    console.log(req.body.artikel);  
+    await Berita.update(req.body, {
+
+        where: {id_berita : id}
+    })
+    .then(num => {
+        if (num == 1){
+            res.send({
+                message : "Berita was updated successfully."
+            });
+        }else{
+            res.send({
+                message : `Cannot update Tutorial with id=${id}. Maybe Berita was not found or req.body is empty!`
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error updating Tutorial with id=" + id
+    })})
+
+
+
+};
