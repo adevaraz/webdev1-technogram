@@ -55,7 +55,7 @@ exports.delete = async (req, res, next) => {
         });
         //jika result === 1 maka record berhasil di delete
         if (result === 1) {
-            deleteImage(news.url_gambar);
+            deleteImage(news.url_gambar); //delete gambar nya
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
@@ -82,7 +82,7 @@ exports.deleteAll = async (req, res, next) => {
             truncate: true,
             restartIdentity: true,
         });
-        deleteAllFiles("app/public/images");
+        deleteAllFiles("app/public/images"); //delete semua gambarnya
         res.status(200).json({
             message: `All post record was deleted successfully.`,
             data: result
