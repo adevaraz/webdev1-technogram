@@ -71,4 +71,27 @@ exports.getByCat = async(req, res, next) => {
     } catch(err) {
         next(err);
     }
+  
+/*
+ @author 23 NM
+
+ Mengambil semua berita
+*/
+
+exports.getAllNews = async(req, res) => {
+    try {
+        const artikel = await Berita.findAll()
+        if(artikel.length > 0) {
+            res.status(200).json({
+                message : 'Success retrieve all data',
+                data : artikel
+            })
+        } else {
+            res.status(200).send({
+                message: 'Articles not Found'
+            })
+        }
+    }catch (err) {
+        next(err)
+    }
 }
