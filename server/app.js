@@ -10,7 +10,11 @@ const app = express();
 
 //nanti disini require model-model nya
 const Berita = require("./app/model/berita");
+const Pembaca = require("./app/model/pembaca");
+const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
+const Associations = require("./app/util/associations");
+
  
 
 /*
@@ -98,6 +102,7 @@ app.use((error, req, res, next) => {
 
 
 //nanti disini taro relasi
+Associations();
 
 const init = async () => {
   try {
