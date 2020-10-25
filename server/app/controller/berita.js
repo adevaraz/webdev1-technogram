@@ -42,6 +42,45 @@ exports.recent = async (req , res , next) => {
 }
 
 /*
+ @author 14 KP
+
+ Membuat berita
+*/
+exports.create = async (req, res, next) => {
+    let filePath=null;
+    try{
+        
+        if (req.file) {
+            filePath = req.file.path.replace(/\\/gi, "/");
+        }
+
+        // Create a news
+        const berita = {
+            judul: req.body.judul,
+            artikel: req.body.artikel,
+            url_gambar: filePath,
+            kategori_berita: req.body.kategori_berita,
+            jumlah_reader: 0,
+            jumlah_likes: 0,
+            jurnalis: req.body.jurnalis,
+            deskripsi_jurnalis: req.body.deskripsi_jurnalis
+
+        };
+        // save to database
+        await Berita.create(berita)
+        res.status(201).json({
+            message : 'Success add new news!',
+            data : berita
+        });
+
+    }catch(err){
+        if(filePath!=null){
+            deleteImage(filePath)
+        }
+        next(err)
+    } 
+}
+
  @author 28 RA
 
  Delete Berita dengan diketahui id nya
