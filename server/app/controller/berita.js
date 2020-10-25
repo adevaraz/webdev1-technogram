@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const sequelize = require("../util/database");
 const fs = require("fs");
 const path = require("path");
+const fsExtra = require("fs-extra");
 
 /*
  @author 16 MN
@@ -81,6 +82,7 @@ exports.deleteAll = async (req, res, next) => {
             truncate: true,
             restartIdentity: true,
         });
+        deleteAllFiles("app/public/images");
         res.status(200).json({
             message: `All post record was deleted successfully.`,
             data: result
@@ -97,4 +99,13 @@ delete gambar
 const deleteImage = (filePath) => {
     filePath = path.join(__dirname, "..", "..", filePath);
     fs.unlink(filePath, (err) => console.log(err));
+};
+
+/*
+@author 28 RA
+delete semua file yang berada di dalam direktori tertentu
+*/
+const deleteAllFiles = (filePath) => {
+    filePath = path.join(__dirname, "..", "..", filePath);
+    fsExtra.emptyDir(filePath, (err) => console.log(err));
 };
