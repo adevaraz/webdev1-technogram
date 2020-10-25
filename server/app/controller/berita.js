@@ -126,7 +126,7 @@ exports.delete = async (req, res, next) => {
         } else {
             const error = new Error("Could not find specific post");
             error.statusCode = 404;
-            error.cause = "Invaid Post ID";
+            error.cause = "Invalid Post ID";
             throw error;
         }
     } catch (err) {
