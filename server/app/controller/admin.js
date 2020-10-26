@@ -102,19 +102,17 @@ exports.deleteAllAdmin = async (req, res, next) => {
 */
 exports.updateAdminById = async (req, res, next) => {
     const id = req.params.id;
-    const result = await Admin.update(req.body, {
+    await Admin.update(req.body, {
         where: { id_admin: id }
     })
     .then(num => {
         if (num == 1) {
             res.status(200).json({
-                message: `Admin with id=${id} was updated successfully.`,
-                data: result
+                message: `Admin with id=${id} was updated successfully.`
             });
         } else {
             res.status(200).json({
-                message: "Cannot update Admin with id=${id}. Maybe Admin was not found or req.body is empty!",
-                data: result
+                message: "Cannot update Admin with id=${id}. Maybe Admin was not found or req.body is empty!"
             });
         }
     })
