@@ -40,10 +40,25 @@ exports.recent = async (req , res , next) => {
 
 exports.update = async (req, res) => {
     const id = req.params.id;
-    console.log(req.body.artikel);  
-    await Berita.update(req.body, {
+    let filePath=null;
 
+    if (req.file) {
+        filePath = req.file.path.replace(/\\/gi, "/");
+    }
+    console.log(id)
+    console.log(req.body.artikel)
+    const berita = {
+        judul: req.body.judul,
+        artikel: req.body.artikel,
+        url_gambar: filePath,
+        kategori_berita: req.body.kategori_berita,
+        jurnalis: req.body.jurnalis,
+        deskripsi_jurnalis: req.body.deskripsi_jurnalis
+
+    };
+    await Berita.update( berita, {
         where: {id_berita : id}
+
     })
     .then(num => {
         if (num == 1){
