@@ -142,9 +142,10 @@ exports.delete = async (req, res, next) => {
 exports.deleteAll = async (req, res, next) => {
     try {
         const result = await Berita.destroy({
-            truncate: true,
-            restartIdentity: true,
+            where: {},
+            truncate: false,
         });
+        await sequelize.query("ALTER SEQUENCE berita_id_berita_seq RESTART WITH 1", {raw: true});
         deleteAllFiles("app/public/images"); //delete semua gambarnya
         res.status(200).json({
             message: `All post record was deleted successfully.`,

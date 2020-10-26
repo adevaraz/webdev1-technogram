@@ -1,5 +1,7 @@
 const Admin = require('../model/admin');
 
+const sequelize = require("../util/database");
+
 /**
 * @author 17 MU
 *
@@ -83,9 +85,10 @@ exports.deleteAdminById = async (req, res, next) => {
 exports.deleteAllAdmin = async (req, res, next) => {
     try {
         const result = await Admin.destroy({
-            truncate: true,
-            restartIdentity: true,
+            where: {},
+            truncate: false,
         });
+        await sequelize.query("ALTER SEQUENCE admins_id_admin_seq RESTART WITH 1", {raw: true});
         res.status(200).json({
             message: `All Admin records was deleted successfully.`,
             data: result
