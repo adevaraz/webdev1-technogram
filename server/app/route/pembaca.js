@@ -16,11 +16,11 @@ router.post("/create", pembacaController.create);
  * 
  * Route untuk mengambil semua akun pembaca
  */
-router.post("/all-account", pembacaController.create);
+router.get("/all-account", pembacaController.getAll);
 
 /**
  * @author 31 ZV
  * 
  * Route untuk mengambil satu akun pembaca berdasarkan id
  */
-router.post("/:id", pembacaController.create);
+router.get("/:id", pembacaController.getById);
