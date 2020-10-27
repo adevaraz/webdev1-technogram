@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
+const pembacaRoutes = require('./app/route/pembaca')
+const adminRoutes = require('./app/route/admin')
 const path = require("path");
 
 const app = express();
@@ -13,11 +15,7 @@ const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
 
- 
-
-
 app.use(bodyParser.json());
-
 
 /*
 @author 14 KP
@@ -27,7 +25,6 @@ app.use(
   "/app/public/images",
   express.static(path.join(__dirname, "app", "public", "images"))
 );
-
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -41,7 +38,8 @@ app.use((req, res, next) => {
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
-
+app.use("/account", pembacaRoutes);
+app.use("/admin", adminRoutes);
 
 /*
  @author 16 MN
