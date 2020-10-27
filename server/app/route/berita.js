@@ -16,6 +16,12 @@ Route untuk membuat berita baru
 router.post("/new-news", uploadPhoto.imageUpload, beritaController.create);
 
 /*
+ @author 14 KP
+
+Route untuk mempublikasikan berita
+*/
+router.put("/publish/:id", beritaController.updatePublish)
+/*
  @author 16 MN
 
 Route untuk mendapatkan berita terkini

@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const fsExtra = require("fs-extra");
 
+
 /*
  @author 14 KP
 
@@ -43,6 +44,34 @@ exports.create = async (req, res, next) => {
         }
         next(err)
     } 
+}
+
+/*
+ @author 14 KP
+
+ update publish
+*/
+exports.updatePublish = async(req, res, next) => {
+    try{
+        const id = req.params.id;
+        const news = await Berita.findByPk(id)
+        if(news.waktu_publikasi!=null){
+            news.waktu_publikasi = null;
+            news.save();
+        } else {
+            console.log(news.waktu_publikasi)
+            const now = new Date()
+            news.waktu_publikasi=now;
+            news.save();
+        }
+        res.status(200).json({
+            message: 'Successfully update publish',
+            data: news
+        });
+    } catch(err) {
+        next(err)
+    }
+    
 }
 
 /**
