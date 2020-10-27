@@ -61,11 +61,7 @@ exports.getById = async(req, res, next) => {
     try {
         const id = req.params.id;
 
-        const result = await Pembaca.findAll({
-            where: {
-                id_pembaca: id
-            }
-        });
+        const result = await Pembaca.findByPk(id);
 
         res.status(200).json({
             message: `Success retrieve account data with id: ${id}`,
