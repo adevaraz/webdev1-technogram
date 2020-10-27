@@ -115,7 +115,7 @@ exports.getByCat = async(req, res, next) => {
  Mengambil semua berita
 */
 
-exports.getAllNews = async(req, res) => {
+exports.getAllNews = async(req, res, next) => {
     try {
         const artikel = await Berita.findAll()
         if(artikel.length > 0) {
@@ -124,7 +124,7 @@ exports.getAllNews = async(req, res) => {
                 data : artikel
             })
         } else {
-            res.status(200).send({
+            res.status(404).send({
                 message: 'Articles not Found'
             })
         }
