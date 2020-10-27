@@ -104,6 +104,41 @@ exports.getAllNews = async(req, res) => {
     }
 }
 
+exports.update = async (req, res) => {
+    const id = req.params.id;
+    let filePath=null;
+
+    if (req.file) {
+        filePath = req.file.path.replace(/\\/gi, "/");
+    }
+    console.log(id)
+    console.log(filePath)
+
+    await Berita.update( berita, {
+        where: {id_berita : id},
+        url_gambar: filePath
+
+    })
+    .then(num => {
+        if (num == 1){
+            res.send({
+                message : "Berita was updated successfully."
+            });
+        }else{
+            res.send({
+                message : `Cannot update Tutorial with id=${id}. Maybe Berita was not found or req.body is empty!`
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error updating Tutorial with id=" + id
+    })})
+
+
+
+};
+
 /*
  @author 28 RA
 
