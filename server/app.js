@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
+const pembacaRoutes = require('./app/route/pembaca')
 const adminRoutes = require('./app/route/admin')
 const multer = require("multer");
 const path = require("path");
@@ -82,8 +83,8 @@ app.use((req, res, next) => {
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
+app.use("/account", pembacaRoutes);
 app.use("/admin", adminRoutes);
-
 
 /*
  @author 16 MN
