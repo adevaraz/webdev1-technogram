@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 //nanti disini require route
-const beritaRoutes = require('./app/route/berita')
+const beritaRoutes = require('./app/route/berita');
+const adminRoutes = require('./app/route/admin');
 const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require('uuid');
@@ -15,7 +17,7 @@ const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
 
- 
+
 
 /*
 @author 14 KP
@@ -81,7 +83,7 @@ app.use((req, res, next) => {
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
-
+app.use("/admin", adminRoutes);
 
 /*
  @author 16 MN

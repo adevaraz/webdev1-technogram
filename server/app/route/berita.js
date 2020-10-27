@@ -4,12 +4,14 @@ const beritaController = require("../controller/berita");
 
 const router = express.Router();
 
+const authenticate = require('../middleware/adminAuth');
+
 /*
  @author 14 KP
 
 Route untuk membuat berita baru
 */
-router.post("/new-news", beritaController.create);
+router.post("/new-news", authenticate , beritaController.create);
 
 /*
  @author 16 MN
@@ -44,13 +46,13 @@ router.get("/all-news", beritaController.getAllNews);
 
 Route untuk melakukan delete berita dengan diketahui id
 */
-router.delete("/delete/:id", beritaController.delete);
+router.delete("/delete/:id", authenticate, beritaController.delete);
 
 /*
  @author 28 RA
 
 Route untuk melakukan delete semua record berita
 */
-router.delete("/delete-all", beritaController.deleteAll);
+router.delete("/delete-all", authenticate, beritaController.deleteAll);
 
 module.exports = router;
