@@ -161,7 +161,7 @@ exports.delete = async (req, res, next) => {
         } else {
             const error = new Error("Could not find specific post");
             error.statusCode = 404;
-            error.cause = "Invaid Post ID";
+            error.cause = "Invalid Post ID";
             throw error;
         }
     } catch (err) {
@@ -177,9 +177,10 @@ exports.delete = async (req, res, next) => {
 exports.deleteAll = async (req, res, next) => {
     try {
         const result = await Berita.destroy({
-            truncate: true,
-            restartIdentity: true,
+            where: {},
+            truncate: false,
         });
+        await sequelize.query("ALTER SEQUENCE berita_id_berita_seq RESTART WITH 1", {raw: true});
         deleteAllFiles("app/public/images"); //delete semua gambarnya
         res.status(200).json({
             message: `All post record was deleted successfully.`,

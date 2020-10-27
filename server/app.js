@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
+const adminRoutes = require('./app/route/admin')
 const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require('uuid');
@@ -81,6 +82,7 @@ app.use((req, res, next) => {
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
+app.use("/admin", adminRoutes);
 
 
 /*
