@@ -40,14 +40,17 @@ exports.signin = async (req, res, next) => {
       { expiresIn: 60 * 15 }
     );
     const key = process.env.ADMIN_PREFIX + admin.id_admin.toString();
-    await cache.setAsync(
+    await cache.settextAsync(
       key,
+      60*17,
       JSON.stringify({
         isDeleted: false,
         //Dikasih nilai defaul karena atribut lastpasswordchange belum ada
         lastPasswordChange: admin.lastPasswordChange || 1516239022
       })
     );
+
+
 
     res.status(200).json({
       token: token,
