@@ -40,6 +40,13 @@ Route untuk mendapatkan semua berita
 router.get("/all-news", beritaController.getAllNews);
 
 /*
+ @author 02 AP
+
+Route untuk update berita
+*/
+router.put("/update/:id",beritaController.update);
+
+/*
  @author 28 RA
 
 Route untuk melakukan delete berita dengan diketahui id
