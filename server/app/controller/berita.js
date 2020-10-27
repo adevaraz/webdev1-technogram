@@ -153,7 +153,7 @@ exports.delete = async (req, res, next) => {
         });
         //jika result === 1 maka record berhasil di delete
         if (result === 1) {
-            deleteImage(news.url_gambar); //delete gambar nya
+            if (news.url_gambar) deleteImage(news.url_gambar); //delete gambar nya
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
