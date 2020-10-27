@@ -46,18 +46,11 @@ exports.update = async (req, res) => {
         filePath = req.file.path.replace(/\\/gi, "/");
     }
     console.log(id)
-    console.log(req.body.artikel)
-    const berita = {
-        judul: req.body.judul,
-        artikel: req.body.artikel,
-        url_gambar: filePath,
-        kategori_berita: req.body.kategori_berita,
-        jurnalis: req.body.jurnalis,
-        deskripsi_jurnalis: req.body.deskripsi_jurnalis
+    console.log(filePath)
 
-    };
     await Berita.update( berita, {
-        where: {id_berita : id}
+        where: {id_berita : id},
+        url_gambar: filePath
 
     })
     .then(num => {
