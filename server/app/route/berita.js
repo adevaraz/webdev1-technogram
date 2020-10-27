@@ -4,13 +4,23 @@ const beritaController = require("../controller/berita");
 
 const router = express.Router();
 
+const uploadPhoto = require('../middleware/imageupload');
+
+
+
 /*
  @author 14 KP
 
 Route untuk membuat berita baru
 */
-router.post("/new-news", beritaController.create);
+router.post("/new-news", uploadPhoto.imageUpload, beritaController.create);
 
+/*
+ @author 14 KP
+
+Route untuk mempublikasikan berita
+*/
+router.put("/publish/:id", beritaController.updatePublish)
 /*
  @author 16 MN
 
@@ -40,6 +50,13 @@ Route untuk mendapatkan semua berita
 router.get("/all-news", beritaController.getAllNews);
 
 /*
+ @author 02 AP
+
+Route untuk update berita
+*/
+router.put("/update/:id",beritaController.update);
+
+/*
  @author 28 RA
 
 Route untuk melakukan delete berita dengan diketahui id
@@ -52,5 +69,13 @@ router.delete("/delete/:id", beritaController.delete);
 Route untuk melakukan delete semua record berita
 */
 router.delete("/delete-all", beritaController.deleteAll);
+
+/*
+ @author 28 RA
+
+ Route untuk Mendapatkan berita populer berdasarkan view terbanyak dengan atau tanpa
+ kata kunci
+*/
+router.get("/popular", beritaController.popularNews);
 
 module.exports = router;

@@ -3,9 +3,8 @@ const bodyParser = require("body-parser");
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
 const pembacaRoutes = require('./app/route/pembaca')
-const multer = require("multer");
+const adminRoutes = require('./app/route/admin')
 const path = require("path");
-const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
@@ -16,49 +15,7 @@ const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
 
- 
-
-/*
-@author 14 KP
-Untuk menentukan file gambarnya ingin disimpan dimana 
-*/
-const fileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'app/public/images');
-    },
-    filename: (req, file, cb) => {
-       const fileExtension = "." + file.mimetype.toString().split("/")[1];
-        cb(null, uuidv4()+ fileExtension)
-    }
-});
-
-/*
-@author 14 KP
-Untuk memfilter tipe file
-*/
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
 app.use(bodyParser.json());
-/*
-@author 14 KP
-membuat middleware dengan storage dan file filter yang telah didefinisikan sebelumnya dan hanya bisa upload satu gambar
-*/
-app.use(
-  multer({
-    storage: fileStorage,
-    fileFilter: fileFilter,
-  }).single("url_gambar")
-);
 
 /*
 @author 14 KP
@@ -68,7 +25,6 @@ app.use(
   "/app/public/images",
   express.static(path.join(__dirname, "app", "public", "images"))
 );
-
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -82,8 +38,8 @@ app.use((req, res, next) => {
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
-app.use("/account" , pembacaRoutes);
-
+app.use("/account", pembacaRoutes);
+app.use("/admin", adminRoutes);
 
 /*
  @author 16 MN
