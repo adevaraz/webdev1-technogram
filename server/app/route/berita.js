@@ -60,4 +60,12 @@ Route untuk melakukan delete semua record berita
 */
 router.delete("/delete-all", beritaController.deleteAll);
 
+/*
+ @author 28 RA
+
+ Route untuk Mendapatkan berita populer berdasarkan view terbanyak dengan atau tanpa
+ kata kunci
+*/
+router.get("/popular", beritaController.popularNews);
+
 module.exports = router;
