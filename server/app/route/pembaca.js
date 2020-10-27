@@ -24,3 +24,5 @@ router.get("/all-account", pembacaController.getAll);
  * Route untuk mengambil satu akun pembaca berdasarkan id
  */
 router.get("/:id", pembacaController.getById);
+
+module.exports = router;

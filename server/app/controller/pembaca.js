@@ -22,7 +22,7 @@ exports.create = async(req, res, next) => {
             data: pembaca
         });
 
-    } catch {
+    } catch (err) {
         next(err);
     }
 }
@@ -47,7 +47,7 @@ exports.getAll = async(req, res, next) => {
                 data: pembaca
             });
         }
-    } catch {
+    } catch (err) {
         next(err);
     }
 }
@@ -69,9 +69,9 @@ exports.getById = async(req, res, next) => {
 
         res.status(200).json({
             message: `Success retrieve account data with id: ${id}`,
-            data: pembaca
+            data: result
         });
-    } catch {
+    } catch (err) {
         next(err);
     }
 }
