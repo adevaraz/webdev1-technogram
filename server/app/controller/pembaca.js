@@ -71,6 +71,7 @@ exports.deleteAll = async(req, res, next) => {
             where: {},
             truncate: false,
         })
+        await sequelize.query("ALTER SEQUENCE pembacas_id_pembaca_seq RESTART WITH 1", {raw: true});
         res.status(200).json({
             message: 'All account was deleted successfully.',
             data: result
