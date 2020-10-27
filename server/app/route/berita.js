@@ -4,12 +4,16 @@ const beritaController = require("../controller/berita");
 
 const router = express.Router();
 
+const uploadPhoto = require('../middleware/imageupload');
+
+
+
 /*
  @author 14 KP
 
 Route untuk membuat berita baru
 */
-router.post("/new-news", beritaController.create);
+router.post("/new-news", uploadPhoto.imageUpload, beritaController.create);
 
 /*
  @author 16 MN
