@@ -1,6 +1,6 @@
 const express = require("express");
-
 const adminController = require("../controller/admin");
+const authenticate = require('../middleware/adminAuth');
 
 const router = express.Router();
 
@@ -40,3 +40,18 @@ router.delete("/delete-all-admin", adminController.deleteAllAdmin);
 router.put("/update-admin/:id", adminController.updateAdminById);
 
 module.exports = router;
+
+/*
+    16 MN
+
+  Route  Untuk signin Admin 
+*/
+router.post("/signin" , adminController.signin);
+
+/*
+    16 MN
+    Route untuk signin admin
+*/
+router.post("/signout",authenticate , adminController.signout);
+
+module.exports = router

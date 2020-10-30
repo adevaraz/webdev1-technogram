@@ -1,12 +1,9 @@
 const express = require("express");
-
 const beritaController = require("../controller/berita");
-
-const router = express.Router();
-
+const authenticate = require('../middleware/adminAuth');
 const uploadPhoto = require('../middleware/imageupload');
 
-
+const router = express.Router();
 
 /*
  @author 14 KP
@@ -61,14 +58,14 @@ router.put("/update/:id",beritaController.update);
 
 Route untuk melakukan delete berita dengan diketahui id
 */
-router.delete("/delete/:id", beritaController.delete);
+router.delete("/delete/:id", authenticate, beritaController.delete);
 
 /*
  @author 28 RA
 
 Route untuk melakukan delete semua record berita
 */
-router.delete("/delete-all", beritaController.deleteAll);
+router.delete("/delete-all", authenticate, beritaController.deleteAll);
 
 /*
  @author 28 RA
