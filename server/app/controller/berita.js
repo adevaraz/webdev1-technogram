@@ -133,40 +133,51 @@ exports.getAllNews = async(req, res, next) => {
     }
 }
 
+/*
+ @author 02 AP
+
+ Update berita sesuai dengan id-nya
+*/
+
 exports.update = async (req, res) => {
     const id = req.params.id;
-    let filePath=null;
-
+    const news = await Berita.findByPk(id);
+    if (!news) {
+        const error = new Error("Could not find specific post");
+        error.statusCode = 404;
+        error.cause = "Invaid Post ID";
+        throw error;
+      }
+    const judul = req.body.judul;
+    const artikel = req.body.artikel;
+    const kategori_berita = req.body.kategori_berita;
+    const jurnalis = req.body.jurnalis;
+    const deskripsi_jurnalis = req.body.deskripsi_jurnalis;
+    let url_gambar = req.body.url_gambar;
     if (req.file) {
-        filePath = req.file.path.replace(/\\/gi, "/");
-    }
-    console.log(id)
-    console.log(filePath)
+        const plainImageUrl = req.file.path;
+        url_gambar = plainImageUrl.replace(/\\/gi, "/");
+        console.log(url_gambar);
+      }
+    if (url_gambar !== news.url_gambar && news.url_gambar!= null) {
+        deleteImage(news.url_gambar);
+      }
+    news.judul = judul || news.judul;
+    news.artikel = artikel || news.artikel;
+    news.kategori_berita = kategori_berita || news.kategori_berita;
+    news.jurnalis = jurnalis || news.jurnalis;
+    news.deskripsi_jurnalis = deskripsi_jurnalis || news.deskripsi_jurnalis;
+    news.url_gambar = url_gambar || news.url_gambar;
 
-    await Berita.update( berita, {
-        where: {id_berita : id},
-        url_gambar: filePath
-
-    })
-    .then(num => {
-        if (num == 1){
-            res.send({
-                message : "Berita was updated successfully."
-            });
-        }else{
-            res.send({
-                message : `Cannot update Tutorial with id=${id}. Maybe Berita was not found or req.body is empty!`
-            })
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: "Error updating Tutorial with id=" + id
-    })})
-
-
+    await news.save();
+    res.status(200).json({
+      message: "News Updated",
+      data: news,
+    });
+  
 
 };
+
 
 /*
  @author 28 RA
