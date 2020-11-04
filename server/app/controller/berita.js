@@ -359,3 +359,28 @@ exports.popularNews = async (req , res , next) => {
         next(err)
     }
 };
+
+/*
+ @author 28 RA
+
+ Get one Berita By id
+*/
+exports.getNewsById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const result = await Berita.findByPk(id);
+        if (result) {
+            res.status(200).json({
+                message: `Success retrieve news data with id: ${id}`,
+                data: result
+            });
+        } else {
+            const error = new Error("Could not find news with specific id");
+            error.statusCode = 404;
+            error.cause = "Invalid Post ID";
+            throw error;
+        }
+    }catch(err) {
+        next(err);
+    }
+};
