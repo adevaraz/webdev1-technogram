@@ -51,7 +51,7 @@ router.get("/all-news", beritaController.getAllNews);
 
 Route untuk update berita
 */
-router.put("/update/:id",beritaController.update);
+router.put("/update/:id",uploadPhoto.imageUpload, beritaController.update);
 
 /*
  @author 28 RA
