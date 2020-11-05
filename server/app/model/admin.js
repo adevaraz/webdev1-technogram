@@ -19,7 +19,6 @@ const Admin = sequelize.define("admin", {
     },
     last_changed_pwd : {
         type : Sequelize.BIGINT,
-        defaultValue : Math.round(new Date().getTime()/1000)
     }
 });
 
