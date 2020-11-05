@@ -1,20 +1,27 @@
 const Pembaca = require('../model/pembaca');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
+const bcrypt = require("bcryptjs");
 
 /**
  * @author 31 ZV
  * 
  * Membuat akun pembaca baru
+ * 
+ * @author 28 RA
+ * Add validator and Encrypt password functionality with bcrypt
  */
 exports.create = async(req, res, next) => {
     try {
+        //karena sudah ada validator maka request pasti valid.
         const pembaca = {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password
         }
-
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(pembaca.password, salt);
+        pembaca.password = hash;
         await Pembaca.create(pembaca);
 
         res.status(201).json({
@@ -76,31 +83,42 @@ exports.getById = async(req, res, next) => {
  @author 23 NM
 
  Update akun pembaca.
+
+ @author 28 RA
+ Add validator and Encrypt password functionality with bcrypt
 */
 exports.update = async(req, res, next) => {
+    //karena sudah ada validator maka request pasti valid.
     const id = req.params.id;
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
-
     try {
         const account = await Pembaca.findByPk(id);
         if(account != null) {
+            const isPasswordSame = await bcrypt.compare(password, account.password);
+            if(!isPasswordSame) {
+                let salt = await bcrypt.genSalt(10);
+                let hash = await bcrypt.hash(password, salt);
+                password = hash;
+            } else {
+                password = account.password;
+            }
             const updateAccount = await account.update({
                 username : username,
                 email : email,
                 password : password
-            })
+            });
             res.status(201).json({
                 message : `Success update Account with id ${id}`
-            })
+            });
         } else {
             res.status(404).json({
                 message : `Account with id ${id} not found`
-            })
+            });
         }
     } catch(err) {
-        next(err)
+        next(err);
     }
 }
 

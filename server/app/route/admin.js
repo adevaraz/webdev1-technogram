@@ -1,6 +1,7 @@
 const express = require("express");
 const adminController = require("../controller/admin");
 const authenticate = require('../middleware/adminAuth');
+const {adminValidationRules, validate} = require("../middleware/validator");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 *
 * Route untuk membuat admin baru
 */
-router.post("/new-admin", adminController.create);
+router.post("/new-admin", adminValidationRules(), validate, adminController.create);
 
 /**
 * @author 17 MU
@@ -37,7 +38,7 @@ router.delete("/delete-all-admin", adminController.deleteAllAdmin);
 *
 * Route untuk update Admin by Id
 */
-router.put("/update-admin/:id", adminController.updateAdminById);
+router.put("/update-admin/:id", adminValidationRules(), validate, adminController.updateAdminById);
 
 module.exports = router;
 

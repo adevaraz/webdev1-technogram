@@ -4,12 +4,14 @@ const pembacaController = require("../controller/pembaca");
 
 const router = express.Router();
 
+const {pembacaValidationRules, validate} = require("../middleware/validator");
+
 /**
  * @author 31 ZV
  * 
  * Route untuk membuat akun baru
  */
-router.post("/create", pembacaController.create);
+router.post("/create", pembacaValidationRules(), validate, pembacaController.create);
 
 /**
  * @author 31 ZV
@@ -30,7 +32,7 @@ router.get("/:id", pembacaController.getById);
  * 
  * Route untuk update akun
  */
-router.put("/update/:id", pembacaController.update);
+router.put("/update/:id", pembacaValidationRules(), validate, pembacaController.update);
 
 /**
  * @author 23 NM
