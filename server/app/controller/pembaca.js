@@ -92,7 +92,7 @@ exports.update = async(req, res, next) => {
     const id = req.params.id;
     const username = req.body.username;
     const email = req.body.email;
-    const password = req.body.password;
+    let password = req.body.password;
     try {
         const account = await Pembaca.findByPk(id);
         if(account != null) {
