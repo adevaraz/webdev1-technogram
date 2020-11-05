@@ -16,14 +16,11 @@ const Admin = sequelize.define("admin", {
     password: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    last_changed_pwd : {
+        type : Sequelize.BIGINT,
+        defaultValue : Math.round(new Date().getTime()/1000)
     }
-
-    //Mau ditambah ini tapi error karena db yang udah ada beda
-    // ,
-    // lastPasswordChange : {
-    //     type : Sequelize.BIGINT,
-    //     defaultValue : Math.round(new Date().getTime()/1000)
-    // }
 });
 
 module.exports = Admin;
