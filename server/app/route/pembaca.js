@@ -46,4 +46,11 @@ router.delete("/delete/:id", pembacaController.delete);
  */
 router.delete("/delete-all", pembacaController.deleteAll);
 
+/**
+ * @author 02 AP
+ * 
+ * Route untuk mengambil berita yang tersimpan pada akun
+ */
+router.get("/get-saved/:id", pembacaController.getSaved);
+
 module.exports = router;

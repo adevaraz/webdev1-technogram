@@ -1,6 +1,8 @@
 const Pembaca = require('../model/pembaca');
+const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
+
 
 /**
  * @author 31 ZV
@@ -147,6 +149,42 @@ exports.deleteAll = async(req, res, next) => {
             data: result
         })
     } catch (err) {
+        next(err)
+    }
+}
+
+/*
+ @author 02 AP
+
+ Mendapatkan berita yang disimpan oleh pembaca
+*/
+exports.getSaved = async(req, res, next) => {
+    const id = req.params.id;
+    console.log(id);
+    try{
+        
+        const saved = await Pembaca.findAll({
+            where :{
+                id_pembaca : id
+            },
+            include :[{
+                model : Berita,
+                as: 'saved',
+            }
+        ]
+        });
+        if(saved.length > 0) {
+            res.status(200).json({
+                message: 'Success retrieve saved data',
+                data: saved
+            });
+        } else {
+            res.status(204).json({
+                message: 'Account not found',
+                data: saved
+            });
+        }
+    }catch (err){
         next(err)
     }
 }

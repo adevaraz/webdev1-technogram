@@ -14,10 +14,12 @@ const setAssociations = () => {
 
     Pembaca.belongsToMany(Berita, {
         through: 'menyimpan',
+        as : 'saved',
         foreignKey: "id_pembaca"
     });
     Berita.belongsToMany(Pembaca, {
         through: 'menyimpan',
+        as : 'saved',
         foreignKey: "id_berita"
     });
 
@@ -38,7 +40,7 @@ const setAssociations = () => {
     Berita.belongsTo(Admin, {
         constraints: true,
         foreignKey: {
-            name: "id_admin",
+            name: "id_berita",
             allowNull: true
         }
     });
