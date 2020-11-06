@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
 const cache = require("../util/cache");
 
-module.exports = async (req , res , next) => {
+
+const validateToken = async ( req  , role) => {
     const token = req.get('Authorization')
     try{
         if(!token){
@@ -22,13 +23,13 @@ module.exports = async (req , res , next) => {
         let decodedToken;
         try{
             decodedToken = jwt.verify(token , process.env.JWT_SECRET_KEY);
-            if(decodedToken.roles !== process.env.ADMIN_PREFIX){
+            if(decodedToken.roles !== role){
                 const error = new Error('Forbidden Access')
                 error.statusCode = 401;
                 error.cause = "You have no access to this endpoint"
                 throw error;
             }
-            const key = process.env.ADMIN_PREFIX + decodedToken.id.toString()
+            const key = role + decodedToken.id.toString()
             const userRequest = await cache.getAsync(key);
             const userCache = JSON.parse(userRequest);
             if(userCache.isDeleted || decodedToken.iat < userCache.lastPasswordChange){
@@ -49,9 +50,26 @@ module.exports = async (req , res , next) => {
         }
         req.decodedToken = decodedToken;
         req.token = token;
-        next();
+        return req
     }catch(err){
-        next(err);
+        return err;
     }
-
 }
+
+exports.validateAdmin = async (req , res , next) => {
+    const validate = await validateToken(req , process.env.ADMIN_PREFIX);
+    if(!(validate instanceof Error)){
+        next();
+    }else{
+        next(validate);
+    }
+}
+exports.validateUser = async (req , res , next) => {
+    const validate = await validateToken(req , process.env.PEMBACA_PREFIX);
+    if(!(validate instanceof Error)){
+        next();
+    }else{
+        next(validate);
+    }
+}
+

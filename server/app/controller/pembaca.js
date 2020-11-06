@@ -1,7 +1,8 @@
 const Pembaca = require('../model/pembaca');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
-
+const jwt = require('jsonwebtoken');
+const cache = require("../util/cache");
 /**
  * @author 31 ZV
  * 
@@ -12,9 +13,9 @@ exports.create = async(req, res, next) => {
         const pembaca = {
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            last_change_pwd : (new Date().getTime()) /1000
         }
-
         await Pembaca.create(pembaca);
 
         res.status(201).json({
@@ -84,6 +85,13 @@ exports.update = async(req, res, next) => {
     const password = req.body.password;
 
     try {
+        if(id!= req.decodedToken.id){
+            console.log("BANDINGIN NIH "+ id +" "+ req.decodedToken.id);
+            const error = new Error("Not your id");
+            error.statusCode = 401;
+            error.cause = "Not your id";
+            throw error;
+        }
         const account = await Pembaca.findByPk(id);
         if(account != null) {
             const updateAccount = await account.update({
@@ -112,6 +120,12 @@ exports.update = async(req, res, next) => {
 exports.delete = async(req, res, next) => {
     const id = req.params.id;
     try {
+        if(id!= req.decodedToken.id){
+            const error = new Error("Not your id");
+            error.statusCode = 401;
+            error.cause = "Not your id";
+            throw error;
+        }
         const account = await Pembaca.findByPk(id)
         if(account != null) {
             const destroy = await Pembaca.destroy({
@@ -149,4 +163,89 @@ exports.deleteAll = async(req, res, next) => {
     } catch (err) {
         next(err)
     }
+}
+
+/*
+@author 14 KP
+Membuat sign in pembaca
+*/
+exports.signin = async(req, res, next) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const pembaca = await Pembaca.findOne({
+            where: {
+                email: email 
+            }
+        })
+        if(pembaca){
+            const isPasswordTrue = password===pembaca.password;
+            //bcrypt.compare(password, pembaca.password)
+            if (!isPasswordTrue) {
+                const error = new Error("Invalid credential");
+                error.statusCode = 401;
+                error.cause = "Wrong password";
+                throw error;
+              }
+            //generate token
+            const accessToken = jwt.sign(
+                {
+                    id: pembaca.id_pembaca,
+                    roles: process.env.PEMBACA_PREFIX,
+                },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: 60 * 15 }
+              );
+            //to add user to cache
+            const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
+            await cache.settextAsync(
+              key,
+              60*17,
+              JSON.stringify({
+                isDeleted: false,
+                lastPasswordChange: pembaca.lastPasswordChange
+              })
+            );
+            res.status(200).json({
+                message: 'sign in Success',
+                token: accessToken,
+                }
+            )
+        } else {
+            const error = new Error("Invalid credential");
+            error.statusCode = 401;
+            error.cause = "Account with such email is not exist";
+            throw error;
+        }
+        
+    } catch (err) {
+        next(err)
+    }
+}
+
+/*
+@author 14 KP
+Membuat sign out pembaca
+*/
+
+exports.signout = async(req, res, err) => {
+    try {
+        const decodedToken = req.decodedToken;
+        const token = req.token;
+        const tokenTimout = decodedToken.exp;
+        const currentTime = Math.round(new Date().getTime() / 1000);
+        const timeDifference = tokenTimout - currentTime;
+        if (currentTime - timeDifference > 10) {
+          await cache.settextAsync(
+            token,
+            timeDifference,
+            JSON.stringify({ isInvalid: false })
+          );
+        }
+        res.json({
+          message: "Success Log out",
+        });
+      } catch (err) {
+        next(err);
+      }
 }
