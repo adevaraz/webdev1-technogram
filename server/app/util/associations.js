@@ -1,6 +1,7 @@
 const Pembaca = require("../model/pembaca");
 const Berita = require("../model/berita");
 const Admin = require("../model/admin");
+const Kategori = require("../model/kategori");
 
 const setAssociations = () => {
     Pembaca.belongsToMany(Berita, {
@@ -30,17 +31,14 @@ const setAssociations = () => {
         foreignKey: "id_berita"
     });
 
-    // Admin.hasMany(Berita, {
-    //     constraints: true,
-        
-    // });
+    Admin.hasMany(Berita, {
+        foreignKey: 'id_admin_pembuat',
+        as : 'membuat',
+    });
 
-    Berita.belongsTo(Admin, {
-        constraints: true,
-        foreignKey: {
-            name: "id_admin",
-            allowNull: true
-        }
+    Admin.hasMany(Berita, {
+        foreignKey: 'id_admin_publikasi',
+        as : 'mempublikasi',
     });
 };
 

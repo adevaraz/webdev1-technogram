@@ -20,6 +20,9 @@ const Pembaca = sequelize.define("pembaca", {
     password: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    last_changed_pwd : {
+        type : Sequelize.BIGINT,
     }
 });
 
