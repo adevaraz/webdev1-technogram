@@ -4,7 +4,8 @@ const pembacaController = require("../controller/pembaca");
 
 const router = express.Router();
 
-const {pembacaValidationRules, validate} = require("../middleware/validator");
+const {validate} = require("../middleware/validation");
+const {pembacaValidationRules} = require("../middleware/validators/pembaca");
 
 /**
  * @author 31 ZV
