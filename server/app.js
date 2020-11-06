@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const beritaRoutes = require('./app/route/berita')
 const pembacaRoutes = require('./app/route/pembaca')
 const adminRoutes = require('./app/route/admin')
+const kategoriRoutes = require('./app/route/kategori')
 const path = require("path");
 
 const app = express();
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 app.use("/news" , beritaRoutes);
 app.use("/account", pembacaRoutes);
 app.use("/admin", adminRoutes);
+app.use('/kategori' , kategoriRoutes);
 
 /*
  @author 16 MN
@@ -52,6 +54,7 @@ app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
   const cause = error.cause || "Unknown";
+  console.log(error);
   res.status(status).json({
     message: message,
     error: status,
