@@ -8,24 +8,29 @@ const sequelize = require("../util/database");
 * @author 17 MU
 *
 * Membuat berita
+* 
+* @author 28 RA
+* Add validator and Encrypt password functionality with bcrypt
 */
 exports.create = async (req, res, next) => {
     try{
+        //karena sudah ada validator maka request body pasti valid.
         const admin = {
             username: req.body.username,
             password: req.body.password
         };
-        // save to database
-        await Admin.create(admin)
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(admin.password, salt);
+        admin.password = hash;
+        await Admin.create(admin);
         res.status(201).json({
             message : 'Success add new admin!',
             data : admin
         });
-
     }catch(err){
-        next(err)
+        next(err);
     } 
-}
+};
 
 /**
 * @author 17 MU
@@ -104,26 +109,45 @@ exports.deleteAllAdmin = async (req, res, next) => {
 * @author 17 MU
 *
 * Update Admin dengan diketahui id nya
+*
+* @author 28 RA
+* Add validator and Encrypt password functionality with bcrypt
 */
 exports.updateAdminById = async (req, res, next) => {
-    const id = req.params.id;
-    await Admin.update(req.body, {
-        where: { id_admin: id }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.status(200).json({
-                message: `Admin with id=${id} was updated successfully.`
-            });
-        } else {
-            res.status(200).json({
-                message: "Cannot update Admin with id=${id}. Maybe Admin was not found or req.body is empty!"
-            });
-        }
-    })
-    .catch(err => {
-        next(err);
-    })
+    try{
+      //karena sudah ada validator maka request body pasti valid.
+      const id = req.params.id;
+      const oldAdmin = await Admin.findByPk(id);
+      if(!oldAdmin) {
+        const error = new Error("Update Failed!");
+        error.statusCode = 401;
+        error.cause = `Cannot update Admin with id=${id}. Admin was not found.`;
+        throw error;
+      }
+      const isPasswordSame = await bcrypt.compare(req.body.password, oldAdmin.password);
+      if(!isPasswordSame) {
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(req.body.password, salt);
+        req.body.password = hash;
+      }else {
+        req.body.password = oldAdmin.password;
+      }
+      const result = await Admin.update(req.body, {
+          where: { id_admin: id }
+      });
+      if (result == 1) {
+        res.status(200).json({
+            message: `Admin with id=${id} was updated successfully.`,
+        });
+      } else {
+          const error = new Error("Update Failed!");
+          error.statusCode = 401;
+          error.cause = `Cannot update Admin with id=${id}. Admin was not found.`;
+          throw error;
+      }
+    }catch(err) {
+      next(err);
+    }
 };
 
 /*
@@ -147,8 +171,8 @@ exports.signin = async (req, res, next) => {
     }
 
     const password = req.body.password;
-    //   const isPasswordValid = await bcrypt.compare(password, admin.password);
-    const isPasswordValid = password === admin.password;
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    // const isPasswordValid = password === admin.password;
     if (!isPasswordValid) {
       const error = new Error("Invalid credential");
       error.statusCode = 401;

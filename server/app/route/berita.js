@@ -1,6 +1,6 @@
 const express = require("express");
 const beritaController = require("../controller/berita");
-const authenticate = require('../middleware/adminAuth');
+const authenticate = require('../middleware/authentication');
 const uploadPhoto = require('../middleware/imageupload');
 
 const router = express.Router();
@@ -10,14 +10,14 @@ const router = express.Router();
 
 Route untuk membuat berita baru
 */
-router.post("/new-news", uploadPhoto.imageUpload, beritaController.create);
+router.post("/new-news", authenticate.validateAdmin, uploadPhoto.imageUpload, beritaController.create);
 
 /*
  @author 14 KP
 
 Route untuk mempublikasikan berita
 */
-router.put("/publish/:id", beritaController.updatePublish)
+router.put("/publish/:id", authenticate.validateAdmin, beritaController.updatePublish)
 /*
  @author 16 MN
 
@@ -51,21 +51,21 @@ router.get("/all-news", beritaController.getAllNews);
 
 Route untuk update berita
 */
-router.put("/update/:id",uploadPhoto.imageUpload, beritaController.update);
+router.put("/update/:id",authenticate.validateAdmin, uploadPhoto.imageUpload, beritaController.update);
 
 /*
  @author 28 RA
 
 Route untuk melakukan delete berita dengan diketahui id
 */
-router.delete("/delete/:id", authenticate, beritaController.delete);
+router.delete("/delete/:id", authenticate.validateAdmin, beritaController.delete);
 
 /*
  @author 28 RA
 
 Route untuk melakukan delete semua record berita
 */
-router.delete("/delete-all", authenticate, beritaController.deleteAll);
+router.delete("/delete-all", authenticate.validateAdmin, beritaController.deleteAll);
 
 /*
  @author 28 RA
@@ -74,5 +74,12 @@ router.delete("/delete-all", authenticate, beritaController.deleteAll);
  kata kunci
 */
 router.get("/popular", beritaController.popularNews);
+
+/*
+ @author 28 RA
+
+ Get one Berita By id
+*/
+router.get("/:id", beritaController.getNewsById);
 
 module.exports = router;
