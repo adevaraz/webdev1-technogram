@@ -115,24 +115,9 @@ exports.update = async (req, res, next) => {
         let hash = await bcrypt.hash(password, salt);
         password = hash;
         lastPasswordChange = Math.floor(new Date().getTime() / 1000);
+        account.last_changed_pwd = lastPasswordChange;
         //generate token
-        accessToken = jwt.sign(
-          {
-            id: account.id_pembaca,
-            roles: process.env.PEMBACA_PREFIX,
-          },
-          process.env.JWT_SECRET_KEY,
-          { expiresIn: 60 * 15 }
-        );
-        const key = process.env.PEMBACA_PREFIX + account.id_pembaca.toString();
-        await cache.settextAsync(
-          key,
-          60 * 17,
-          JSON.stringify({
-            isDeleted: false,
-            lastPasswordChange: account.last_changed_pwd,
-          })
-        );
+        accessToken = await createPembacaToken(account);
       } else {
         password = account.password;
         lastPasswordChange = account.lastPasswordChange;
@@ -182,6 +167,15 @@ exports.delete = async (req, res, next) => {
       const destroy = await Pembaca.destroy({
         where: { id_pembaca: id },
       });
+      const key = process.env.PEMBACA_PREFIX + account.id_pembaca.toString();
+      await cache.settextAsync(
+        key,
+        60 * 17,
+        JSON.stringify({
+          isDeleted: true,
+          lastPasswordChange: account.last_changed_pwd,
+        })
+      )
       res.status(201).json({
         message: `Success delete Account with id ${id}`,
       });
@@ -318,27 +312,12 @@ exports.signin = async (req, res, next) => {
         error.cause = "Wrong password";
         throw error;
       }
-      //generate token
-      const accessToken = jwt.sign(
-        {
-          id: pembaca.id_pembaca,
-          roles: process.env.PEMBACA_PREFIX,
-        },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: 60 * 15 }
-      );
-      const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
-      await cache.settextAsync(
-        key,
-        60 * 17,
-        JSON.stringify({
-          isDeleted: false,
-          lastPasswordChange: pembaca.last_changed_pwd,
-        })
-      );
+      //generate token 
+      const accessToken = await createPembacaToken(pembaca);
+
       res.status(200).json({
         message: "sign in Success",
-        token: accessToken,
+        token: accessToken
       });
     } else {
       const error = new Error("Invalid credential");
@@ -404,3 +383,25 @@ exports.getUserNotification = async (req, res, next) => {
     next(err);
   }
 };
+
+const createPembacaToken = async (pembaca) => {
+  const accessToken = jwt.sign(
+    {
+      id: pembaca.id_pembaca,
+      roles: process.env.PEMBACA_PREFIX,
+    },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: 60 * 15 }
+  );
+  console.log(pembaca.last_changed_pwd);
+  const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
+  await cache.settextAsync(
+    key,
+    60 * 17,
+    JSON.stringify({
+      isDeleted: false,
+      lastPasswordChange: pembaca.last_changed_pwd,
+    })
+  );
+  return accessToken;
+}
