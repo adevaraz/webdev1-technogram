@@ -20,6 +20,7 @@ const setAssociations = () => {
     });
     Berita.belongsToMany(Pembaca, {
         through: 'menyimpan',
+        as: 'saved',
         foreignKey: "id_berita"
     });
 

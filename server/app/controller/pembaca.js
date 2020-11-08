@@ -2,19 +2,31 @@ const Pembaca = require('../model/pembaca');
 const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
+const jwt = require('jsonwebtoken');
+const cache = require("../util/cache");
+const bcrypt = require("bcryptjs");
 
 /**
  * @author 31 ZV
  * 
  * Membuat akun pembaca baru
+ * 
+ * @author 28 RA
+ * Add validator and Encrypt password functionality with bcrypt
  */
 exports.create = async(req, res, next) => {
     try {
+        //karena sudah ada validator maka request pasti valid.
         const pembaca = {
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            last_change_pwd : (new Date().getTime()) /1000
         }
+
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(pembaca.password, salt);
+        pembaca.password = hash;
 
         await Pembaca.create(pembaca);
 
@@ -77,31 +89,48 @@ exports.getById = async(req, res, next) => {
  @author 23 NM
 
  Update akun pembaca.
+
+ @author 28 RA
+ Add validator and Encrypt password functionality with bcrypt
 */
 exports.update = async(req, res, next) => {
+    //karena sudah ada validator maka request pasti valid.
     const id = req.params.id;
     const username = req.body.username;
     const email = req.body.email;
-    const password = req.body.password;
-
+    let password = req.body.password;
     try {
+        if(id!= req.decodedToken.id){
+            const error = new Error("Not your id");
+            error.statusCode = 401;
+            error.cause = "Not your id";
+            throw error;
+        }
         const account = await Pembaca.findByPk(id);
         if(account != null) {
+            const isPasswordSame = await bcrypt.compare(password, account.password);
+            if(!isPasswordSame) {
+                let salt = await bcrypt.genSalt(10);
+                let hash = await bcrypt.hash(password, salt);
+                password = hash;
+            } else {
+                password = account.password;
+            }
             const updateAccount = await account.update({
                 username : username,
                 email : email,
                 password : password
-            })
+            });
             res.status(201).json({
                 message : `Success update Account with id ${id}`
-            })
+            });
         } else {
             res.status(404).json({
                 message : `Account with id ${id} not found`
-            })
+            });
         }
     } catch(err) {
-        next(err)
+        next(err);
     }
 }
 
@@ -113,6 +142,12 @@ exports.update = async(req, res, next) => {
 exports.delete = async(req, res, next) => {
     const id = req.params.id;
     try {
+        if(id!= req.decodedToken.id){
+            const error = new Error("Not your id");
+            error.statusCode = 401;
+            error.cause = "Not your id";
+            throw error;
+        }
         const account = await Pembaca.findByPk(id)
         if(account != null) {
             const destroy = await Pembaca.destroy({
@@ -192,4 +227,125 @@ exports.saveNews = async(req, res, next) => {
     } catch (err) {
         next(err);
     }
+}
+
+/*
+ @author 02 AP
+
+ Mendapatkan berita yang disimpan oleh pembaca
+*/
+exports.getSave = async(req, res, next) => {
+    const id = req.params.id;
+    console.log(id);
+    try{
+        
+        const saved = await Pembaca.findAll({
+            where :{
+                id_pembaca : id
+            },
+            include :[{
+                model : Berita,
+                as: 'saved',
+            }
+        ]
+        });
+        if(saved.length > 0) {
+            res.status(200).json({
+                message: 'Success retrieve saved data',
+                data: saved
+            });
+        } else {
+            res.status(204).json({
+                message: 'Account not found',
+                data: saved
+            });
+        }
+    }catch (err){
+        next(err)
+    }
+}
+
+ /*
+@author 14 KP
+Membuat sign in pembaca
+*/
+exports.signin = async(req, res, next) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const pembaca = await Pembaca.findOne({
+            where: {
+                email: email 
+            }
+        })
+        if(pembaca){
+            const isPasswordTrue = password===pembaca.password;
+            //bcrypt.compare(password, pembaca.password)
+            if (!isPasswordTrue) {
+                const error = new Error("Invalid credential");
+                error.statusCode = 401;
+                error.cause = "Wrong password";
+                throw error;
+              }
+            //generate token
+            const accessToken = jwt.sign(
+                {
+                    id: pembaca.id_pembaca,
+                    roles: process.env.PEMBACA_PREFIX,
+                },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: 60 * 15 }
+              );
+            //to add user to cache
+            const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
+            await cache.settextAsync(
+              key,
+              60*17,
+              JSON.stringify({
+                isDeleted: false,
+                lastPasswordChange: pembaca.lastPasswordChange
+              })
+            );
+            res.status(200).json({
+                message: 'sign in Success',
+                token: accessToken,
+                }
+            )
+        } else {
+            const error = new Error("Invalid credential");
+            error.statusCode = 401;
+            error.cause = "Account with such email is not exist";
+            throw error;
+        }
+        
+    } catch (err) {
+        next(err)
+    }
+}
+
+/*
+@author 14 KP
+Membuat sign out pembaca
+*/
+
+exports.signout = async(req, res, err) => {
+    try {
+        const decodedToken = req.decodedToken;
+        const token = req.token;
+        const tokenTimout = decodedToken.exp;
+        const currentTime = Math.round(new Date().getTime() / 1000);
+        const timeDifference = tokenTimout - currentTime;
+        if (currentTime - timeDifference > 10) {
+          await cache.settextAsync(
+            token,
+            timeDifference,
+            JSON.stringify({ isInvalid: false })
+          );
+        }
+        res.json({
+          message: "Success Log out",
+        });
+      } catch (err) {
+        next(err);
+      }
 }
