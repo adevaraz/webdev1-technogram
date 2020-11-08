@@ -1,11 +1,9 @@
 const express = require("express");
-
 const pembacaController = require("../controller/pembaca");
-
 const router = express.Router();
-
-const {validate} = require("../middleware/validation");
-const {pembacaValidationRules} = require("../middleware/validators/pembaca");
+const authentication = require("../middleware/authentication");
+const { validate } = require("../middleware/validation");
+const { pembacaValidationRules } = require("../middleware/validators/pembaca");
 
 /**
  * @author 31 ZV
@@ -33,20 +31,33 @@ router.get("/:id", pembacaController.getById);
  * 
  * Route untuk update akun
  */
-router.put("/update/:id", pembacaValidationRules(), validate, pembacaController.update);
+router.put("/update/:id", authentication.validateUser, pembacaController.update);
 
 /**
  * @author 23 NM
  * 
  * Route untuk delete akun berdasarkan id
  */
-router.delete("/delete/:id", pembacaController.delete);
+router.delete("/delete/:id", authentication.validateUser, pembacaController.delete);
 
 /**
  * @author 23 NM
  * 
  * Route untuk delete semua akun
  */
-router.delete("/delete-all", pembacaController.deleteAll);
+router.delete("/delete-all",authentication.validateAdmin, pembacaController.deleteAll);
 
+/**
+ * @author 14 KP
+ * 
+ * Route untuk sign in pembaca
+ */
+router.post("/sign-in", pembacaController.signin);
+
+/**
+ * @author 14 KP
+ * 
+ * Route untuk sign out pembaca
+ */
+router.post("/sign-out", authentication.validateUser, pembacaController.signout);
 module.exports = router;

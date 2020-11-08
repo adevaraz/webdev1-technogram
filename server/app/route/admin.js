@@ -1,6 +1,6 @@
 const express = require("express");
 const adminController = require("../controller/admin");
-const authenticate = require('../middleware/adminAuth');
+const authenticate = require('../middleware/authentication');
 const {validate} = require("../middleware/validation");
 const {adminValidationRules} = require("../middleware/validators/admin");
 
@@ -54,6 +54,6 @@ router.post("/signin" , adminController.signin);
     16 MN
     Route untuk signin admin
 */
-router.post("/signout",authenticate , adminController.signout);
+router.post("/signout",authenticate.validateAdmin , adminController.signout);
 
 module.exports = router

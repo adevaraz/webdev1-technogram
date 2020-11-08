@@ -51,6 +51,7 @@ Error Handler , ketika terjadi error pada salah satu middleware maka akan di cat
 oleh handler ini.(Untuk mengurang boilerplate) . Bisa dibuat route sendiri misal ErrorHandler.js 
 */
 app.use((error, req, res, next) => {
+  console.log(error)
   const status = error.statusCode || 500;
   const message = error.message;
   const cause = error.cause || "Unknown";
