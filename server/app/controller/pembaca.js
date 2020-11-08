@@ -1,4 +1,5 @@
 const Pembaca = require('../model/pembaca');
+const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
 const jwt = require('jsonwebtoken');
@@ -187,6 +188,42 @@ exports.deleteAll = async(req, res, next) => {
 }
 
 /*
+ @author 02 AP
+
+ Mendapatkan berita yang disimpan oleh pembaca
+*/
+exports.getSave = async(req, res, next) => {
+    const id = req.params.id;
+    console.log(id);
+    try{
+        
+        const saved = await Pembaca.findAll({
+            where :{
+                id_pembaca : id
+            },
+            include :[{
+                model : Berita,
+                as: 'saved',
+            }
+        ]
+        });
+        if(saved.length > 0) {
+            res.status(200).json({
+                message: 'Success retrieve saved data',
+                data: saved
+            });
+        } else {
+            res.status(204).json({
+                message: 'Account not found',
+                data: saved
+            });
+        }
+    }catch (err){
+        next(err)
+    }
+}
+
+ /*
 @author 14 KP
 Membuat sign in pembaca
 */

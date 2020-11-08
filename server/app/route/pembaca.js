@@ -48,6 +48,13 @@ router.delete("/delete/:id", authentication.validateUser, pembacaController.dele
 router.delete("/delete-all",authentication.validateAdmin, pembacaController.deleteAll);
 
 /**
+ * @author 02 AP
+ * 
+ * Route untuk mendapatkan berita yang di save pembaca
+ */
+router.get("/get-save/:id", pembacaController.getSave);
+
+/**
  * @author 14 KP
  * 
  * Route untuk sign in pembaca
@@ -60,4 +67,5 @@ router.post("/sign-in", pembacaController.signin);
  * Route untuk sign out pembaca
  */
 router.post("/sign-out", authentication.validateUser, pembacaController.signout);
+
 module.exports = router;
