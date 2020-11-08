@@ -46,4 +46,11 @@ router.delete("/delete/:id", pembacaController.delete);
  */
 router.delete("/delete-all", pembacaController.deleteAll);
 
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk menyimpan berita (bookmark berita)
+ */
+router.post("/save-news", pembacaController.saveNews);
+
 module.exports = router;

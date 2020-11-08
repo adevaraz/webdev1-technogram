@@ -1,4 +1,5 @@
 const Pembaca = require('../model/pembaca');
+const Berita = require('../model/berita');
 const { Op } = require("sequelize");
 const sequelize = require("../util/database");
 
@@ -148,5 +149,47 @@ exports.deleteAll = async(req, res, next) => {
         })
     } catch (err) {
         next(err)
+    }
+}
+
+/**
+ * @author 31 ZV
+ * 
+ * Menyimpan berita (bookmark berita)
+ */
+exports.saveNews = async(req, res, next) => {
+    const readerId = req.query.readerid;
+    const newsId = req.query.newsid;
+
+    try {
+        const account = await Pembaca.findByPk(readerId);
+        const news = await Berita.findByPk(newsId);
+
+        if(account != null && news != null) {
+            // Check whether account has bookmarked news or not
+            account.hasSaved(news).then(function(exist) {
+                if(exist) {
+                    // Unbookmark
+                    account.removeSaved(news);
+    
+                    res.status(201).json({
+                        message: `Success unsaved news with id : ${newsId}`
+                    });
+                } else {
+                    // Bookmark
+                    account.addSaved(news);
+    
+                    res.status(201).json({
+                        message: `Success saved news with id : ${newsId}`
+                    });
+                }
+            });
+        } else {
+            res.status(404).json({
+                message: `Data not found`
+            });
+        }
+    } catch (err) {
+        next(err);
     }
 }
