@@ -6,10 +6,13 @@ const PembacaKategori = require('../model/pembacaKategori');
 const setAssociations = () => {
     Pembaca.belongsToMany(Berita, {
         through: 'menyukai',
+        as: 'like',
         foreignKey: "id_pembaca"
     });
+
     Berita.belongsToMany(Pembaca, {
         through: 'menyukai',
+        as: 'like',
         foreignKey: "id_berita"
     });
 
@@ -18,6 +21,7 @@ const setAssociations = () => {
         as: 'saved',
         foreignKey: "id_pembaca"
     });
+
     Berita.belongsToMany(Pembaca, {
         through: 'menyimpan',
         as: 'saved',
@@ -26,10 +30,13 @@ const setAssociations = () => {
 
     Pembaca.belongsToMany(Berita, {
         through: 'mendapat_notifikasi',
+        as: 'notification',
         foreignKey: "id_pembaca"
     });
+    
     Berita.belongsToMany(Pembaca, {
         through: 'mendapat_notifikasi',
+        as: 'notification',
         foreignKey: "id_berita"
     });
 
