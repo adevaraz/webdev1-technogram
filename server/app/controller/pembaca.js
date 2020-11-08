@@ -169,14 +169,14 @@ exports.saveNews = async(req, res, next) => {
             // Check whether account has bookmarked news or not
             account.hasSaved(news).then(function(exist) {
                 if(exist) {
-                    // Unbookmark
+                    // Unbookmark -- remove from 'menyimpan' table
                     account.removeSaved(news);
     
                     res.status(201).json({
                         message: `Success unsaved news with id : ${newsId}`
                     });
                 } else {
-                    // Bookmark
+                    // Bookmark -- add to 'menyimpan' table
                     account.addSaved(news);
     
                     res.status(201).json({
