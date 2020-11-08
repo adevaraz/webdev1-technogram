@@ -6,14 +6,14 @@ const {validate} = require('../middleware/validation');
 
 const router = express.Router();
 
-router.post('/create' , authenticate, kategoriValidationRules() , validate , kategoriController.createKategori);
+router.post('/create', authenticate.validateAdmin, kategoriValidationRules() , validate, kategoriController.createKategori);
 
-router.delete('/delete/:id' , authenticate, kategoriController.deleteKategoriByID);
+router.delete('/delete/:id', authenticate.validateAdmin, kategoriController.deleteKategoriByID);
 
-router.get('/get/:id' , kategoriController.getKategoriByID);
+router.get('/get/:id', kategoriController.getKategoriByID);
 
-router.get('/get' , kategoriController.getAllKategori);
+router.get('/get', kategoriController.getAllKategori);
 
-router.put('/update/:id' , kategoriValidationRules() , validate, authenticate ,  kategoriController.updateKategoriById);
+router.put('/update/:id', authenticate.validateAdmin, kategoriValidationRules(), validate, kategoriController.updateKategoriById);
 
 module.exports = router
