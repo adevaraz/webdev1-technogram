@@ -28,8 +28,8 @@ exports.create = async (req, res, next) => {
             jumlah_reader: 0,
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
-            deskripsi_jurnalis: req.body.deskripsi_jurnalis
-
+            deskripsi_jurnalis: req.body.deskripsi_jurnalis,
+            id_admin_pembuat: req.query.admin
         };
         // save to database
         await Berita.create(berita)
@@ -54,6 +54,7 @@ exports.create = async (req, res, next) => {
 exports.updatePublish = async(req, res, next) => {
     try{
         const id = req.params.id;
+        const idAdmin = req.query.admin;
         const news = await Berita.findByPk(id)
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
@@ -62,6 +63,7 @@ exports.updatePublish = async(req, res, next) => {
             console.log(news.waktu_publikasi)
             const now = new Date()
             news.waktu_publikasi=now;
+            news.id_admin_publikasi=idAdmin;
             news.save();
         }
         res.status(200).json({
@@ -357,5 +359,30 @@ exports.popularNews = async (req , res , next) => {
         });
     }catch(err){
         next(err)
+    }
+};
+
+/*
+ @author 28 RA
+
+ Get one Berita By id
+*/
+exports.getNewsById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const result = await Berita.findByPk(id);
+        if (result) {
+            res.status(200).json({
+                message: `Success retrieve news data with id: ${id}`,
+                data: result
+            });
+        } else {
+            const error = new Error("Could not find news with specific id");
+            error.statusCode = 404;
+            error.cause = "Invalid Post ID";
+            throw error;
+        }
+    }catch(err) {
+        next(err);
     }
 };
