@@ -187,6 +187,48 @@ exports.deleteAll = async(req, res, next) => {
     }
 }
 
+/**
+ * @author 31 ZV
+ * 
+ * Menyimpan berita (bookmark berita)
+ */
+exports.saveNews = async(req, res, next) => {
+    const readerId = req.query.account;
+    const newsId = req.query.news;
+
+    try {
+        const account = await Pembaca.findByPk(readerId);
+        const news = await Berita.findByPk(newsId);
+
+        if(account != null && news != null) {
+            // Check whether account has bookmarked news or not
+            account.hasSaved(news).then(function(exist) {
+                if(exist) {
+                    // Unbookmark -- remove from 'menyimpan' table
+                    account.removeSaved(news);
+    
+                    res.status(201).json({
+                        message: `Success unsaved news with id : ${newsId}`
+                    });
+                } else {
+                    // Bookmark -- add to 'menyimpan' table
+                    account.addSaved(news);
+    
+                    res.status(201).json({
+                        message: `Success saved news with id : ${newsId}`
+                    });
+                }
+            });
+        } else {
+            res.status(404).json({
+                message: `Data not found`
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
 /*
  @author 02 AP
 

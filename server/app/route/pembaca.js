@@ -68,4 +68,11 @@ router.post("/sign-in", pembacaController.signin);
  */
 router.post("/sign-out", authentication.validateUser, pembacaController.signout);
 
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk menyimpan berita (bookmark berita)
+ */
+router.post("/save-news", pembacaController.saveNews);
+
 module.exports = router;
