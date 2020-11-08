@@ -158,8 +158,8 @@ exports.deleteAll = async(req, res, next) => {
  * Menyimpan berita (bookmark berita)
  */
 exports.saveNews = async(req, res, next) => {
-    const readerId = req.query.readerid;
-    const newsId = req.query.newsid;
+    const readerId = req.query.account;
+    const newsId = req.query.news;
 
     try {
         const account = await Pembaca.findByPk(readerId);
