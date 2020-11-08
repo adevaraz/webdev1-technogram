@@ -2,7 +2,7 @@ const Pembaca = require("../model/pembaca");
 const Berita = require("../model/berita");
 const Admin = require("../model/admin");
 const Kategori = require("../model/kategori");
-
+const PembacaKategori = require('../model/pembacaKategori');
 const setAssociations = () => {
     Pembaca.belongsToMany(Berita, {
         through: 'menyukai',
@@ -40,7 +40,17 @@ const setAssociations = () => {
 
     Admin.hasMany(Berita, {
         foreignKey: 'id_admin_publikasi',
-        as : 'mempublikasi',
+        as : 'mempublikasi'
+    });
+    
+    Pembaca.belongsToMany(Kategori , {
+        through : PembacaKategori,
+        foreignKey : 'id_pembaca'
+    });
+
+    Kategori.belongsToMany(Pembaca , {
+        through : PembacaKategori,
+        foreignKey : 'id_kategori' 
     });
 };
 
