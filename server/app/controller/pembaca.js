@@ -3,19 +3,30 @@ const { Op } = require("sequelize");
 const sequelize = require("../util/database");
 const jwt = require('jsonwebtoken');
 const cache = require("../util/cache");
+const bcrypt = require("bcryptjs");
+
 /**
  * @author 31 ZV
  * 
  * Membuat akun pembaca baru
+ * 
+ * @author 28 RA
+ * Add validator and Encrypt password functionality with bcrypt
  */
 exports.create = async(req, res, next) => {
     try {
+        //karena sudah ada validator maka request pasti valid.
         const pembaca = {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
             last_change_pwd : (new Date().getTime()) /1000
         }
+
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(pembaca.password, salt);
+        pembaca.password = hash;
+
         await Pembaca.create(pembaca);
 
         res.status(201).json({
@@ -77,16 +88,18 @@ exports.getById = async(req, res, next) => {
  @author 23 NM
 
  Update akun pembaca.
+
+ @author 28 RA
+ Add validator and Encrypt password functionality with bcrypt
 */
 exports.update = async(req, res, next) => {
+    //karena sudah ada validator maka request pasti valid.
     const id = req.params.id;
     const username = req.body.username;
     const email = req.body.email;
-    const password = req.body.password;
-
+    let password = req.body.password;
     try {
         if(id!= req.decodedToken.id){
-            console.log("BANDINGIN NIH "+ id +" "+ req.decodedToken.id);
             const error = new Error("Not your id");
             error.statusCode = 401;
             error.cause = "Not your id";
@@ -94,21 +107,29 @@ exports.update = async(req, res, next) => {
         }
         const account = await Pembaca.findByPk(id);
         if(account != null) {
+            const isPasswordSame = await bcrypt.compare(password, account.password);
+            if(!isPasswordSame) {
+                let salt = await bcrypt.genSalt(10);
+                let hash = await bcrypt.hash(password, salt);
+                password = hash;
+            } else {
+                password = account.password;
+            }
             const updateAccount = await account.update({
                 username : username,
                 email : email,
                 password : password
-            })
+            });
             res.status(201).json({
                 message : `Success update Account with id ${id}`
-            })
+            });
         } else {
             res.status(404).json({
                 message : `Account with id ${id} not found`
-            })
+            });
         }
     } catch(err) {
-        next(err)
+        next(err);
     }
 }
 

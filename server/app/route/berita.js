@@ -75,4 +75,11 @@ router.delete("/delete-all", authenticate.validateAdmin, beritaController.delete
 */
 router.get("/popular", beritaController.popularNews);
 
+/*
+ @author 28 RA
+
+ Get one Berita By id
+*/
+router.get("/:id", beritaController.getNewsById);
+
 module.exports = router;
