@@ -86,3 +86,11 @@ router.get('/notifikasi' , authentication.validateUser, pembacaController.getUse
 
 module.exports = router;
 
+/**
+ * @author 17 MU
+ * 
+ * Route untuk menyukai berita (like berita)
+ */
+router.post("/like-news", pembacaController.likeNews);
+
+module.exports = router;
