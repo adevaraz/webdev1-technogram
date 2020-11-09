@@ -8,6 +8,7 @@ const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
 const Pembaca = require('../model/pembaca');
 const socket = require('../../socket');
+const { promisify } = require('util');
 
 
 /*
@@ -414,15 +415,18 @@ const notifyDeleteBerite = async (berita) => {
             most_liked_category : kategori.id_kategori
         }
     });
-    for(const pembaca in listOfPembaca){
-        await pembaca.removeNotification(berita);
-    }
-    const key = berita.kategori_berita
-    socket.getIO().to(key).emit('notification',{
-        action : 'remove',
-        message : 'New Notification',
-        data : berita
-    })    
+    if(listOfPembaca.length > 0){
+        for (let i = 0; i < listOfPembaca.length; i++)  {
+            await listOfPembaca[i].removeNotification(berita);
+        }
+        const key = berita.kategori_berita
+        socket.getIO().to(key).emit('notification',{
+            action : 'remove',
+            message : 'New Notification',
+            data : berita
+        })    
+    }    
+
 }
 
 const notifyNewBerita = async (berita) => {
@@ -441,18 +445,20 @@ const notifyNewBerita = async (berita) => {
             most_liked_category : kategori.id_kategori
         }
     });
-    console.log(listOfPembaca);
+
     if(listOfPembaca.length > 0){
-        for(const pembaca in listOfPembaca){
-            await pembaca.addNotification(berita);
+        for (let i = 0; i < listOfPembaca.length; i++)  {
+            await listOfPembaca[i].addNotification(berita);
         }
+        const key = berita.kategori_berita
+        socket.getIO().to(key).emit('notification',{
+            action : 'publish',
+            message : 'New Notification',
+            data : berita
+        })
     }
-    const key = berita.kategori_berita
-    socket.getIO().to(key).emit('notification',{
-        action : 'create',
-        message : 'New Notification',
-        data : berita
-    })
+
+
 
     
 }

@@ -300,15 +300,6 @@ exports.likeNews = async(req, res, next) => {
                     });
                 }
             });
-            // async function updateMostLiked() {
-            //     var id_cat = await PembacaKategori.max('jumlah', {
-            //         where : {id_pembaca : readerId, id_kategori : catId}
-            //     });
-            //     await Pembaca.update({ most_liked_category : id_cat},{
-            //         where : {id_pembaca : readerId}
-            //     });
-            // }
-            // updateMostLiked();
         } else {
             res.status(404).json({
                 message: `Data not found`
