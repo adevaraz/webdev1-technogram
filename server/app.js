@@ -7,7 +7,6 @@ const pembacaRoutes = require('./app/route/pembaca')
 const adminRoutes = require('./app/route/admin')
 const kategoriRoutes = require('./app/route/kategori')
 const path = require("path");
-
 const app = express();
 
 //nanti disini require model-model nya
@@ -16,6 +15,20 @@ const Pembaca = require("./app/model/pembaca");
 const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
+
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+
+// app.use(cors())
 
 app.use(bodyParser.json());
 
@@ -28,15 +41,6 @@ app.use(
   express.static(path.join(__dirname, "app", "public", "images"))
 );
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
 
 //nanti disini app.use route
 app.use("/news" , beritaRoutes);
