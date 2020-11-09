@@ -5,6 +5,8 @@ const sequelize = require("../util/database");
 const jwt = require('jsonwebtoken');
 const cache = require("../util/cache");
 const bcrypt = require("bcryptjs");
+const Kategori = require('../model/kategori');
+const PembacaKategori = require('../model/pembacaKategori');
 
 /**
  * @author 31 ZV
@@ -184,6 +186,88 @@ exports.deleteAll = async(req, res, next) => {
         })
     } catch (err) {
         next(err)
+    }
+}
+
+/**
+ * @author 17 MU
+ * 
+ * Menyukai berita (Like)
+ */
+exports.likeNews = async(req, res, next) => {
+    const readerId = req.query.account;
+    const newsId = req.query.news;
+    const catId = req.query.category;
+
+    try {
+        const account = await Pembaca.findByPk(readerId);
+        const category = await Kategori.findByPk(catId);
+        const news = await Berita.findByPk(newsId);
+
+        if(account != null && category != null) {
+            // Check whether account has liked news or not
+            account.hasLike(news).then(function(exist) {
+                if(exist) {
+                    // Unlike -- remove from 'menyukai' table
+                    async function unlike() {
+                        await account.removeLike(news);
+                        await news.update({
+                            jumlah_likes : sequelize.literal('jumlah_likes - 1')
+                        }, { where : { id_berita : newsId}});
+                        await PembacaKategori.update({
+                            jumlah : sequelize.literal('jumlah - 1')
+                        }, { where : {id_pembaca : readerId, id_kategori : catId}});
+                        await PembacaKategori.destroy({
+                            where : { jumlah : 0 }
+                        })
+                    }
+                    unlike();
+                    
+    
+                    res.status(201).json({
+                        message: `Success unlike news with id : ${newsId}`
+                    });
+                } else {
+                    // checking join table
+                    account.hasCount(category).then(function(exist) {
+                        if(exist) {
+                            // if there is exist a join table with that category and that account
+                            PembacaKategori.update({
+                                jumlah : sequelize.literal('jumlah + 1')
+                            }, { where : {id_pembaca : readerId, id_kategori : catId}});
+                        }
+                        else{
+                            // if there is no join table with that category and taht account
+                            async function count() {
+                                await account.addCount(category);
+                                await PembacaKategori.update({
+                                    jumlah : sequelize.literal('jumlah + 1')
+                                }, { where : {id_pembaca : readerId, id_kategori : catId}});
+                            }
+                            count();
+                        }
+                    });
+                    // Like -- add to 'menyukai' table
+                    async function like() {
+                        await account.addLike(news);
+                        await news.update({
+                            jumlah_likes : sequelize.literal('jumlah_likes + 1')
+                        }, { where : { id_berita : newsId}});
+                    }
+                    like();
+                    
+                    res.status(201).json({
+                        message: `Success like news with id : ${newsId}`
+                    });
+                }
+            });
+        } else {
+            res.status(404).json({
+                message: `Data not found`
+            });
+        }
+    } catch (err) {
+        next(err);
     }
 }
 
