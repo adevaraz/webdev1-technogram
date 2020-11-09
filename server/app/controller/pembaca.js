@@ -1,6 +1,6 @@
 const Pembaca = require('../model/pembaca');
 const Berita = require('../model/berita');
-const { Op } = require("sequelize");
+const { Op, NUMBER } = require("sequelize");
 const sequelize = require("../util/database");
 const jwt = require('jsonwebtoken');
 const cache = require("../util/cache");
@@ -219,7 +219,20 @@ exports.likeNews = async(req, res, next) => {
                         }, { where : {id_pembaca : readerId, id_kategori : catId}});
                         await PembacaKategori.destroy({
                             where : { jumlah : 0 }
-                        })
+                        });
+                        var id_cat = await PembacaKategori.max('jumlah', {
+                            where : {id_pembaca : readerId, id_kategori : catId}
+                        });
+                        if(await Number.isNaN(id_cat)){
+                            await Pembaca.update({ most_liked_category : null},{
+                                where : {id_pembaca : readerId}
+                            });
+                        }
+                        else{
+                            await Pembaca.update({ most_liked_category : id_cat},{
+                                where : {id_pembaca : readerId}
+                            });
+                        }
                     }
                     unlike();
                     
@@ -230,22 +243,16 @@ exports.likeNews = async(req, res, next) => {
                 } else {
                     // checking join table
                     account.hasCount(category).then(function(exist) {
-                        if(exist) {
-                            // if there is exist a join table with that category and that account
-                            PembacaKategori.update({
+                        // if there is no join table with that category and taht account
+                        async function count() {
+                            if(!exist){
+                                await account.addCount(category);
+                            }
+                            await PembacaKategori.update({
                                 jumlah : sequelize.literal('jumlah + 1')
                             }, { where : {id_pembaca : readerId, id_kategori : catId}});
                         }
-                        else{
-                            // if there is no join table with that category and taht account
-                            async function count() {
-                                await account.addCount(category);
-                                await PembacaKategori.update({
-                                    jumlah : sequelize.literal('jumlah + 1')
-                                }, { where : {id_pembaca : readerId, id_kategori : catId}});
-                            }
-                            count();
-                        }
+                        count();
                     });
                     // Like -- add to 'menyukai' table
                     async function like() {
@@ -253,6 +260,12 @@ exports.likeNews = async(req, res, next) => {
                         await news.update({
                             jumlah_likes : sequelize.literal('jumlah_likes + 1')
                         }, { where : { id_berita : newsId}});
+                        var id_cat = await PembacaKategori.max('jumlah', {
+                            where : {id_pembaca : readerId, id_kategori : catId}
+                        });
+                        await Pembaca.update({ most_liked_category : id_cat},{
+                            where : {id_pembaca : readerId}
+                        });
                     }
                     like();
                     
@@ -261,6 +274,15 @@ exports.likeNews = async(req, res, next) => {
                     });
                 }
             });
+            // async function updateMostLiked() {
+            //     var id_cat = await PembacaKategori.max('jumlah', {
+            //         where : {id_pembaca : readerId, id_kategori : catId}
+            //     });
+            //     await Pembaca.update({ most_liked_category : id_cat},{
+            //         where : {id_pembaca : readerId}
+            //     });
+            // }
+            // updateMostLiked();
         } else {
             res.status(404).json({
                 message: `Data not found`
