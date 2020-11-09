@@ -84,3 +84,11 @@ router.post("/save-news", pembacaController.saveNews);
 router.get('/notification/:id' , pembacaController.getUserNotification);
 module.exports = router;
 
+/**
+ * @author 17 MU
+ * 
+ * Route untuk menyukai berita (like berita)
+ */
+router.post("/like-news", pembacaController.likeNews);
+
+module.exports = router;

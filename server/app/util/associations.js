@@ -51,12 +51,14 @@ const setAssociations = () => {
     });
     
     Pembaca.belongsToMany(Kategori , {
-        through : PembacaKategori,
+        through : 'pembaca_kategori',
+        as : 'count',
         foreignKey : 'id_pembaca'
     });
 
     Kategori.belongsToMany(Pembaca , {
-        through : PembacaKategori,
+        through : 'pembaca_kategori',
+        as : 'count',
         foreignKey : 'id_kategori' 
     });
 };
