@@ -279,7 +279,8 @@ exports.signin = async(req, res, next) => {
             }
         })
         if(pembaca){
-            const isPasswordTrue = password===pembaca.password;
+            // const isPasswordTrue = password===pembaca.password;
+            const isPasswordTrue = await bcrypt.compare(password, pembaca.password);
             //bcrypt.compare(password, pembaca.password)
             if (!isPasswordTrue) {
                 const error = new Error("Invalid credential");

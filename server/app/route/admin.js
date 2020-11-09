@@ -2,7 +2,7 @@ const express = require("express");
 const adminController = require("../controller/admin");
 const authenticate = require('../middleware/authentication');
 const {validate} = require("../middleware/validation");
-const {adminValidationRules} = require("../middleware/validators/admin");
+const {createAdminValidationRules, updateAdminValidationRules, signInAdminValidationRules} = require("../middleware/validators/admin");
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ const router = express.Router();
 *
 * Route untuk membuat admin baru
 */
-router.post("/new-admin", adminValidationRules(), validate, adminController.create);
+router.post("/new-admin", createAdminValidationRules(), validate, adminController.create);
 
 /**
 * @author 17 MU
@@ -39,7 +39,7 @@ router.delete("/delete-all-admin", adminController.deleteAllAdmin);
 *
 * Route untuk update Admin by Id
 */
-router.put("/update-admin/:id", adminValidationRules(), validate, adminController.updateAdminById);
+router.put("/update-admin/:id", updateAdminValidationRules(), validate, adminController.updateAdminById);
 
 module.exports = router;
 
@@ -48,7 +48,7 @@ module.exports = router;
 
   Route  Untuk signin Admin 
 */
-router.post("/signin" , adminController.signin);
+router.post("/signin" , signInAdminValidationRules(), validate, adminController.signin);
 
 /*
     16 MN
