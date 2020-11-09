@@ -75,4 +75,12 @@ router.post("/sign-out", authentication.validateUser, pembacaController.signout)
  */
 router.post("/save-news", pembacaController.saveNews);
 
+
+/**
+ * @author 17 MU
+ * 
+ * Route untuk menyukai berita (like berita)
+ */
+router.post("/like-news", pembacaController.likeNews);
+
 module.exports = router;
