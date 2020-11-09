@@ -32,6 +32,8 @@ const validateToken = async ( req  , role) => {
             const key = role + decodedToken.id.toString()
             const userRequest = await cache.getAsync(key);
             const userCache = JSON.parse(userRequest);
+            console.log(decodedToken.iat);
+            console.log(userCache.lastPasswordChange);
             if(userCache.isDeleted || decodedToken.iat < userCache.lastPasswordChange){
                 const error = new Error('Invalid credential')
                 error.statusCode = 401;

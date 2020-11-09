@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
+const socket = require('./app/util/socket');
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
 const pembacaRoutes = require('./app/route/pembaca')
@@ -72,9 +73,10 @@ const init = async () => {
     await sequelize.sync();
     // set port, listen for requests
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}.`);
     });
+    socket.init(server);
   } catch (err) {
     console.log(err);
   }

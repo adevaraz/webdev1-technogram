@@ -77,6 +77,14 @@ router.post("/save-news", pembacaController.saveNews);
 
 
 /**
+ * @author 16 MN
+ * 
+ * Route untuk mendapatkan notifikasi
+ */
+router.get('/notification/:id' , pembacaController.getUserNotification);
+module.exports = router;
+
+/**
  * @author 17 MU
  * 
  * Route untuk menyukai berita (like berita)
