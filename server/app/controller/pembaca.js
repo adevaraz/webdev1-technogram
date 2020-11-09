@@ -96,18 +96,12 @@ exports.getById = async (req, res, next) => {
 */
 exports.update = async (req, res, next) => {
   //karena sudah ada validator maka request pasti valid.
-  const id = req.params.id;
+  const id = req.decodedToken.id;
   const username = req.body.username;
   const email = req.body.email;
   let password = req.body.password;
   let accessToken;
   try {
-    if (id != req.decodedToken.id) {
-      const error = new Error("Not your id");
-      error.statusCode = 401;
-      error.cause = "Not your id";
-      throw error;
-    }
     let lastPasswordChange;
     const account = await Pembaca.findByPk(id);
     if (account != null) {
