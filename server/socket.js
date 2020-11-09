@@ -2,8 +2,13 @@ let io;
 
 module.exports = {
     init: httpServer => {
-        io = require('socket.io')(httpServer);
+        io = require('socket.io')(httpServer , {
+            cors : {
+                
+            }
+        });
         io.on('connection' , socket => {
+            console.log('user connected');
             socket.on('room' , (roomid) => {
                 socket.join(roomid);
             })

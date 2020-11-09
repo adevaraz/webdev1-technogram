@@ -24,7 +24,7 @@ router.get("/all-account", pembacaController.getAll);
  * 
  * Route untuk mengambil satu akun pembaca berdasarkan id
  */
-router.get("/:id", pembacaController.getById);
+router.get("/getbyid", pembacaController.getById);
 
 /**
  * @author 23 NM
@@ -81,6 +81,8 @@ router.post("/save-news", pembacaController.saveNews);
  * 
  * Route untuk mendapatkan notifikasi
  */
-router.get('/notification/:id' , pembacaController.getUserNotification);
+router.get('/notifikasi' , authentication.validateUser, pembacaController.getUserNotification);
+
+
 module.exports = router;
 

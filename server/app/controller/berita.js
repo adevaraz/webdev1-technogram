@@ -4,6 +4,10 @@ const sequelize = require("../util/database");
 const fs = require("fs");
 const path = require("path");
 const fsExtra = require("fs-extra");
+const Kategori = require('../model/kategori');
+const PembacaKategori = require('../model/pembacaKategori');
+const Pembaca = require('../model/pembaca');
+const socket = require('../../socket');
 
 
 /*
@@ -18,6 +22,8 @@ exports.create = async (req, res, next) => {
         if (req.file) {
             filePath = req.file.path.replace(/\\/gi, "/");
         }
+
+        
 
         // Create a news
         const berita = {
@@ -60,13 +66,15 @@ exports.updatePublish = async(req, res, next) => {
         const news = await Berita.findByPk(id)
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
-            news.save();
+            await news.save();
+            await notifyDeleteBerite(news);
         } else {
             console.log(news.waktu_publikasi)
             const now = new Date()
             news.waktu_publikasi=now;
             news.id_admin_publikasi=idAdmin;
-            news.save();
+            await news.save();
+            await notifyNewBerita(news);
         }
         res.status(200).json({
             message: 'Successfully update publish',
@@ -198,6 +206,7 @@ exports.delete = async (req, res, next) => {
         //jika result === 1 maka record berhasil di delete
         if (result === 1) {
             if (news.url_gambar) deleteImage(news.url_gambar); //delete gambar nya
+            notifyDeleteBerite(news)
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
@@ -388,3 +397,62 @@ exports.getNewsById = async (req, res, next) => {
         next(err);
     }
 };
+
+const notifyDeleteBerite = async (berita) => {
+    const kategori = await Kategori.findOne({
+        where : {
+            nama_kategori : berita.kategori_berita
+        }
+    })
+    if(!kategori){
+        const error = new Error('Invalid Category');
+        error.statusCode = 401;
+        throw error;
+    }
+    const listOfPembaca = await Pembaca.findAll({
+        where : {
+            most_liked_category : kategori.id_kategori
+        }
+    });
+    for(const pembaca in listOfPembaca){
+        await pembaca.removeNotification(berita);
+    }
+    const key = berita.kategori_berita
+    socket.getIO().to(key).emit('notification',{
+        action : 'remove',
+        message : 'New Notification',
+        data : berita
+    })    
+}
+
+const notifyNewBerita = async (berita) => {
+    const kategori = await Kategori.findOne({
+        where : {
+            nama_kategori : berita.kategori_berita
+        }
+    })
+    if(!kategori){
+        const error = new Error('Invalid Category');
+        error.statusCode = 401;
+        throw error;
+    }
+    const listOfPembaca = await Pembaca.findAll({
+        where : {
+            most_liked_category : kategori.id_kategori
+        }
+    });
+    console.log(listOfPembaca);
+    if(listOfPembaca.length > 0){
+        for(const pembaca in listOfPembaca){
+            await pembaca.addNotification(berita);
+        }
+    }
+    const key = berita.kategori_berita
+    socket.getIO().to(key).emit('notification',{
+        action : 'create',
+        message : 'New Notification',
+        data : berita
+    })
+
+    
+}
