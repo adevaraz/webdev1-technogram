@@ -7,15 +7,15 @@ const USER_REFRESHTOKEN_EXPIRED = 60 * 60 * 24 * 7;
 // User Cache Expired  , access token + 2 minutes (to make sure all token expired)
 const USER_REDIS_EXPIRED = USER_ACCESSTOKEN_EXPIRED  + 2 *60
 
-// User Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
+// Admin Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
 const ADMIN_ACCESSTOKEN_EXPIRED = 60 * 60
 
 
-//User Refresh token expired in 2 days (calculated in seconds )
+//Admin Refresh token expired in 2 days (calculated in seconds )
 const ADMIN_REFRESHTOKEN_EXPIRED = 60 * 60 * 24 * 2;
 
 
-// User Cache Expired  , access token + 2 minutes (to make sure all token expired)
+// Admin Cache Expired  , access token + 2 minutes (to make sure all token expired)
 const ADMIN_REDIS_EXPIRED = ADMIN_ACCESSTOKEN_EXPIRED  + 2 *60
 
 
