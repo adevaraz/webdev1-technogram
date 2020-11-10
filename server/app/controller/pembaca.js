@@ -457,6 +457,11 @@ exports.signout = async (req, res, err) => {
   }
 };
 
+/**
+ * @author 16 MN
+ *
+ * Mengambil notifikasi
+ */
 exports.getUserNotification = async (req, res, next) => {
   try {
     const id = req.params.id; // Ganti jadi token kalo udah di test
@@ -484,6 +489,11 @@ exports.getUserNotification = async (req, res, next) => {
   }
 };
 
+/**
+ * @author 16 MN
+ *
+ * Fungsi untuk membuat token pembaca
+ */
 const createPembacaToken = async (pembaca) => {
   const accessToken = jwt.sign(
     {

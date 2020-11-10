@@ -2,7 +2,7 @@ const express = require("express");
 const adminController = require("../controller/admin");
 const authenticate = require('../middleware/authentication');
 const {validate} = require("../middleware/validation");
-const {adminValidationRules} = require("../middleware/validators/admin");
+const {createAdminValidationRules, updateAdminValidationRules, signInAdminValidationRules} = require("../middleware/validators/admin");
 
 const router = express.Router();
 
@@ -10,8 +10,11 @@ const router = express.Router();
 * @author 17 MU
 *
 * Route untuk membuat admin baru
+*
+* @author KP -- modifikasi menambahkan autentikasi admin
+* @author RA -- modifikasi menambahkan validasi admin
 */
-router.post("/new-admin", authenticate.validateAdmin, adminValidationRules(), validate, adminController.create);
+router.post("/new-admin", authenticate.validateAdmin, createAdminValidationRules(), validate, adminController.create);
 
 /**
 * @author 17 MU
@@ -24,13 +27,17 @@ router.get("/all-admin", adminController.getAllAdmin);
 * @author 17 MU
 *
 * Route untuk menghapus Admin by Id
+*
+* @author AP -- modifikasi menambahkan autentikasi admin
 */
-router.delete("/delete-admin/:id",authenticate.validateAdmin, adminController.deleteAdminById);
+router.delete("/delete-admin/:id", authenticate.validateAdmin, adminController.deleteAdminById);
 
 /**
 * @author 17 MU
 *
 * Route untuk menghapus Admin by Id
+*
+* @author AP -- modifikasi menambahkan autentikasi admin
 */
 router.delete("/delete-all-admin", authenticate.validateAdmin, adminController.deleteAllAdmin);
 
@@ -38,17 +45,18 @@ router.delete("/delete-all-admin", authenticate.validateAdmin, adminController.d
 * @author 17 MU
 *
 * Route untuk update Admin by Id
+*
+* @author KP -- modifikasi menambahkan autentikasi admin
+* @author RA -- modifikasi menambahkan validasi admin
 */
-router.put("/update-admin/:id",authenticate.validateAdmin, adminValidationRules(), validate, adminController.updateAdminById);
-
-module.exports = router;
+router.put("/update-admin/:id", authenticate.validateAdmin, updateAdminValidationRules(), validate, adminController.updateAdminById);
 
 /*
-    16 MN
+  16 MN
 
   Route  Untuk signin Admin 
 */
-router.post("/signin" , adminController.signin);
+router.post("/signin" , signInAdminValidationRules(), validate, adminController.signin);
 
 /*
     16 MN
