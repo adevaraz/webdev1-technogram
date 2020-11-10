@@ -11,7 +11,7 @@ const router = express.Router();
 *
 * Route untuk membuat admin baru
 */
-router.post("/new-admin", adminValidationRules(), validate, adminController.create);
+router.post("/new-admin", authenticate.validateAdmin, adminValidationRules(), validate, adminController.create);
 
 /**
 * @author 17 MU
@@ -25,21 +25,21 @@ router.get("/all-admin", adminController.getAllAdmin);
 *
 * Route untuk menghapus Admin by Id
 */
-router.delete("/delete-admin/:id", adminController.deleteAdminById);
+router.delete("/delete-admin/:id",authenticate.validateAdmin, adminController.deleteAdminById);
 
 /**
 * @author 17 MU
 *
 * Route untuk menghapus Admin by Id
 */
-router.delete("/delete-all-admin", adminController.deleteAllAdmin);
+router.delete("/delete-all-admin", authenticate.validateAdmin, adminController.deleteAllAdmin);
 
 /**
 * @author 17 MU
 *
 * Route untuk update Admin by Id
 */
-router.put("/update-admin/:id", adminValidationRules(), validate, adminController.updateAdminById);
+router.put("/update-admin/:id",authenticate.validateAdmin, adminValidationRules(), validate, adminController.updateAdminById);
 
 module.exports = router;
 
@@ -52,7 +52,7 @@ router.post("/signin" , adminController.signin);
 
 /*
     16 MN
-    Route untuk signin admin
+    Route untuk signout admin
 */
 router.post("/signout",authenticate.validateAdmin , adminController.signout);
 
