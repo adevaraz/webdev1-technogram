@@ -22,7 +22,7 @@ const createPembacaValidationRules = () => {
         body('email')
             .trim()
             .notEmpty().withMessage("Email tidak boleh kosong.")
-            .isEmail().withMessage("Email harus bentuk email yang valid.")
+            .isEmail().withMessage("Email harus berformat email yang valid.")
             .custom(async(value) => {
                 let isExist = await Pembaca.findOne({
                     where: {
@@ -71,7 +71,7 @@ const updatePembacaValidationRules = () => {
         body('email')
             .trim()
             .notEmpty().withMessage("Email tidak boleh kosong.")
-            .isEmail().withMessage("Email harus bentuk email yang valid.")
+            .isEmail().withMessage("Email harus berformat email yang valid.")
             .custom(async (value, {req}) => {
                 let oldPembaca = await Pembaca.findByPk(req.params.id);
                 if(!oldPembaca) {
@@ -104,7 +104,7 @@ const pembacaSignInValidationRules = () => {
         body('email')
             .trim()
             .notEmpty().withMessage("Email tidak boleh kosong.")
-            .isEmail().withMessage("Email harus bentuk email yang valid."),
+            .isEmail().withMessage("Email harus berformat email yang valid."),
         body('password')
             .trim()
             .notEmpty().withMessage("Password tidak boleh kosong.")
