@@ -3,8 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cache = require("../util/cache");
 const sequelize = require("../util/database");
+const {AdminConst : AdminAuthConst} = require('../util/authConst');
 
 /**
+ * 
+ *
  * @author 17 MU
  *
  * Membuat berita
@@ -14,6 +17,7 @@ const sequelize = require("../util/database");
  */
 exports.create = async (req, res, next) => {
   try {
+
     //karena sudah ada validator maka request body pasti valid.
     const admin = {
       username: req.body.username,
@@ -124,6 +128,9 @@ exports.deleteAllAdmin = async (req, res, next) => {
  *
  * @author 28 RA
  * Add validator and Encrypt password functionality with bcrypt
+ * 
+ * @Author 16 MN
+ * Menambahakan Token baru refresh dan access , saat user mengganti password
  */
 exports.updateAdminById = async (req, res, next) => {
   try {
@@ -149,7 +156,9 @@ exports.updateAdminById = async (req, res, next) => {
       let hash = await bcrypt.hash(req.body.password, salt);
       req.body.password = hash;
       oldAdmin.last_changed_pwd = Math.floor(new Date().getTime() / 1000);
-      token = await createNewToken(oldAdmin);
+      token = await createAccessToken(oldAdmin);
+      await createRefreshToken(oldAdmin ,res)
+
     } else {
       req.body.password = oldAdmin.password;
     }
@@ -214,8 +223,8 @@ exports.signin = async (req, res, next) => {
       throw error;
     }
 
-    const token = await createNewToken(admin);
-
+    const token = await createAccessToken(admin);
+    await createRefreshToken(admin , res);
     res.status(200).json({
       token: token,
       message: "Success Login",
@@ -229,7 +238,7 @@ exports.signin = async (req, res, next) => {
     16 MN
     Untuk signout admin
   */
-exports.signout = async (req, res, next) => {
+ exports.signout = async (req, res, next) => {
   try {
     const decodedToken = req.decodedToken;
     const token = req.token;
@@ -243,6 +252,7 @@ exports.signout = async (req, res, next) => {
         JSON.stringify({ isInvalid: false })
       );
     }
+    nulifyClientRefreshToken(res);
     res.json({
       message: "Success Log out",
     });
@@ -251,19 +261,101 @@ exports.signout = async (req, res, next) => {
   }
 };
 
-const createNewToken = async (admin) => {
+
+/*
+@author 16 MN
+membuat access token menggunakan refresh token bagi admin
+*/
+exports.getAccessToken = async (req , res , next ) => {
+  try{
+    const refreshToken = req.signedCookies['refresh'];
+    if(!refreshToken){
+      const error = new Error('Not auhtorized');
+      error.statusCode = 403;
+      throw error;
+    }
+    const decodedRefreshToken = jwt.verify(refreshToken , process.env.JWT_REFRESH_KEY);
+    
+    if(decodedRefreshToken.roles !== process.env.ADMIN_PREFIX){
+      const error = new Error('Forbidden access');
+      error.statusCode = 401;
+      error.cause = 'You are not allowed to access this route , please contact your administrator'
+      throw error;
+    }
+    const adminId = decodedRefreshToken.id
+    const admin = await Admin.findByPk(adminId);
+    
+    if(!admin){
+      const error = new Error('User with such token not found');
+      error.statusCode = 401;
+      error.cause = 'You are account might be deleted'
+      throw error;
+    }
+    
+    console.log(admin.last_changed_pwd);
+    console.log(decodedRefreshToken.iat);
+    if(admin.last_changed_pwd > decodedRefreshToken.iat){
+      const error = new Error('Invalid token');
+      error.statusCode = 401;
+      error.cause = 'You might re-login to access this route'
+      throw error;      
+    }
+    
+    const newToken = await createAccessToken(admin);
+
+    res.status(201).json({
+      message : 'success create new access token',
+      token : newToken
+    })
+
+  }catch(err){
+    next(err);
+  }
+}
+
+/*
+@author 16 MN
+membuat refresh token bagi admin
+*/
+const createRefreshToken = async (admin , res) => {
+  const token = jwt.sign(
+    {
+      id: admin.id_admin,
+      roles: process.env.ADMIN_PREFIX
+    },
+    process.env.JWT_REFRESH_KEY,
+    { expiresIn: AdminAuthConst.ADMIN_REFRESHTOKEN_EXPIRED}
+  );
+
+  /*
+   Refresh token expire time ===  COOKIES EXPIRED , so when refresh token is expired , then
+   the refresh token in the cookies will also be expired/deleted
+   */
+  res.cookie('refresh' , token , {
+    signed : true,
+    maxAge :  AdminAuthConst.ADMIN_COOKIES_EXPIRED,
+    httpOnly  : true
+  })
+  return token; 
+}
+
+/*
+@author 16 MN
+membuat Access token bagi admin
+*/
+const createAccessToken = async (admin) => {
   const token = jwt.sign(
     {
       id: admin.id_admin,
       roles: process.env.ADMIN_PREFIX,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: 60 * 15 }
+    { expiresIn: AdminAuthConst.ADMIN_ACCESSTOKEN_EXPIRED }
   );
   const key = process.env.ADMIN_PREFIX + admin.id_admin.toString();
   await cache.settextAsync(
     key,
-    60 * 17,
+    AdminAuthConst.ADMIN_REDIS_EXPIRED, 
     JSON.stringify({
       isDeleted: false,
       lastPasswordChange: admin.last_changed_pwd,
@@ -271,3 +363,16 @@ const createNewToken = async (admin) => {
   );
   return token;
 };
+
+/*
+@author 16 MN
+ - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+(digunakan ketika log out)
+*/
+const nulifyClientRefreshToken = (res) => {
+  res.cookie('refresh' , '' , {
+    maxAge :  0,
+    httpOnly  : true,
+    signed : true
+  })
+}

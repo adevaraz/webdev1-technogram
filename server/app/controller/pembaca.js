@@ -7,7 +7,7 @@ const cache = require("../util/cache");
 const bcrypt = require("bcryptjs");
 const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
-
+const {UserConst : UserAuthConst} = require('../util/authConst');
 /**
  * @author 31 ZV
  *
@@ -113,7 +113,9 @@ exports.update = async (req, res, next) => {
         lastPasswordChange = Math.floor(new Date().getTime() / 1000);
         account.last_changed_pwd = lastPasswordChange;
         //generate token
-        accessToken = await createPembacaToken(account);
+        accessToken = await createAccessToken(account);
+        await createRefreshToken(account,res)
+        
       } else {
         password = account.password;
         lastPasswordChange = account.lastPasswordChange;
@@ -215,7 +217,7 @@ exports.deleteAll = async (req, res, next) => {
  * Menyukai berita (Like)
  */
 exports.likeNews = async(req, res, next) => {
-    const readerId = req.query.account;
+    const readerId = req.decodedToken.id;
     const newsId = req.query.news;
     const catId = req.query.category;
 
@@ -310,7 +312,7 @@ exports.likeNews = async(req, res, next) => {
  * Menyimpan berita (bookmark berita)
  */
 exports.saveNews = async (req, res, next) => {
-  const readerId = req.query.account;
+  const readerId = req.decodedToken.id;
   const newsId = req.query.news;
 
   try {
@@ -404,8 +406,8 @@ exports.signin = async (req, res, next) => {
         throw error;
       }
       //generate token 
-      const accessToken = await createPembacaToken(pembaca);
-
+      const accessToken = await createAccessToken(pembaca);
+      await createRefreshToken(pembaca,res);
       res.status(200).json({
         message: "sign in Success",
         token: accessToken
@@ -440,6 +442,7 @@ exports.signout = async (req, res, err) => {
         JSON.stringify({ isInvalid: false })
       );
     }
+    nullifyClientRefreshToken(res);
     res.json({
       message: "Success Log out",
     });
@@ -480,25 +483,98 @@ exports.getUserNotification = async (req, res, next) => {
   }
 };
 
-/**
- * @author 16 MN
- *
- * Fungsi untuk membuat token pembaca
- */
-const createPembacaToken = async (pembaca) => {
+/*
+@author 16 MN
+membuat accestoken dari refresh token yang diberikan oleh pembaca
+*/
+exports.getAccessToken = async (req , res , next ) => {
+  try{
+    const refreshToken = req.signedCookies['refresh'];
+    if(!refreshToken){
+      const error = new Error('Not auhtorized');
+      error.statusCode = 403;
+      throw error;
+    }
+    const decodedRefreshToken = jwt.verify(refreshToken , process.env.JWT_REFRESH_KEY);
+    
+    if(decodedRefreshToken.roles !== process.env.PEMBACA_PREFIX){
+      const error = new Error('Forbidden access');
+      error.statusCode = 401;
+      error.cause = 'You are not allowed to access this route , please contact your administrator'
+      throw error;
+    }
+    const pembacaId = decodedRefreshToken.id
+    const pembaca = await Pembaca.findByPk(pembacaId);
+    
+    if(!pembaca){
+      const error = new Error('User with such token not found');
+      error.statusCode = 401;
+      error.cause = 'You are account might be deleted'
+      throw error;
+    }
+    
+    if(pembaca.last_changed_pwd > decodedRefreshToken.iat){
+      const error = new Error('Invalid token');
+      error.statusCode = 401;
+      error.cause = 'You might re-login to access this route'
+      throw error;      
+    }
+    
+    const newToken = await createAccessToken(pembaca);
+
+    res.status(201).json({
+      message : 'success create new access token',
+      token : newToken
+    })
+
+  }catch(err){
+    next(err);
+  }
+}
+
+/*
+@author 16 MN
+membuat refresh token bagi pembaca
+*/
+const createRefreshToken = async (pembaca , res) => {
+  const token = jwt.sign(
+    {
+      id: pembaca.id_pembaca,
+      roles: process.env.PEMBACA_PREFIX,
+    },
+    process.env.JWT_REFRESH_KEY,
+    { expiresIn: UserAuthConst.USER_REFRESHTOKEN_EXPIRED}
+  );
+  /*
+   Refresh token expire time ===  COOKIES EXPIRED , so when refresh token is expired , then
+   the refresh token in the cookies will also be expired/deleted
+   */  
+  res.cookie('refresh' , token , {
+    signed : true,
+    maxAge :  UserAuthConst.USER_COOKIES_EXPIRED,
+    httpOnly  : true
+  })
+  return token; 
+}
+
+/*
+@author 16 MN
+membuat access token bagi pembaca
+*/
+
+const createAccessToken = async (pembaca) => {
   const accessToken = jwt.sign(
     {
       id: pembaca.id_pembaca,
       roles: process.env.PEMBACA_PREFIX,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: 60 * 15 }
+    { expiresIn: UserAuthConst.USER_ACCESSTOKEN_EXPIRED }
   );
-  console.log(pembaca.last_changed_pwd);
   const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
   await cache.settextAsync(
     key,
-    60 * 17,
+    UserAuthConst.USER_REDIS_EXPIRED,
     JSON.stringify({
       isDeleted: false,
       lastPasswordChange: pembaca.last_changed_pwd,
@@ -506,3 +582,17 @@ const createPembacaToken = async (pembaca) => {
   );
   return accessToken;
 }
+
+/*
+@author 16 MN
+ - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+(digunakan ketika log out)
+*/
+const nullifyClientRefreshToken = (res) =>{
+  res.cookie('refresh' , '' , {
+    maxAge :  0,
+    httpOnly  : true,
+    signed : true
+  })
+}
+
