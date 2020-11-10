@@ -24,14 +24,14 @@ router.get("/all-account", pembacaController.getAll);
  * 
  * Route untuk mengambil satu akun pembaca berdasarkan id
  */
-router.get("/:id", pembacaController.getById);
+router.get("/get-by-id", pembacaController.getById);
 
 /**
  * @author 23 NM
  * 
  * Route untuk update akun
  */
-router.put("/update/:id", authentication.validateUser, updatePembacaValidationRules(), validate, pembacaController.update);
+router.put("/update", authentication.validateUser, updatePembacaValidationRules(), validate, pembacaController.update);
 
 /**
  * @author 23 NM
@@ -52,7 +52,7 @@ router.delete("/delete-all",authentication.validateAdmin, pembacaController.dele
  * 
  * Route untuk mendapatkan berita yang di save pembaca
  */
-router.get("/get-save/:id", authentication.validateUser, pembacaController.getSave);
+router.get("/get-save", authentication.validateUser, pembacaController.getSave);
 
 /**
  * @author 14 KP
@@ -81,8 +81,7 @@ router.post("/save-news", authentication.validateUser, pembacaController.saveNew
  * 
  * Route untuk mendapatkan notifikasi
  */
-router.get('/notification/:id' , authentication.validateUser, pembacaController.getUserNotification);
-module.exports = router;
+router.get('/notifikasi' , authentication.validateUser, pembacaController.getUserNotification);
 
 /**
  * @author 17 MU

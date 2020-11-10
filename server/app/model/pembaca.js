@@ -21,11 +21,11 @@ const Pembaca = sequelize.define("pembaca", {
         type: Sequelize.STRING,
         allowNull: false
     },
+    most_liked_category: {
+        type : Sequelize.INTEGER
+    },
     last_changed_pwd : {
         type : Sequelize.BIGINT,
-    },
-    most_liked_category : {
-        type : Sequelize.INTEGER,
     }
 });
 

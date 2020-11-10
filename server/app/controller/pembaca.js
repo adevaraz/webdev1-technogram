@@ -73,7 +73,7 @@ exports.getAll = async (req, res, next) => {
  */
 exports.getById = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id = req.decodedToken.id;
 
     const result = await Pembaca.findByPk(id);
     console.log(result.last_changed_pwd);
@@ -294,15 +294,6 @@ exports.likeNews = async(req, res, next) => {
                     });
                 }
             });
-            // async function updateMostLiked() {
-            //     var id_cat = await PembacaKategori.max('jumlah', {
-            //         where : {id_pembaca : readerId, id_kategori : catId}
-            //     });
-            //     await Pembaca.update({ most_liked_category : id_cat},{
-            //         where : {id_pembaca : readerId}
-            //     });
-            // }
-            // updateMostLiked();
         } else {
             res.status(404).json({
                 message: `Data not found`
@@ -361,7 +352,7 @@ exports.saveNews = async (req, res, next) => {
  Mendapatkan berita yang disimpan oleh pembaca
 */
 exports.getSave = async (req, res, next) => {
-  const id = req.params.id;
+  const id = req.decodedToken.id;
   console.log(id);
   try {
     const saved = await Pembaca.findAll({
@@ -464,11 +455,12 @@ exports.signout = async (req, res, err) => {
  */
 exports.getUserNotification = async (req, res, next) => {
   try {
-    const id = req.params.id; // Ganti jadi token kalo udah di test
-    const result = Pembaca.findByPk(id, {
+    const id = req.decodedToken.id
+    const result = await Pembaca.findByPk(id, {
       include: [
         {
           model: Berita,
+          as : 'notification'
         },
       ],
     });
@@ -478,7 +470,6 @@ exports.getUserNotification = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-
     console.log(result);
     res.status(200).json({
       message: "Success retrieve user notification",
