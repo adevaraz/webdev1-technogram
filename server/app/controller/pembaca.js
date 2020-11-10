@@ -96,18 +96,12 @@ exports.getById = async (req, res, next) => {
 */
 exports.update = async (req, res, next) => {
   //karena sudah ada validator maka request pasti valid.
-  const id = req.params.id;
+  const id = req.decodedToken.id;
   const username = req.body.username;
   const email = req.body.email;
   let password = req.body.password;
   let accessToken;
   try {
-    if (id != req.decodedToken.id) {
-      const error = new Error("Not your id");
-      error.statusCode = 401;
-      error.cause = "Not your id";
-      throw error;
-    }
     let lastPasswordChange;
     const account = await Pembaca.findByPk(id);
     if (account != null) {
@@ -358,7 +352,7 @@ exports.saveNews = async (req, res, next) => {
  Mendapatkan berita yang disimpan oleh pembaca
 */
 exports.getSave = async (req, res, next) => {
-  const id = req.params.id;
+  const id = req.decodedToken.id;
   console.log(id);
   try {
     const saved = await Pembaca.findAll({
@@ -454,9 +448,13 @@ exports.signout = async (req, res, err) => {
   }
 };
 
+/**
+ * @author 16 MN
+ *
+ * Mengambil notifikasi
+ */
 exports.getUserNotification = async (req, res, next) => {
   try {
-    console.log(req.decodedToken);
     const id = req.decodedToken.id
     const result = await Pembaca.findByPk(id, {
       include: [
@@ -482,7 +480,11 @@ exports.getUserNotification = async (req, res, next) => {
   }
 };
 
-
+/**
+ * @author 16 MN
+ *
+ * Fungsi untuk membuat token pembaca
+ */
 const createPembacaToken = async (pembaca) => {
   const accessToken = jwt.sign(
     {

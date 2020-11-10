@@ -3,14 +3,14 @@ const pembacaController = require("../controller/pembaca");
 const router = express.Router();
 const authentication = require("../middleware/authentication");
 const { validate } = require("../middleware/validation");
-const { pembacaValidationRules } = require("../middleware/validators/pembaca");
+const { createPembacaValidationRules, pembacaSignInValidationRules, updatePembacaValidationRules } = require("../middleware/validators/pembaca");
 
 /**
  * @author 31 ZV
  * 
  * Route untuk membuat akun baru
  */
-router.post("/create", pembacaValidationRules(), validate, pembacaController.create);
+router.post("/create", createPembacaValidationRules(), validate, pembacaController.create);
 
 /**
  * @author 31 ZV
@@ -24,21 +24,21 @@ router.get("/all-account", pembacaController.getAll);
  * 
  * Route untuk mengambil satu akun pembaca berdasarkan id
  */
-router.get("/getbyid", pembacaController.getById);
+router.get("/get-by-id", pembacaController.getById);
 
 /**
  * @author 23 NM
  * 
  * Route untuk update akun
  */
-router.put("/update/:id", authentication.validateUser, pembacaController.update);
+router.put("/update", authentication.validateUser, updatePembacaValidationRules(), validate, pembacaController.update);
 
 /**
  * @author 23 NM
  * 
  * Route untuk delete akun berdasarkan id
  */
-router.delete("/delete/:id", authentication.validateUser, pembacaController.delete);
+router.delete("/delete/:id", authentication.validateAdmin, pembacaController.delete);
 
 /**
  * @author 23 NM
@@ -52,14 +52,14 @@ router.delete("/delete-all",authentication.validateAdmin, pembacaController.dele
  * 
  * Route untuk mendapatkan berita yang di save pembaca
  */
-router.get("/get-save/:id", pembacaController.getSave);
+router.get("/get-save", authentication.validateUser, pembacaController.getSave);
 
 /**
  * @author 14 KP
  * 
  * Route untuk sign in pembaca
  */
-router.post("/sign-in", pembacaController.signin);
+router.post("/sign-in", pembacaSignInValidationRules(), validate, pembacaController.signin);
 
 /**
  * @author 14 KP
@@ -73,7 +73,7 @@ router.post("/sign-out", authentication.validateUser, pembacaController.signout)
  * 
  * Route untuk menyimpan berita (bookmark berita)
  */
-router.post("/save-news", pembacaController.saveNews);
+router.post("/save-news", authentication.validateUser, pembacaController.saveNews);
 
 
 /**
@@ -83,14 +83,11 @@ router.post("/save-news", pembacaController.saveNews);
  */
 router.get('/notifikasi' , authentication.validateUser, pembacaController.getUserNotification);
 
-
-module.exports = router;
-
 /**
  * @author 17 MU
  * 
  * Route untuk menyukai berita (like berita)
  */
-router.post("/like-news", pembacaController.likeNews);
+router.post("/like-news", authentication.validateUser, pembacaController.likeNews);
 
 module.exports = router;

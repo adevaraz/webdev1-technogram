@@ -2,6 +2,7 @@ const express = require("express");
 const beritaController = require("../controller/berita");
 const authenticate = require('../middleware/authentication');
 const uploadPhoto = require('../middleware/imageupload');
+const {newsValidationRules, newsValidate} = require('../middleware/validators/berita');
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const router = express.Router();
 
 Route untuk membuat berita baru
 */
-router.post("/new-news", authenticate.validateAdmin, uploadPhoto.imageUpload, beritaController.create);
+router.post("/new-news", authenticate.validateAdmin, uploadPhoto.imageUpload, newsValidationRules(), newsValidate, beritaController.create);
 
 /*
  @author 14 KP
@@ -51,7 +52,7 @@ router.get("/all-news", beritaController.getAllNews);
 
 Route untuk update berita
 */
-router.put("/update/:id",authenticate.validateAdmin, uploadPhoto.imageUpload, beritaController.update);
+router.put("/update/:id",authenticate.validateAdmin, uploadPhoto.imageUpload, newsValidationRules(), newsValidate,beritaController.update);
 
 /*
  @author 28 RA

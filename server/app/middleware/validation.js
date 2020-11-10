@@ -8,7 +8,7 @@ const validate = (req, res, next) => {
   
     const error = new Error('Input invalid');
     error.statusCode = 422;
-    error.cause = errors.array()
+    error.cause = errors.array();
     next(error);
 }
 
