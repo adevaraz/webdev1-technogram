@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 //nanti disini require route
 const beritaRoutes = require('./app/route/berita')
 const pembacaRoutes = require('./app/route/pembaca')
@@ -8,27 +9,27 @@ const adminRoutes = require('./app/route/admin')
 const kategoriRoutes = require('./app/route/kategori')
 const path = require("path");
 const app = express();
-
+const cors = require('cors');
 //nanti disini require model-model nya
-const Berita = require("./app/model/berita");
-const Pembaca = require("./app/model/pembaca");
-const Admin = require("./app/model/admin");
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
+const { env } = require('process');
 
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+
+/*
+@author 16 MN
+untuk mengatsi cors
+*/
+app.use(cors())
 
 
-// app.use(cors())
+
+/*
+@author 16MN
+untuk parsing cookies 
+*/
+app.use(cookieParser(process.env.COOKIES_SECRET_KEY));
 
 app.use(bodyParser.json());
 

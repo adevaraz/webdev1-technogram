@@ -64,4 +64,10 @@ router.post("/signin" , signInAdminValidationRules(), validate, adminController.
 */
 router.post("/signout",authenticate.validateAdmin , adminController.signout);
 
+/*
+    16 MN
+    Route untuk signout admin
+*/
+router.post('/refresh' ,adminController.getAccessToken);
+
 module.exports = router

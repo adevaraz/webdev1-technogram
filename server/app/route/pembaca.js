@@ -90,4 +90,11 @@ router.get('/notifikasi' , authentication.validateUser, pembacaController.getUse
  */
 router.post("/like-news", authentication.validateUser, pembacaController.likeNews);
 
+/**
+ * @author 16 MN
+ * 
+ * Route untuk request access token menggunakan refresh token
+ */
+router.post('/refresh' , pembacaController.getAccessToken);
+
 module.exports = router;

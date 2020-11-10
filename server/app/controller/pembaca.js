@@ -7,6 +7,7 @@ const cache = require("../util/cache");
 const bcrypt = require("bcryptjs");
 const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
+const { cookie } = require('express-validator');
 
 /**
  * @author 31 ZV
@@ -113,7 +114,14 @@ exports.update = async (req, res, next) => {
         lastPasswordChange = Math.floor(new Date().getTime() / 1000);
         account.last_changed_pwd = lastPasswordChange;
         //generate token
-        accessToken = await createPembacaToken(account);
+        accessToken = await createAccessToken(account);
+        const refreshtoken = await createRefreshToken(account)
+        res.cookie('refresh' , refreshtoken , {
+          signed : true,
+          maxAge :  1000 * 60 * 60 * 24 * 7,
+          httpOnly  : true
+        })
+        
       } else {
         password = account.password;
         lastPasswordChange = account.lastPasswordChange;
@@ -404,8 +412,13 @@ exports.signin = async (req, res, next) => {
         throw error;
       }
       //generate token 
-      const accessToken = await createPembacaToken(pembaca);
-
+      const accessToken = await createAccessToken(pembaca);
+      const refreshtoken = await createRefreshToken(pembaca);
+      res.cookie('refresh' , refreshtoken , {
+        signed : true,
+        maxAge :  1000 * 60 * 60 * 24 * 7,
+        httpOnly  : true
+      })
       res.status(200).json({
         message: "sign in Success",
         token: accessToken
@@ -440,6 +453,11 @@ exports.signout = async (req, res, err) => {
         JSON.stringify({ isInvalid: false })
       );
     }
+    res.cookie('refresh' , '' , {
+      maxAge :  0,
+      httpOnly  : true,
+      signed : true
+    })
     res.json({
       message: "Success Log out",
     });
@@ -480,25 +498,89 @@ exports.getUserNotification = async (req, res, next) => {
   }
 };
 
-/**
- * @author 16 MN
- *
- * Fungsi untuk membuat token pembaca
- */
-const createPembacaToken = async (pembaca) => {
+/*
+@author 16 MN
+membuat accestoken dari refresh token yang diberikan oleh pembaca
+*/
+exports.getAccessToken = async (req , res , next ) => {
+  try{
+    const refreshToken = req.signedCookies['refresh'];
+    if(!refreshToken){
+      const error = new Error('Not auhtorized');
+      error.statusCode = 403;
+      throw error;
+    }
+    const decodedRefreshToken = jwt.verify(refreshToken , process.env.JWT_REFRESH_KEY);
+    
+    if(decodedRefreshToken.roles !== process.env.PEMBACA_PREFIX){
+      const error = new Error('Forbidden access');
+      error.statusCode = 401;
+      error.cause = 'You are not allowed to access this route , please contact your administrator'
+      throw error;
+    }
+    const pembacaId = decodedRefreshToken.id
+    const pembaca = await Pembaca.findByPk(pembacaId);
+    
+    if(!pembaca){
+      const error = new Error('User with such token not found');
+      error.statusCode = 401;
+      error.cause = 'You are account might be deleted'
+      throw error;
+    }
+    
+    if(pembaca.last_changed_pwd > decodedRefreshToken.iat){
+      const error = new Error('Invalid token');
+      error.statusCode = 401;
+      error.cause = 'You might re-login to access this route'
+      throw error;      
+    }
+    
+    const newToken = await createAccessToken(pembaca);
+
+    res.status(201).json({
+      message : 'success create new access token',
+      token : newToken
+    })
+
+  }catch(err){
+    next(err);
+  }
+}
+
+/*
+@author 16 MN
+membuat refresh token bagi pembaca
+*/
+const createRefreshToken = async (pembaca) => {
+  const token = jwt.sign(
+    {
+      id: pembaca.id_pembaca,
+      roles: process.env.PEMBACA_PREFIX,
+    },
+    process.env.JWT_REFRESH_KEY,
+    { expiresIn: 60 * 60 * 24 * 7}
+  );
+  return token; 
+}
+
+/*
+@author 16 MN
+membuat access token bagi pembaca
+*/
+
+const createAccessToken = async (pembaca) => {
   const accessToken = jwt.sign(
     {
       id: pembaca.id_pembaca,
       roles: process.env.PEMBACA_PREFIX,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: 60 * 15 }
+    { expiresIn: 60 * 60 *  2  }
   );
-  console.log(pembaca.last_changed_pwd);
   const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
   await cache.settextAsync(
     key,
-    60 * 17,
+    60 * 60 * 2 + 2*60,
     JSON.stringify({
       isDeleted: false,
       lastPasswordChange: pembaca.last_changed_pwd,
@@ -506,3 +588,4 @@ const createPembacaToken = async (pembaca) => {
   );
   return accessToken;
 }
+

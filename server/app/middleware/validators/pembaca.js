@@ -49,7 +49,7 @@ const updatePembacaValidationRules = () => {
             .notEmpty().withMessage("Username tidak boleh kosong.")
             .isLength({min: 4}).withMessage("Username harus minimal 4 karakter")
             .custom(async (value, {req}) => {
-                let oldPembaca = await Pembaca.findByPk(req.params.id);
+                let oldPembaca = await Pembaca.findByPk(req.decodedToken.id);
                 if(!oldPembaca) {
                     throw new Error(`id Pembaca was not found.`);
                 }
@@ -73,7 +73,7 @@ const updatePembacaValidationRules = () => {
             .notEmpty().withMessage("Email tidak boleh kosong.")
             .isEmail().withMessage("Email harus berformat email yang valid.")
             .custom(async (value, {req}) => {
-                let oldPembaca = await Pembaca.findByPk(req.params.id);
+                let oldPembaca = await Pembaca.findByPk(req.decodedToken.id);
                 if(!oldPembaca) {
                     throw new Error(`id Pembaca was not found.`);
                 }
