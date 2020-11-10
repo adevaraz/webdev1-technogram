@@ -10,8 +10,11 @@ const router = express.Router();
 * @author 17 MU
 *
 * Route untuk membuat admin baru
+*
+* @author KP -- modifikasi menambahkan autentikasi admin
+* @author RA -- modifikasi menambahkan validasi admin
 */
-router.post("/new-admin", createAdminValidationRules(), validate, adminController.create);
+router.post("/new-admin", authenticate.validateAdmin, createAdminValidationRules(), validate, adminController.create);
 
 /**
 * @author 17 MU
@@ -24,27 +27,32 @@ router.get("/all-admin", adminController.getAllAdmin);
 * @author 17 MU
 *
 * Route untuk menghapus Admin by Id
+*
+* @author AP -- modifikasi menambahkan autentikasi admin
 */
-router.delete("/delete-admin/:id", adminController.deleteAdminById);
+router.delete("/delete-admin/:id", authenticate.validateAdmin, adminController.deleteAdminById);
 
 /**
 * @author 17 MU
 *
 * Route untuk menghapus Admin by Id
+*
+* @author AP -- modifikasi menambahkan autentikasi admin
 */
-router.delete("/delete-all-admin", adminController.deleteAllAdmin);
+router.delete("/delete-all-admin", authenticate.validateAdmin, adminController.deleteAllAdmin);
 
 /**
 * @author 17 MU
 *
 * Route untuk update Admin by Id
+*
+* @author KP -- modifikasi menambahkan autentikasi admin
+* @author RA -- modifikasi menambahkan validasi admin
 */
-router.put("/update-admin/:id", updateAdminValidationRules(), validate, adminController.updateAdminById);
-
-module.exports = router;
+router.put("/update-admin/:id", authenticate.validateAdmin, updateAdminValidationRules(), validate, adminController.updateAdminById);
 
 /*
-    16 MN
+  16 MN
 
   Route  Untuk signin Admin 
 */
@@ -52,7 +60,7 @@ router.post("/signin" , signInAdminValidationRules(), validate, adminController.
 
 /*
     16 MN
-    Route untuk signin admin
+    Route untuk signout admin
 */
 router.post("/signout",authenticate.validateAdmin , adminController.signout);
 

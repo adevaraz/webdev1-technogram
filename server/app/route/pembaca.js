@@ -38,7 +38,7 @@ router.put("/update/:id", authentication.validateUser, updatePembacaValidationRu
  * 
  * Route untuk delete akun berdasarkan id
  */
-router.delete("/delete/:id", authentication.validateUser, pembacaController.delete);
+router.delete("/delete/:id", authentication.validateAdmin, pembacaController.delete);
 
 /**
  * @author 23 NM
@@ -52,7 +52,7 @@ router.delete("/delete-all",authentication.validateAdmin, pembacaController.dele
  * 
  * Route untuk mendapatkan berita yang di save pembaca
  */
-router.get("/get-save/:id", pembacaController.getSave);
+router.get("/get-save/:id", authentication.validateUser, pembacaController.getSave);
 
 /**
  * @author 14 KP
@@ -73,6 +73,22 @@ router.post("/sign-out", authentication.validateUser, pembacaController.signout)
  * 
  * Route untuk menyimpan berita (bookmark berita)
  */
-router.post("/save-news", pembacaController.saveNews);
+router.post("/save-news", authentication.validateUser, pembacaController.saveNews);
+
+
+/**
+ * @author 16 MN
+ * 
+ * Route untuk mendapatkan notifikasi
+ */
+router.get('/notification/:id' , authentication.validateUser, pembacaController.getUserNotification);
+module.exports = router;
+
+/**
+ * @author 17 MU
+ * 
+ * Route untuk menyukai berita (like berita)
+ */
+router.post("/like-news", authentication.validateUser, pembacaController.likeNews);
 
 module.exports = router;
