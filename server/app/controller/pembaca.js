@@ -545,9 +545,13 @@ const createRefreshToken = async (pembaca , res) => {
     process.env.JWT_REFRESH_KEY,
     { expiresIn: UserAuthConst.USER_REFRESHTOKEN_EXPIRED}
   );
+  /*
+   Refresh token expire time ===  COOKIES EXPIRED , so when refresh token is expired , then
+   the refresh token in the cookies will also be expired/deleted
+   */  
   res.cookie('refresh' , token , {
     signed : true,
-    maxAge :  UserAuthConst.USER_REFRESHTOKEN_EXPIRED,
+    maxAge :  UserAuthConst.USER_COOKIES_EXPIRED,
     httpOnly  : true
   })
   return token; 
@@ -580,8 +584,9 @@ const createAccessToken = async (pembaca) => {
 }
 
 /*
-*
-*
+@author 16 MN
+ - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+(digunakan ketika log out)
 */
 const nullifyClientRefreshToken = (res) =>{
   res.cookie('refresh' , '' , {

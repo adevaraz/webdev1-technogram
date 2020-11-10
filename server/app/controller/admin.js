@@ -327,16 +327,21 @@ const createRefreshToken = async (admin , res) => {
     { expiresIn: AdminAuthConst.ADMIN_REFRESHTOKEN_EXPIRED}
   );
 
+  /*
+   Refresh token expire time ===  COOKIES EXPIRED , so when refresh token is expired , then
+   the refresh token in the cookies will also be expired/deleted
+   */
   res.cookie('refresh' , token , {
     signed : true,
-    maxAge :  AdminAuthConst.ADMIN_REFRESHTOKEN_EXPIRED,
+    maxAge :  AdminAuthConst.ADMIN_COOKIES_EXPIRED,
     httpOnly  : true
   })
   return token; 
 }
 
 /*
-
+@author 16 MN
+membuat Access token bagi admin
 */
 const createAccessToken = async (admin) => {
   const token = jwt.sign(
@@ -360,8 +365,9 @@ const createAccessToken = async (admin) => {
 };
 
 /*
-*
-*
+@author 16 MN
+ - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+(digunakan ketika log out)
 */
 const nulifyClientRefreshToken = (res) => {
   res.cookie('refresh' , '' , {
