@@ -3,8 +3,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cache = require("../util/cache");
 const sequelize = require("../util/database");
+const {AdminConst : AdminAuthConst} = require('../util/authConst');
 
 /**
+ * 
+ *
  * @author 17 MU
  *
  * Membuat berita
@@ -14,6 +17,7 @@ const sequelize = require("../util/database");
  */
 exports.create = async (req, res, next) => {
   try {
+
     //karena sudah ada validator maka request body pasti valid.
     const admin = {
       username: req.body.username,
@@ -153,12 +157,8 @@ exports.updateAdminById = async (req, res, next) => {
       req.body.password = hash;
       oldAdmin.last_changed_pwd = Math.floor(new Date().getTime() / 1000);
       token = await createAccessToken(oldAdmin);
-      const refreshtoken = await createRefreshToken(oldAdmin)
-      res.cookie('refresh' , refreshtoken , {
-        signed : true,
-        maxAge :  1000 * 60 * 60 * 24 * 2,
-        httpOnly  : true
-      })
+      await createRefreshToken(oldAdmin ,res)
+
     } else {
       req.body.password = oldAdmin.password;
     }
@@ -224,12 +224,7 @@ exports.signin = async (req, res, next) => {
     }
 
     const token = await createAccessToken(admin);
-    const refreshToken = await createRefreshToken(admin);
-    res.cookie('refresh' , refreshToken , {
-      maxAge :  1000 * 60 * 60 * 24 * 2,
-      httpOnly  : true,
-      signed : true
-    })
+    await createRefreshToken(admin , res);
     res.status(200).json({
       token: token,
       message: "Success Login",
@@ -257,11 +252,7 @@ exports.signin = async (req, res, next) => {
         JSON.stringify({ isInvalid: false })
       );
     }
-    res.cookie('refresh' , '' , {
-      maxAge :  0,
-      httpOnly  : true,
-      signed : true
-    })
+    nulifyClientRefreshToken(res);
     res.json({
       message: "Success Log out",
     });
@@ -326,15 +317,21 @@ exports.getAccessToken = async (req , res , next ) => {
 @author 16 MN
 membuat refresh token bagi admin
 */
-const createRefreshToken = async (admin) => {
+const createRefreshToken = async (admin , res) => {
   const token = jwt.sign(
     {
       id: admin.id_admin,
       roles: process.env.ADMIN_PREFIX
     },
     process.env.JWT_REFRESH_KEY,
-    { expiresIn: 60 * 60 * 24 * 2}
+    { expiresIn: AdminAuthConst.ADMIN_REFRESHTOKEN_EXPIRED}
   );
+
+  res.cookie('refresh' , token , {
+    signed : true,
+    maxAge :  AdminAuthConst.ADMIN_REFRESHTOKEN_EXPIRED,
+    httpOnly  : true
+  })
   return token; 
 }
 
@@ -348,12 +345,12 @@ const createAccessToken = async (admin) => {
       roles: process.env.ADMIN_PREFIX,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: 60 * 60  }
+    { expiresIn: AdminAuthConst.ADMIN_ACCESSTOKEN_EXPIRED }
   );
   const key = process.env.ADMIN_PREFIX + admin.id_admin.toString();
   await cache.settextAsync(
     key,
-    60 * 60 + 2*60, 
+    AdminAuthConst.ADMIN_REDIS_EXPIRED, 
     JSON.stringify({
       isDeleted: false,
       lastPasswordChange: admin.last_changed_pwd,
@@ -361,3 +358,15 @@ const createAccessToken = async (admin) => {
   );
   return token;
 };
+
+/*
+*
+*
+*/
+const nulifyClientRefreshToken = (res) => {
+  res.cookie('refresh' , '' , {
+    maxAge :  0,
+    httpOnly  : true,
+    signed : true
+  })
+}

@@ -13,9 +13,6 @@ const cors = require('cors');
 //nanti disini require model-model nya
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
-const { env } = require('process');
-
-
 
 /*
 @author 16 MN

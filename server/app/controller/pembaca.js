@@ -7,8 +7,7 @@ const cache = require("../util/cache");
 const bcrypt = require("bcryptjs");
 const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
-const { cookie } = require('express-validator');
-
+const {UserConst : UserAuthConst} = require('../util/authConst');
 /**
  * @author 31 ZV
  *
@@ -115,12 +114,7 @@ exports.update = async (req, res, next) => {
         account.last_changed_pwd = lastPasswordChange;
         //generate token
         accessToken = await createAccessToken(account);
-        const refreshtoken = await createRefreshToken(account)
-        res.cookie('refresh' , refreshtoken , {
-          signed : true,
-          maxAge :  1000 * 60 * 60 * 24 * 7,
-          httpOnly  : true
-        })
+        await createRefreshToken(account,res)
         
       } else {
         password = account.password;
@@ -413,12 +407,7 @@ exports.signin = async (req, res, next) => {
       }
       //generate token 
       const accessToken = await createAccessToken(pembaca);
-      const refreshtoken = await createRefreshToken(pembaca);
-      res.cookie('refresh' , refreshtoken , {
-        signed : true,
-        maxAge :  1000 * 60 * 60 * 24 * 7,
-        httpOnly  : true
-      })
+      await createRefreshToken(pembaca,res);
       res.status(200).json({
         message: "sign in Success",
         token: accessToken
@@ -453,11 +442,7 @@ exports.signout = async (req, res, err) => {
         JSON.stringify({ isInvalid: false })
       );
     }
-    res.cookie('refresh' , '' , {
-      maxAge :  0,
-      httpOnly  : true,
-      signed : true
-    })
+    nullifyClientRefreshToken(res);
     res.json({
       message: "Success Log out",
     });
@@ -551,15 +536,20 @@ exports.getAccessToken = async (req , res , next ) => {
 @author 16 MN
 membuat refresh token bagi pembaca
 */
-const createRefreshToken = async (pembaca) => {
+const createRefreshToken = async (pembaca , res) => {
   const token = jwt.sign(
     {
       id: pembaca.id_pembaca,
       roles: process.env.PEMBACA_PREFIX,
     },
     process.env.JWT_REFRESH_KEY,
-    { expiresIn: 60 * 60 * 24 * 7}
+    { expiresIn: UserAuthConst.USER_REFRESHTOKEN_EXPIRED}
   );
+  res.cookie('refresh' , token , {
+    signed : true,
+    maxAge :  UserAuthConst.USER_REFRESHTOKEN_EXPIRED,
+    httpOnly  : true
+  })
   return token; 
 }
 
@@ -575,17 +565,29 @@ const createAccessToken = async (pembaca) => {
       roles: process.env.PEMBACA_PREFIX,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: 60 * 60 *  2  }
+    { expiresIn: UserAuthConst.USER_ACCESSTOKEN_EXPIRED }
   );
   const key = process.env.PEMBACA_PREFIX + pembaca.id_pembaca.toString();
   await cache.settextAsync(
     key,
-    60 * 60 * 2 + 2*60,
+    UserAuthConst.USER_REDIS_EXPIRED,
     JSON.stringify({
       isDeleted: false,
       lastPasswordChange: pembaca.last_changed_pwd,
     })
   );
   return accessToken;
+}
+
+/*
+*
+*
+*/
+const nullifyClientRefreshToken = (res) =>{
+  res.cookie('refresh' , '' , {
+    maxAge :  0,
+    httpOnly  : true,
+    signed : true
+  })
 }
 
