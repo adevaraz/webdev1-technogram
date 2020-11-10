@@ -223,7 +223,7 @@ exports.deleteAll = async (req, res, next) => {
  * Menyukai berita (Like)
  */
 exports.likeNews = async(req, res, next) => {
-    const readerId = req.query.account;
+    const readerId = req.decodedToken.id;
     const newsId = req.query.news;
     const catId = req.query.category;
 
@@ -318,7 +318,7 @@ exports.likeNews = async(req, res, next) => {
  * Menyimpan berita (bookmark berita)
  */
 exports.saveNews = async (req, res, next) => {
-  const readerId = req.query.account;
+  const readerId = req.decodedToken.id;
   const newsId = req.query.news;
 
   try {
