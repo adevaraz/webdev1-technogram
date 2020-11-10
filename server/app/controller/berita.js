@@ -68,7 +68,7 @@ exports.updatePublish = async(req, res, next) => {
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
             await news.save();
-            await notifyDeleteBerite(news);
+            await notifyDeleteBerita(news);
         } else {
             console.log(news.waktu_publikasi)
             const now = new Date()
