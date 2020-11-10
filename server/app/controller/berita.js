@@ -399,7 +399,7 @@ exports.getNewsById = async (req, res, next) => {
     }
 };
 
-const notifyDeleteBerite = async (berita) => {
+const notifyDeleteBerita = async (berita) => {
     const kategori = await Kategori.findOne({
         where : {
             nama_kategori : berita.kategori_berita
