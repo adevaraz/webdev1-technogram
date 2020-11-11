@@ -1,3 +1,6 @@
+/**
+ * User Const
+ */
 // User Access Token expired in 2 hours (calculated in seconds 7200 seconds) 
 const USER_ACCESSTOKEN_EXPIRED = 60 * 60 *  2;
 
@@ -8,17 +11,19 @@ const USER_REFRESHTOKEN_EXPIRED = 60 * 60 * 24 * 7;
 const USER_REDIS_EXPIRED = USER_ACCESSTOKEN_EXPIRED  + 2 *60
 
 // User Cookies expired , value same as refresh token 
-const USER_COOKIES_EXPIRED = USER_REFRESHTOKEN_EXPIRED
+const USER_COOKIES_EXPIRED = USER_REFRESHTOKEN_EXPIRED * 1000
 
+/**
+ * Admin Const
+ */
 // Admin Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
 const ADMIN_ACCESSTOKEN_EXPIRED = 60 * 60
-
 
 //Admin Refresh token expired in 2 days (calculated in seconds )
 const ADMIN_REFRESHTOKEN_EXPIRED = 60 * 60 * 24 * 2;
 
 // Admin Cookies expired , value same as refresh token 
-const ADMIN_COOKIES_EXPIRED = ADMIN_REFRESHTOKEN_EXPIRED
+const ADMIN_COOKIES_EXPIRED = ADMIN_REFRESHTOKEN_EXPIRED * 1000
 
 // Admin Cache Expired  , access token + 2 minutes (to make sure all token expired)
 const ADMIN_REDIS_EXPIRED = ADMIN_ACCESSTOKEN_EXPIRED  + 2 *60
