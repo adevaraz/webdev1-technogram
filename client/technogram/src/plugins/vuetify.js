@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Vuetify, {VBtn} from 'vuetify';
+import Vue from 'vue'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify, {
-    components: {
-        VBtn
-    }
-});
+Vue.use(Vuetify)
 
-export default new Vuetify({
-});
+const opts = {}
+
+export default new Vuetify(opts)
