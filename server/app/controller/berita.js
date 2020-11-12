@@ -481,7 +481,7 @@ exports.uploadImgHandler = async (req, res, next)  => {
 
 exports.deleteImgHandler = async (req, res, next) => {
     try {
-        const filepath = req.body.filepath;
+        const filepath = req.body.url_gambar;
         if(!filepath) {
             const error = new Error("No image url found.");
             error.statusCode = 422;
