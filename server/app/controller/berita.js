@@ -457,8 +457,42 @@ const notifyNewBerita = async (berita) => {
             data : berita
         })
     }
-
-
-
-    
 }
+
+exports.uploadImgHandler = async (req, res, next)  => {
+    try {
+        if(!req.file) {
+            const error = new Error("No image found.");
+            error.statusCode = 422;
+            throw error;
+        } else {
+            const filepath = req.file.path.replace(/\\/gi, "/");
+            res.status(201).json({
+                message: "Success upload image.",
+                data : {
+                    url : filepath
+                }
+            });
+        }
+    }catch(err) {
+        next(err);
+    }
+};
+
+exports.deleteImgHandler = async (req, res, next) => {
+    try {
+        const filepath = req.body.filepath;
+        if(!filepath) {
+            const error = new Error("No image url found.");
+            error.statusCode = 422;
+            throw error;
+        } else {
+            deleteImage(filepath);
+            res.status(201).json({
+                message: "Success delete image."
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+};
