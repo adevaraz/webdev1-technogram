@@ -1,4 +1,4 @@
-const BASE_URL = "https://technogram-backend-nrkaf.ondigitalocean.app"
+const BASE_URL = "http://localhost:3000"
 
 const ADMIN_URL = BASE_URL + '/admin'
 
