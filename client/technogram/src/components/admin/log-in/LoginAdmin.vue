@@ -4,10 +4,7 @@
       <v-col xs="12" sm="8" md="5" lg="5">
         <v-row class="fill-height">
           <v-col>
-            <v-card height="100%" :loading="isLoading" :elevation="$vuetify.breakpoint.xs ? 0 : 2">
-              <template slot="progress">
-                <v-progress-linear color="#E52B38" height="10" indeterminate></v-progress-linear>
-              </template>
+            <v-card height="100%"  :elevation="$vuetify.breakpoint.xs ? 0 : 2">
               <div class="content">
                 <div class="logo">
                   <v-img :src="require('../../../assets/technogram-creator-b.png')"></v-img>
@@ -51,7 +48,8 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-overlay :value="isLoading"></v-overlay>
+    <v-progress-circular class="progressbar" v-if="isLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
+    <v-overlay :value="isLoading" absolute></v-overlay>
   </v-container>
 </template>
 
@@ -123,6 +121,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.progressbar{
+  position: relative;
+    bottom: 50%;
+
 }
 
 @media screen and (max-width: 400px) {

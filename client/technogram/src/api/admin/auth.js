@@ -13,9 +13,6 @@ const signin = async(username , password) => {
             withCredentials : true
         }
         );
-//        const testURL = ADMIN_URL + '/refresh'
-        // const test = await axios.post(testURL);
-        // console.log(test.respo);
         return result.data;
     }catch(err){
 
