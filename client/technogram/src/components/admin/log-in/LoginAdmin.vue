@@ -91,6 +91,7 @@ export default {
       const loginResult = await Auth.signin(this.username, this.password);
       this.isLoading = false;
       if (loginResult instanceof Error) {
+        console.log(loginResult.cause);
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
