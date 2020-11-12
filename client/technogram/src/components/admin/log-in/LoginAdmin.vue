@@ -1,44 +1,103 @@
 <template>
-  <v-container>
-    <v-col cols="6" class="coloumn">
-      <v-card class="justify-center" width="90%" max-height="100%">
-        <template slot="progress">
-          <v-progress-linear color="deep-purple" height="10" indeterminate></v-progress-linear>
-        </template>
-        <div class="content">
-          <v-img
-            width="5rem"
-            height="5rem"
-            :src="require('../../../assets/technogram-creator-b.png')"
-          ></v-img>
-          <form class="mt-10">
-            <div class="username">
-              <p class="text-caption font-weight-bold text-center">Username</p>  
-              <v-text-field cl></v-text-field>
-            </div>
-            <div class="password">
-                              <p class="text-caption font-weight-bold text-center">Password</p>  
-                <v-text-field
-            :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="isPasswordShown ? 'text' : 'password'"
-            class="input-group--focused"
-          ></v-text-field>
-            </div>
-           <v-btn color="#E52B38" class="login_btn" small>Sign in</v-btn>
-          </form>
-        </div>
-      </v-card>
-    </v-col>
+  <v-container fluid class="fill-height">
+    <v-row class="justify-center fill-height">
+      <v-col xs="12" sm="8" md="5" lg="5">
+        <v-row class="fill-height">
+          <v-col>
+            <v-card height="100%" :loading="isLoading" :elevation="$vuetify.breakpoint.xs ? 0 : 2">
+              <template slot="progress">
+                <v-progress-linear color="#E52B38" height="10" indeterminate></v-progress-linear>
+              </template>
+              <div class="content">
+                <div class="logo">
+                  <v-img :src="require('../../../assets/technogram-creator-b.png')"></v-img>
+                </div>
+                <form class="mt-10">
+                  <v-row class="jutify-center">
+                    <v-col cols="12">
+                      <p class="text-caption font-weight-bold text-center">Username</p>
+                      <v-text-field
+                       :rules="[rules.username]"
+                       v-model="username"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <p class="text-caption font-weight-bold text-center">Password</p>
+                      <v-text-field
+                        v-model="password"
+                        :rules="[rules.password]"
+                        :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="isPasswordShown ? 'text' : 'password'"
+                        class="input-group--focused"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-alert
+                        dense
+                        outlined
+                        type="error"
+                        :icon="false"
+                        v-if="error.isError"
+                        class="text-center text-subtitle-2"
+                      >{{errorMessage}}</v-alert>
+                    </v-col>
+                    <v-col class="d-flex justify-center">
+                      <v-btn color="#E52B38" @click="signin" class="login_btn" :disabled="!isInputValid" small>Sign in</v-btn>
+                    </v-col>
+                  </v-row>
+                </form>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-overlay :value="isLoading"></v-overlay>
   </v-container>
 </template>
 
 <script>
+import Auth from "../../../api/admin/auth";
 export default {
-    data(){
-        return{
-            isPasswordShown : true
-        }
+  data() {
+    return {
+      isPasswordShown: false,
+      isLoading: false,
+      username: "",
+      password: "",
+      error: {
+        isError: false,
+        message: "",
+      },
+      rules : {
+        username : value => !(!value) || 'Username tidak boleh kosong',
+        password : value => !(!value) || 'Password tidak boleh kosong'
+      }
+    };
+  },
+  computed : {
+    errorMessage(){
+      return this.error.message;
+    },
+    isInputValid(){
+      const isEmpty = this.username === '' | this.password === '';
+      return !isEmpty
     }
+  },
+  methods: {
+    async signin() {
+      this.error.isError = false;
+      this.error.message = "";
+      this.isLoading = true;
+      const loginResult = await Auth.signin(this.username, this.password);
+      this.isLoading = false;
+      if (loginResult instanceof Error) {
+        this.error.message = loginResult.cause;
+        this.error.isError = true;
+      } else {
+        console.log(loginResult);
+      }
+    },
+  },
 };
 </script>
 
@@ -46,21 +105,18 @@ export default {
 .container {
   display: flex;
   justify-content: center;
-  min-height: 100%;
-  max-height: 100vh;
   box-sizing: border-box;
 }
 
-
 .content {
-  padding: 1rem 0 1rem 0;
+  padding: 1rem;
   display: flex;
   height: 100%;
   width: 100%;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
-
 
 .content form {
   width: 80%;
@@ -69,9 +125,16 @@ export default {
   align-items: center;
 }
 
-.content form .login_btn {
-    color : white;
+@media screen and (max-width: 400px) {
+  .content .logo {
+    width: 60%;
+  }
+  .content form {
+    width: 90%;
+  }
 }
 
-
+.content form .login_btn {
+  color: white;
+}
 </style>

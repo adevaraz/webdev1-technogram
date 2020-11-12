@@ -1,14 +1,14 @@
 <template>
-  <div class="app">
-    <navbar></navbar>
-  </div>
+  <v-app>
+    <login-admin></login-admin>
+  </v-app>
 </template>
 
 <script>
-import Navbar from "./components/admin/ui/Navbar"
+import LoginAdmin from './components/admin/log-in/LoginAdmin.vue';
 export default {
   components: {
-    "navbar": Navbar
+    LoginAdmin
   }
 };
 </script>
