@@ -4,7 +4,10 @@
       <v-col xs="12" sm="8" md="5" lg="5">
         <v-row class="fill-height">
           <v-col>
-            <v-card height="100%"  :elevation="$vuetify.breakpoint.xs ? 0 : 2">
+            <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+              <template slot="progress">
+                <v-progress-linear  color="#E52B38" height="10" indeterminate></v-progress-linear>
+              </template>
               <div class="content">
                 <div class="logo">
                   <v-img :src="require('../../../assets/technogram-creator-b.png')"></v-img>
@@ -13,9 +16,7 @@
                   <v-row class="jutify-center">
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">Username</p>
-                      <v-text-field
-                       :rules="[rules.username]"
-                       v-model="username"></v-text-field>
+                      <v-text-field :rules="[rules.username]" v-model="username"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">Password</p>
@@ -38,7 +39,12 @@
                       >{{errorMessage}}</v-alert>
                     </v-col>
                     <v-col class="d-flex justify-center">
-                      <v-btn color="#E52B38" @click="signin" class="login_btn" :disabled="!isInputValid" small>Sign in</v-btn>
+                      <v-btn
+                        color="#E52B38"
+                        @click="signin"
+                        class="login_btn"
+                        :disabled="!isInputValid"
+                      >Sign in</v-btn>
                     </v-col>
                   </v-row>
                 </form>
@@ -48,7 +54,13 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-progress-circular class="progressbar" v-if="isLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
+    <v-progress-circular
+      class="progressbar"
+      v-if="isLoading && isMobile"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    ></v-progress-circular>
     <v-overlay :value="isLoading" absolute></v-overlay>
   </v-container>
 </template>
@@ -66,23 +78,27 @@ export default {
         isError: false,
         message: "",
       },
-      rules : {
-        username : value => !(!value) || 'Username tidak boleh kosong',
-        password : value => !(!value) || 'Password tidak boleh kosong'
-      }
+      rules: {
+        username: (value) => !!value || "Username tidak boleh kosong",
+        password: (value) => !!value || "Password tidak boleh kosong",
+      },
     };
   },
-  computed : {
-    errorMessage(){
+  computed: {
+    errorMessage() {
       return this.error.message;
     },
-    isInputValid(){
-      const isEmpty = this.username === '' | this.password === '';
-      return !isEmpty
+    isInputValid() {
+      const isEmpty = (this.username === "") | (this.password === "");
+      return !isEmpty;
+    },
+    isMobile(){
+      return this.$vuetify.breakpoint.xs ? true : false
     }
   },
   methods: {
     async signin() {
+      console.log(this.isMobile);
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
@@ -123,10 +139,9 @@ export default {
   align-items: center;
 }
 
-.progressbar{
+.progressbar {
   position: relative;
-    bottom: 50%;
-
+  bottom: 50%;
 }
 
 @media screen and (max-width: 400px) {
