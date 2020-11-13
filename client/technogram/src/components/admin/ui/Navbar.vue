@@ -1,13 +1,19 @@
 <template>
-  <v-card height="700">
+  <v-card
+    height="700"
+    color="#F4F4F4"
+  >
+    <v-app-bar-nav-icon @click.stop="drawe = !drawer"></v-app-bar-nav-icon>
+    
     <v-navigation-drawer
-      absolute
+      v-model="drawer"
       permanent
       left
+      color="#3c3d40"
     >
       <template v-slot:prepend>
         <v-list-item two-line>
-          <img src="../../../assets/technogram-creator-b.png">
+          <img src="../../../assets/technogram-creator-w.png">
         </v-list-item>
       </template>
 
@@ -97,3 +103,17 @@
     })
   }
 </script>
+
+<style scoped>
+* {
+  color: white;
+}
+
+v-card {
+  justify-content: center;
+}
+
+img {
+  max-width: 200px;
+}
+</style>
