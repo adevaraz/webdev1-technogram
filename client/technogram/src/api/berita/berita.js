@@ -34,8 +34,21 @@ const deleteImg = async (image) => {
     }
 };
 
+const save = async (data) => {
+    try {
+        const saveUrl = BERITA_URL + "/new-news";
+        const result = await axios.post(saveUrl, data, {timeout:TIMEOUT, headers: {
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTI4MDQ5OCwiZXhwIjoxNjA1Mjg0MDk4fQ._LSVrguGw3I1nNgZmm8i1qkkd4Ffqliq_2XUm3gU8lQ",
+        }});
+        return result.data;
+    } catch (err) {
+        return ErrorHandler.errorHandler(err);
+    }
+};
+
 export default{
     getAllKategori,
     uploadImg,
-    deleteImg
+    deleteImg,
+    save
 };

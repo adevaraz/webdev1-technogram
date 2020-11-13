@@ -1,9 +1,20 @@
 <template>
-  <v-form v-model="valid">
+  <v-form ref="form" v-model="valid">
     <v-container>
       <v-row>
         <v-col cols="12" md="10">
           <div class="text-h3">Buat Berita</div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="10">
+          <v-alert
+            type="success"
+            :value="alert"
+            transition="slide-y-transition"
+          >
+            Sukses menambahkan berita.
+          </v-alert>
         </v-col>
       </v-row>
       <v-row class="mt-4">
@@ -53,13 +64,6 @@
         </v-col>
         <v-col cols="12" md="5">
           <div class="text-h6">Pilih Foto Header</div>
-          <v-img
-            v-if="this.urlTemp != null"
-            :src="urlTemp"
-            :aspect-ratio="16 / 9"
-            contain
-            class="grey darken-4"
-          ></v-img>
           <v-file-input
             @change="Preview_image"
             @click:clear="close_image"
@@ -70,6 +74,13 @@
             :rules="imgRules"
           >
           </v-file-input>
+          <v-img
+            v-if="this.urlTemp != null"
+            :src="urlTemp"
+            :aspect-ratio="16 / 9"
+            contain
+            class="grey darken-4"
+          ></v-img>
         </v-col>
       </v-row>
       <v-row>
@@ -91,12 +102,15 @@
             elevation="6"
             color="success"
             large
+            @click="saveBerita"
             :disabled="!valid"
-            type="submit"
             >Simpan</v-btn
           >
         </v-col>
       </v-row>
+      <v-overlay :value="isLoading" absolute>
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
     </v-container>
   </v-form>
 </template>
@@ -109,6 +123,8 @@ export default {
   components: { VueEditor },
   data() {
     return {
+      isLoading: false,
+      alert: false,
       valid: true,
       urlTemp: null,
       url_gambar: null,
@@ -142,6 +158,9 @@ export default {
       ],
       listKategori: [],
     };
+  },
+  mounted() {
+    this.retrieveKategori();
   },
   methods: {
     Preview_image() {
@@ -186,6 +205,7 @@ export default {
     },
     async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
       try {
+        console.log(file);
         let formData = new FormData();
         formData.append("url_gambar", file);
 
@@ -211,9 +231,46 @@ export default {
         console.log(error);
       }
     },
+    async saveBerita() {
+      try {
+        let data = new FormData();
+        data.append("judul", this.judul);
+        data.append("artikel", this.artikel);
+        if (this.url_gambar) data.append("url_gambar", this.url_gambar);
+        data.append("kategori_berita", this.kategori_berita);
+        data.append("jurnalis", this.jurnalis);
+        data.append("deskripsi_jurnalis", this.deskripsi_jurnalis);
+        this.isLoading = true;
+        const result = await berita.save(data);
+        if (result instanceof Error) {
+          throw result;
+        }
+        this.reset();
+        console.log(result);
+        this.isLoading = false;
+        this.alert = true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    reset() {
+      this.url_gambar = null;
+      this.judul = "";
+      this.jurnalis = "";
+      this.deskripsi_jurnalis = "";
+      this.kategori_berita = "";
+      this.artikel = "";
+      this.$refs.form.resetValidation();
+    },
   },
-  mounted() {
-    this.retrieveKategori();
+  watch: {
+    alert: function (val) {
+      if (val) {
+        setTimeout(() => {
+          this.alert = false;
+        }, 5000);
+      }
+    },
   },
 };
 </script>
