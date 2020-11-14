@@ -86,6 +86,32 @@ exports.getById = async (req, res, next) => {
   }
 };
 
+/**
+ * @author 17 MU
+ *
+ * Mencari akun pembaca dengan berdasarkan key
+ */
+exports.searchBy = async (req, res, next) => {
+  try {
+    let key = req.query.key;
+    
+    const result = await Pembaca.findAll({
+      where: {
+        [Op.or] : [
+            { username : key }, { email : key }
+        ]
+      },
+    });
+    
+    res.status(200).json({
+      message: `Success retrieve accounts`,
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 /*
  @author 23 NM
 
