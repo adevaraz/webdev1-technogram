@@ -1,14 +1,14 @@
 <template>
-  <div class="app">
-    <navbar></navbar>
-  </div>
+  <v-app>
+    <daftar-kategori></daftar-kategori>
+  </v-app>
 </template>
 
 <script>
-import Navbar from "./components/admin/ui/Navbar"
+import daftarKategori from "./components/admin/kategori/daftar-kategori/DaftarKategori"
 export default {
   components: {
-    "navbar": Navbar
+    daftarKategori
   }
 };
 </script>
