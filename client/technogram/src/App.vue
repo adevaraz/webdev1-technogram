@@ -1,18 +1,14 @@
 <template>
-  <div class="app">
-    <navbar></navbar>
-  </div>
+  <v-app>
+    <router-view></router-view>
+  </v-app>
 </template>
 
 <script>
-import Navbar from "./components/admin/ui/Navbar"
 export default {
-  components: {
-    "navbar": Navbar
-  }
+
 };
 </script>
 
-<style>
-  
+<style scoped>
 </style>
