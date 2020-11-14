@@ -315,21 +315,21 @@ nav {
     background: white;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.247);
     width: 100%;
-    position: fixed;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
   }
   .navBar {
     overflow-x: hidden;
   }
   .drawer {
+    background: white;
     position: absolute;
     top: 8.5vh;
-    z-index: 90;
+    z-index: 100;
   }
 
   .slide-leave-active {
-  animation: slide-out 1s ease-out forwards;
-  transition: opacity 2s;
+  animation: slide-out 0.5s ease-out forwards;
+  transition: opacity 1s;
   opacity: 0;
   position: absolute;
   }
@@ -349,8 +349,8 @@ nav {
 }
 
 .slide-enter-active {
-  animation: slide-in 1s ease-out forwards;
-  transition: opacity 2s;
+  animation: slide-in 0.5s ease-out forwards;
+  transition: opacity 1s;
 }
 
 
