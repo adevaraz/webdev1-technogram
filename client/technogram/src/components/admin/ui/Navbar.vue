@@ -3,10 +3,7 @@
     height="700"
     color="#F4F4F4"
   >
-    <v-app-bar-nav-icon @click.stop="drawe = !drawer"></v-app-bar-nav-icon>
-    
     <v-navigation-drawer
-      v-model="drawer"
       permanent
       left
       color="#3c3d40"
@@ -18,15 +15,25 @@
       </template>
 
       <v-divider></v-divider>
-
+      
       <!-- Home Button -->
-      <v-list-item>
-        <v-list-item-title>Home</v-list-item-title>
-      </v-list-item>
-
+      <v-list-group
+        :value="false"
+        color="white"
+        active-class="grey darken-4"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item-content>
+        </template>
+      </v-list-group>
+      
       <!-- Berita Button Group -->
       <v-list-group
         :value="false"
+        color="white"
+        active-class="grey darken-4"
       >
         <template v-slot:activator>
           <v-list-item-content>
@@ -36,16 +43,18 @@
 
         <v-list-item
           v-for="menu in beritas"
-          :key="menu.submenu"
+          :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.submenu }}</v-list-item-title>
+          <v-list-item-title>{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
 
       <!-- Pembaca Button Group -->
       <v-list-group
         :value="false"
+        color="white"
+        active-class="grey darken-4"
       >
         <template v-slot:activator>
           <v-list-item-content>
@@ -55,16 +64,18 @@
 
         <v-list-item
           v-for="menu in pembacas"
-          :key="menu.submenu"
+          :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.submenu }}</v-list-item-title>
+          <v-list-item-title>{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
 
       <!-- Admin Button Group -->
       <v-list-group
         :value="false"
+        color="white"
+        active-class="grey darken-4"
       >
         <template v-slot:activator>
           <v-list-item-content>
@@ -74,10 +85,10 @@
 
         <v-list-item
           v-for="menu in admins"
-          :key="menu.submenu"
+          :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.submenu }}</v-list-item-title>
+          <v-list-item-title>{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
     </v-navigation-drawer>
@@ -88,17 +99,35 @@
   export default {
     name: 'navbar',
     data: () => ({
+        menus: [
+          {
+            text: 'Home',
+            submenu: ''
+          },
+          {
+            text: 'Berita',
+            submenu: 'beritas'
+          },
+          {
+            text: 'Pembaca',
+            submenu: 'pembacas'
+          },
+          {
+            text: 'Admin',
+            submenu: 'admins'
+          }
+        ],
         beritas: [
-          { submenu: 'Daftar Berita' },
-          { submenu: 'Unggah Berita' },
-          { submenu: 'Kategori' }
+          { text: 'Daftar Berita' },
+          { text: 'Unggah Berita' },
+          { text: 'Kategori' }
         ],
         pembacas: [
-          { submenu: 'Daftar Akun' }
+          { text: 'Daftar Akun' }
         ],
         admins: [
-          { submenu: 'Daftar Admin' },
-          { submenu: 'Tambah Admin' }
+          { text: 'Daftar Admin' },
+          { text: 'Tambah Admin' }
         ]
     })
   }
