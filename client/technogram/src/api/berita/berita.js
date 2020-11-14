@@ -38,7 +38,7 @@ const save = async (data) => {
     try {
         const saveUrl = BERITA_URL + "/new-news";
         const result = await axios.post(saveUrl, data, {timeout:TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTI4NDYzMywiZXhwIjoxNjA1Mjg4MjMzfQ.2Cfp-fkTqz2xYdrsAuNkMuZQYLI1qlvqpUw8pjiSSc0",
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM0OTcyNCwiZXhwIjoxNjA1MzUzMzI0fQ.Jhy21APsl1yKafKXRdlAMgCvX8-3ro9ob25rIOTb3DY",
         }});
         return result.data;
     } catch (err) {

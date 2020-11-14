@@ -123,6 +123,7 @@ export default {
   components: { VueEditor },
   data() {
     return {
+      isReset: false,
       isLoading: false,
       alert: false,
       valid: true,
@@ -149,13 +150,7 @@ export default {
         (v) => v.length >= 3 || "Deskripsi Jurnalis minimal 3 karakter",
       ],
       kategoriRules: [(v) => !!v || "Kategori tidak boleh kosong."],
-      imgRules: [
-        (v) =>
-          v.type === "image/png" ||
-          v.type === "image/jpg" ||
-          v.type === "image/jpeg" ||
-          "Gambar harus bertipe *.jpg, *.jpeg, atau *.png",
-      ],
+      imgRules: [],
       listKategori: [],
     };
   },
@@ -221,6 +216,10 @@ export default {
       }
     },
     async handleImageRemoved(image) {
+      if (this.isReset) {
+        this.isReset = false;
+        return;
+      }
       try {
         const result = await berita.deleteImg(image);
         if (result instanceof Error) {
@@ -260,6 +259,7 @@ export default {
       this.jurnalis = "";
       this.deskripsi_jurnalis = "";
       this.kategori_berita = "";
+      this.isReset = true;
       this.artikel = "";
       this.$refs.form.resetValidation();
     },
@@ -270,6 +270,19 @@ export default {
         setTimeout(() => {
           this.alert = false;
         }, 5000);
+      }
+    },
+    url_gambar: function (val) {
+      if (val) {
+        this.imgRules = [
+          (v) =>
+            v.type === "image/png" ||
+            v.type === "image/jpg" ||
+            v.type === "image/jpeg" ||
+            "Gambar harus bertipe *.jpg, *.jpeg, atau *.png",
+        ];
+      } else {
+        this.imgRules = [];
       }
     },
   },
