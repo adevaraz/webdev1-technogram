@@ -245,15 +245,16 @@ export default {
         if (result instanceof Error) {
           throw result;
         }
-        this.reset();
-        console.log(result);
         this.isLoading = false;
+        console.log(result);
+        this.reset();
         this.alert = true;
       } catch (error) {
         console.log(error);
       }
     },
     reset() {
+      this.urlTemp = null;
       this.url_gambar = null;
       this.judul = "";
       this.jurnalis = "";
