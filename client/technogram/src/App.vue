@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <add-berita></add-berita>
+    <!-- <add-berita></add-berita> -->
+    <router-view />
   </v-app>
 </template>
 
@@ -11,11 +12,12 @@
 //     "navbar": Navbar
 //   }
 // };
-import AddBerita from "./components/admin/berita/AddBerita";
+// import AddBerita from "./components/admin/berita/AddBerita";
 export default {
-  components: {
-    AddBerita,
-  },
+  name: "App",
+  // components: {
+  //   AddBerita,
+  // },
 };
 </script>
 

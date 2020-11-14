@@ -120,6 +120,7 @@ import { BASE_URL } from "../../../api/const";
 import { VueEditor } from "vue2-editor";
 import berita from "../../../api/berita/berita";
 export default {
+  name: "add-berita",
   components: { VueEditor },
   data() {
     return {

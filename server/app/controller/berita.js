@@ -167,6 +167,7 @@ exports.update = async (req, res) => {
     const jurnalis = req.body.jurnalis;
     const deskripsi_jurnalis = req.body.deskripsi_jurnalis;
     let url_gambar = req.body.url_gambar;
+    if(url_gambar === 'null' || url_gambar === 'undefined') url_gambar = null;
     if (req.file) {
         const plainImageUrl = req.file.path;
         url_gambar = plainImageUrl.replace(/\\/gi, "/");
@@ -174,6 +175,7 @@ exports.update = async (req, res) => {
       }
     if (url_gambar !== news.url_gambar && news.url_gambar!= null) {
         deleteImage(news.url_gambar);
+        news.url_gambar = null;
       }
     news.judul = judul || news.judul;
     news.artikel = artikel || news.artikel;

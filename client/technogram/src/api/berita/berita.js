@@ -38,8 +38,30 @@ const save = async (data) => {
     try {
         const saveUrl = BERITA_URL + "/new-news";
         const result = await axios.post(saveUrl, data, {timeout:TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM0OTcyNCwiZXhwIjoxNjA1MzUzMzI0fQ.Jhy21APsl1yKafKXRdlAMgCvX8-3ro9ob25rIOTb3DY",
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM2OTA4MywiZXhwIjoxNjA1MzcyNjgzfQ.iCr74JJLapaQnpgcj89walcR92E7chLTsQUDTaMD36w",
         }});
+        return result.data;
+    } catch (err) {
+        return ErrorHandler.errorHandler(err);
+    }
+};
+
+const update = async (idBerita, data) => {
+    try {
+        const updateUrl = BERITA_URL + `/update/${idBerita}`;
+        const result = await axios.put(updateUrl, data, {timeout: TIMEOUT, headers: {
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM2OTA4MywiZXhwIjoxNjA1MzcyNjgzfQ.iCr74JJLapaQnpgcj89walcR92E7chLTsQUDTaMD36w",
+        }});
+        return result.data;
+    } catch (err) {
+        return ErrorHandler.errorHandler(err);
+    }
+};
+
+const get = async (id) => {
+    try {
+        const getUrl = BERITA_URL + `/${id}`;
+        const result = await axios.get(getUrl, {}, {timeout: TIMEOUT});
         return result.data;
     } catch (err) {
         return ErrorHandler.errorHandler(err);
@@ -50,5 +72,7 @@ export default{
     getAllKategori,
     uploadImg,
     deleteImg,
-    save
+    save,
+    update,
+    get
 };
