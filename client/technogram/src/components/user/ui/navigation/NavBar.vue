@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div :class="navbarClass">
     <nav>
       <div class="header">
         <div class="left">
@@ -94,6 +94,7 @@ export default {
   },
   data() {
     return {
+      navbarClass : 'navbar',
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
       menus: [
@@ -161,9 +162,11 @@ export default {
         if (window.top.scrollY > 100) {
           this.$refs.logo.classList.add('toogle');
           this.$refs.greetingText.classList.add('toogle');
+          this.navbarClass = 'navbar floating'
         }else{
            this.$refs.logo.classList.remove('toogle');
            this.$refs.greetingText.classList.remove('toogle');
+           this.navbarClass = 'navbar'
         }
       }
     },
@@ -230,13 +233,17 @@ export default {
 .navbar {
   background: white;
   border-bottom: 0.1px solid white;
-  max-height: 8rem;
+  max-height: 9rem;
   width: 100%;
   position: fixed;
   top: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
   z-index: 5;
 }
+
+.floating  {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
+
 
 nav {
   display: flex;
@@ -328,13 +335,14 @@ nav .header .right .btn {
 }
 
 .button {
-  margin: 0 1rem 0 1rem;
+  margin: 0.25rem 1rem 0.25rem 1rem;
 }
 
 
 @media screen and (max-width: 960px) {
   .navbar {
     max-height: 6rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
   }
 
   nav .header {
