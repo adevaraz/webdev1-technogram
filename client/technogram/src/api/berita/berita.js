@@ -38,7 +38,7 @@ const save = async (data) => {
     try {
         const saveUrl = BERITA_URL + "/new-news";
         const result = await axios.post(saveUrl, data, {timeout:TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM2OTA4MywiZXhwIjoxNjA1MzcyNjgzfQ.iCr74JJLapaQnpgcj89walcR92E7chLTsQUDTaMD36w",
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxNjc3MCwiZXhwIjoxNjA1NDIwMzcwfQ.l4gT6f_h8vnb3p1HIUljvEC-Dyn2LeG2ecFgR7l-jRY",
         }});
         return result.data;
     } catch (err) {
@@ -50,7 +50,7 @@ const update = async (idBerita, data) => {
     try {
         const updateUrl = BERITA_URL + `/update/${idBerita}`;
         const result = await axios.put(updateUrl, data, {timeout: TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTM2OTA4MywiZXhwIjoxNjA1MzcyNjgzfQ.iCr74JJLapaQnpgcj89walcR92E7chLTsQUDTaMD36w",
+            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxNjc3MCwiZXhwIjoxNjA1NDIwMzcwfQ.l4gT6f_h8vnb3p1HIUljvEC-Dyn2LeG2ecFgR7l-jRY",
         }});
         return result.data;
     } catch (err) {

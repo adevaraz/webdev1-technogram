@@ -259,6 +259,7 @@ export default {
         console.log(result);
         this.getBeritabyId(this.id);
         this.alert = true;
+        window.scrollTo(0, 0);
       } catch (error) {
         console.log(error);
       }
