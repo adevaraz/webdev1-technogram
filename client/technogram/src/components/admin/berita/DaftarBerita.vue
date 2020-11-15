@@ -1,5 +1,5 @@
 <template>
-  <v-card width="1000px">
+  <v-card width="1200px">
     <v-card-title>
       Berita
       <v-spacer></v-spacer>
@@ -11,91 +11,108 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-    <v-data-table
-      v-model="selected"
-      :headers="headers"
-      :items="berita"
-      :pagination.sync="pagination"
-      select-all
-      item-key="name"
-      class="elevation-1"
-    >
-      <template v-slot:headers="props">
+    <v-simple-table height="500px" width="600px" class="grey lighten-5" dense>
+    <template v-slot:default>
+    <thead>
         <tr>
-          <th
-            v-for="header in props.headers"
-            :key="header.text"
-          >
-            {{ header.text }}
-          </th>
-          <th>
-            Pilihan
-          </th>
+          <th>id</th>
+          <th>Judul</th>
+          <th>Waktu Publikasi</th>
+          <th>Kategori</th>
+          <th class="text-center">Pilihan</th>
         </tr>
-      </template>
-      <template v-slot:items="props">
-        <tr :active="props.selected" @click="props.selected = !props.selected">
-          <td class="text-xs-center">{{ props.item.id_berita }}</td>
-          <td class="text-xs-center">{{ props.item.judul_berita }}</td>
-          <td class="text-xs-center">{{ props.item.waktu_publikasi }}</td>
-          <td class="text-xs-center">{{ props.item.kategori }}</td>
-          <td class="text-xs-center">
-            <v-btn color="success" dark>
+      </thead>
+      <tbody>
+        <tr v-for="item in berita"
+            :key="item.id_berita">
+          <td class="text-xs-center">{{ item.id_berita }}</td>
+          <td class="text-xs-center">{{ item.judul }}</td>
+          <td class="text-xs-center">{{ item.waktu_publikasi }}</td>
+          <td class="text-xs-center">{{ item.kategori_berita }}</td>
+          <td class="text-center">
+            <v-btn v-if="item.waktu_publikasi!=null" class="ma-1" color="success" dark
+            v-on:click="publish(item.id_berita)">
+                Unpublish
+            </v-btn>
+            <v-btn v-else class="ma-1" color="success" dark
+            v-on:click="publish(item.id_berita)">
                 Publish
             </v-btn>
-            <v-btn color="warning" dark>
+            <v-btn class="ma-1" color="warning" dark>
                 Edit
             </v-btn>
-            <v-btn color="error" dark>
+            <v-btn class="ma-1" color="error" dark
+            v-on:click="deleteBerita(item.id_berita)">
                 Delete
             </v-btn>
           </td>
         </tr>
-      </template>
-    </v-data-table>
+      </tbody>
+    </template>
+    </v-simple-table>
   </v-card>
 </template>
 
 <script>
+import daftarBerita from "../../../api/admin/daftarberita";
   export default {
     data () {
       return {
-      pagination: {
-      sortBy: 'id'
-    },
-    selected: [],
-    headers: [
-          {
-            text: 'id',
-            align: 'left',
-            sortable: false,
-            value: 'id_berita',
-          },
-          { text: 'Judul', value: 'judul_berita'},
-          { text: 'Waktu Publikasi', value: 'waktu_publikasi' },
-          { text: 'Kategori', value: 'kategori' }
-        ],
-        berita: [
-          {
-            id_berita: 1,
-            judul_berita: 'judul#1',
-            waktu_publikasi: null,
-            kategori: 'AI',
-          },
-          {
-            id_berita: 2,
-            judul_berita: 'judul#2',
-            waktu_publikasi: null,
-            kategori: 'Mobile Apps',
-          },
-          {
-            id_berita: 3,
-            judul_berita: 'judul#3',
-            waktu_publikasi: null,
-            kategori: 'Operating Systems',
-          },
-        ],
+      berita: [],
+      key: "",
+      id: ""
       }
     },
-  }
+
+    methods: {
+      retrieveBerita() {
+        daftarBerita.getAll()
+        .then(response => {
+          this.berita = response.data;
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        })
+      },
+
+      searchBerita() {
+        if(this.key=="") {
+          this.retrieveBerita();
+        } else {
+          daftarBerita.searchBy(this.key)
+          .then(response => {
+          this.berita = response.data;
+          console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          })
+        }
+      },
+
+      deleteBerita(id) {
+        daftarBerita.deleteBy(id)
+        this.retrieveBerita();
+      },
+
+      publish(id) {
+        daftarBerita.publish(id)
+        .then(response => {
+          this.berita = response.data
+          console.log('ada apa ini');
+          console.log(id);
+          console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          })
+        this.retrieveBerita();
+      }
+    },
+
+    mounted() {
+      this.searchBerita();
+    }
+  };
 </script>
