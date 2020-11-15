@@ -2,7 +2,7 @@ import axios from 'axios'
 import {KATEGORI_URL, TIMEOUT} from '../const'
 import errorHandler from '../errorHandler'
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1MzYwOTM5LCJleHAiOjE2MDUzNjQ1Mzl9.gcJg25adr-9TfTWCZVahFiqrWVy5Rhp3h5USgn0CUAE'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1NDM1NjU0LCJleHAiOjE2MDU0MzkyNTR9.dqwZjTCnMuLJuCrSXkW9xz3LaLt1DkpSmNGPJpJ1WTE'
 const retrieveAll = async() => {
     try{
         const retrieveURL = KATEGORI_URL + '/get' 

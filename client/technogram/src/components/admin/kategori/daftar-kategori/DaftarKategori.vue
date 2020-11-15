@@ -2,29 +2,36 @@
 <v-row class="list px-3 mx-auto">
   <v-col cols="20" sm="20">
     <h1 style="margin-top:20px; margin-bottom:20px">Daftar Kategori </h1>
-    <v-btn tile small style ="margin-top:20px; margin-right:20px" @click="newItem"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-plus</v-icon> Tambah kategori</v-btn>
-    <v-btn tile small style ="margin-top:20px" @click="deleteAll"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-close</v-icon>Hapus semua kategori</v-btn>
+    <v-btn small color="#41916c" class="white--text" style ="margin-top:20px; margin-right:20px" @click="newItem"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-plus</v-icon> Tambah kategori</v-btn>
+    <v-btn small color="#E52B38" class="white--text" style ="margin-top:20px" @click="deleteAll"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-close</v-icon>Hapus semua kategori</v-btn>
      
     <v-data-table :headers="headers" 
                   :items="kategori" 
                   hide-default-footer
                   class="elevation-3"
-                  style="margin-top: 20px; margin-left: auto; margin-right: auto; width:700px"
+                  style="margin-top: 20px; margin-left: auto; margin-right: auto; width:600px"
     >
     <template v-slot:top="">
         <v-dialog v-model="dialog" max-width="300px">
-            <v-card>
+          <v-card :loading="loading" max-width="300">
+            <template slot="progress">
+              <v-progress-linear
+                color="deep-purple"
+                height="3"
+                indeterminate
+              ></v-progress-linear>
+            </template>
             <v-card-title>
               <span style="margin-bottom: 40px;" class="headline">{{formTitle}}</span>
             </v-card-title>
             <v-card-text>
               <v-container>
                 <v-row>
-                  <div v-if="dialogDelete === false && dialogDeleteAll=== false">
+                  <div v-if="dialogDelete === false && dialogDeleteAll=== false">                 
                     <v-col cols="20" sm="10" md="10">
-                      <v-text-field style="max-width: 200px; margin-top=20px" v-model="editedItem.nama_kategori" label="Nama kategori" :rules="[(v) => !!v || 'Kategori tidak boleh kosong']"></v-text-field>
+                      <v-text-field :rules="[(v) => !!v || 'Kategori tidak boleh kosong']" style="max-width: 200px; margin-top=20px" v-model="editedItem.nama_kategori" label="Nama kategori" ></v-text-field>
                     </v-col>
-                  </div>
+                  </div>                 
                 </v-row>
               </v-container>
             </v-card-text>
@@ -36,18 +43,18 @@
                   <v-btn color="blue darken-1" text="" @click="save">Save</v-btn>
                 </div>
             </v-card-actions>
-            <v-progress-linear
-              :active="loading"
-              :indeterminate="loading"
-              absolute
-              bottom
-              color="deep-purple accent-4"
-            ></v-progress-linear>
           </v-card>
         </v-dialog>
 
         <v-dialog v-model="dialogDelete" max-width="400px">  
-          <v-card>
+          <v-card  :loading="loading" max-width="400">
+            <template slot="progress">
+              <v-progress-linear
+                color="deep-purple"
+                height="3"
+                indeterminate
+              ></v-progress-linear>
+            </template>
             <v-card-title>
               <span style="margin-bottom: 40px;" class="headline">{{formTitle}}</span>
             </v-card-title>
@@ -69,20 +76,13 @@
                   <v-btn color="blue darken-1" text="" @click="remove">Delete</v-btn>
             </v-card-actions>
 
-            <v-progress-linear
-              :active="loading"
-              :indeterminate="loading"
-              absolute
-              bottom
-              color="deep-purple accent-4"
-            ></v-progress-linear>
           </v-card>
         </v-dialog>
     </template>
 
     <template v-slot:[`item.pilihan`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteItem(item)" >mdi-delete</v-icon>          
+      <v-btn small color="#FAB339" class="white--text" style="margin-right:5px" @click="editItem(item)"> edit </v-btn>
+      <v-btn small color="#E52B38" class="white--text" @click="deleteItem(item)"> delete</v-btn>        
     </template>
 
   </v-data-table>
@@ -125,7 +125,8 @@ export default {
       }
       
       return "Form Title"
-    }
+    },
+    
   },
 
   watch: {
@@ -198,6 +199,7 @@ export default {
     },
 
     async save() {
+      this.loading=true;
       if (this.editedIndex > -1) {  // Edited save
         Object.assign(this.kategori[this.editedIndex], this.editedItem);
         await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori);
@@ -211,11 +213,13 @@ export default {
           console.log(addResult);
         }
       }
+      
       this.close();
       this.refreshList();
     },
 
     async remove() {
+      this.loading=true;
       if(this.editedIndex>-1){ //delete one
         this.kategori.splice(this.editedIndex, 1);
         await categoriesData.deleteOneKategori(this.editedItem.id_kategori);
