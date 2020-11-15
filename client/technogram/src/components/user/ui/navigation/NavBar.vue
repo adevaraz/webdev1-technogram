@@ -4,7 +4,8 @@
       <div class="header">
         <div class="left">
           <div
-            class="greeting-text text-subtitle-2 font-weight-bold "
+            ref="greetingText"
+            class="greeting-text  font-weight-bold"
             v-if="!isMobile"
           >{{getGreetings}}</div>
           <div @click="slideDrawer" ref="burger" class="burger" v-else>
@@ -14,7 +15,7 @@
           </div>
         </div>
         <div class="middle">
-          <div class="logo">
+          <div ref='logo' class="logo">
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
@@ -81,6 +82,7 @@ export default {
     setInterval(() => {
       this.currentTime = new Date().getHours();
     }, TEN_MINUTES);
+    window.addEventListener("scroll", this.handleScroll);
   },
   components: { NavDrawer },
   props: {
@@ -88,7 +90,7 @@ export default {
       type: Boolean,
       default: false,
     },
-     toogleDrawer : Function
+    toogleDrawer: Function,
   },
   data() {
     return {
@@ -154,6 +156,17 @@ export default {
     },
   },
   methods: {
+    handleScroll() {
+      if (!this.isMobile) {
+        if (window.top.scrollY > 100) {
+          this.$refs.logo.classList.add('toogle');
+          this.$refs.greetingText.classList.add('toogle');
+        }else{
+           this.$refs.logo.classList.remove('toogle');
+           this.$refs.greetingText.classList.remove('toogle');
+        }
+      }
+    },
     slideDrawer() {
       this.isDrawerShown = !this.isDrawerShown;
       //burger animation
@@ -187,7 +200,7 @@ export default {
         });
       this.selectedMenuIndex = index;
       this.selectedMenu = this.$router.currentRoute.fullPath;
-            this.toogleDrawer(this.isDrawerShown);
+      this.toogleDrawer(this.isDrawerShown);
     },
   },
   watch: {
@@ -198,6 +211,9 @@ export default {
         this.$refs.burger.classList.toggle("toogle");
       }
     },
+  },
+  destroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -214,7 +230,7 @@ export default {
 .navbar {
   background: white;
   border-bottom: 0.1px solid white;
-  max-height: 7rem;
+  max-height: 8rem;
   width: 100%;
   position: fixed;
   top: 0;
@@ -246,6 +262,15 @@ nav .header .left {
   align-items: center;
 }
 
+
+.greeting-text{
+  font-size: 1.2rem;
+  transition: width 0.15s ease-in;
+}
+
+.left .toogle{
+  font-size : 0.8rem;
+}
 /* Middle section */
 nav .header .middle {
   flex: 3 1 15%;
@@ -254,16 +279,23 @@ nav .header .middle {
 }
 
 nav .header .middle .logo img {
-  width: 6rem;
+  width: 8rem;
   height: auto;
   cursor: pointer;
+  transition: width 0.15s ease-in;
 }
+
+nav .header .middle .toogle  img{
+  width: 5rem;
+}
+
 
 /* Right section */
 nav .header .right img {
-  width: 1.2;
+  width: 1.2rem;
   height: 1.2rem;
 }
+
 
 nav .header .right {
   flex: 0 1 42.5%;
@@ -295,19 +327,19 @@ nav .header .right .btn {
   font-family: "Work Sans", sans-serif;
 }
 
-.button{
+.button {
   margin: 0 1rem 0 1rem;
 }
 
+
 @media screen and (max-width: 960px) {
-  .navbar{
-     max-height: 6rem; 
+  .navbar {
+    max-height: 6rem;
   }
-  
+
   nav .header {
     border-bottom: none;
   }
-
 
   .burger {
     cursor: pointer;

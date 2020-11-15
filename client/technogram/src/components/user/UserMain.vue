@@ -45,7 +45,7 @@ export default {
   justify-content: center;
 }
 .content-container {
-  padding: 8rem 1rem 0 1rem;
+  padding: 9rem 1rem 0 1rem;
   width: 100%;
   max-width: 1488px;
 }
