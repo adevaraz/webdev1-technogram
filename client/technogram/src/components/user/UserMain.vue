@@ -50,6 +50,12 @@ export default {
   max-width: 1488px;
 }
 
+@media screen and (max-width: 960px){
+    .content-container {
+        padding: 7rem 1rem 0 1rem;
+    }
+}
+
 /* fade */
 .fade-enter {
   opacity: 0;

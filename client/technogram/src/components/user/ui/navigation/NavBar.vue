@@ -82,7 +82,7 @@ export default {
     setInterval(() => {
       this.currentTime = new Date().getHours();
     }, TEN_MINUTES);
-    window.addEventListener("scroll", this.handleScroll);
+      window.addEventListener("scroll", this.handleScroll);
   },
   components: { NavDrawer },
   props: {
@@ -179,8 +179,8 @@ export default {
     menuClass(index) {
       return this.selectedMenu ===
         getFullRoute(this.menus[index].route, this.menus[index].query || null)
-        ? "button text-decoration-underline font-weight-medium text-none"
-        : "button font-weight-medium text-none";
+        ? "button text-decoration-underline text-none"
+        : "button  text-none";
     },
     onDrawerMenuSelected(index) {
       this.isDrawerShown = !this.isDrawerShown;
@@ -216,13 +216,13 @@ export default {
     },
   },
   destroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+      window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 * {
   margin: 0;
   padding: 0;
@@ -232,7 +232,7 @@ export default {
 
 .navbar {
   background: white;
-  border-bottom: 0.1px solid white;
+  border-bottom: 0.1px solid rgb(112, 112, 112, 0.3);
   max-height: 9rem;
   width: 100%;
   position: fixed;
@@ -241,6 +241,7 @@ export default {
 }
 
 .floating  {
+  border-bottom: 0.1px solid white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
 }
 
