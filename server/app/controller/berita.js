@@ -36,7 +36,7 @@ exports.create = async (req, res, next) => {
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
             deskripsi_jurnalis: req.body.deskripsi_jurnalis,
-            id_admin_pembuat: req.query.admin
+            id_admin_pembuat: req.decodedToken.id
         };
         // save to database
         await Berita.create(berita)
@@ -63,7 +63,7 @@ exports.create = async (req, res, next) => {
 exports.updatePublish = async(req, res, next) => {
     try{
         const id = req.params.id;
-        const idAdmin = req.query.admin;
+        const idAdmin = req.decodedToken.id;
         const news = await Berita.findByPk(id)
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
