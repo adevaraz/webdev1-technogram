@@ -8,10 +8,11 @@
         <daftar-berita></daftar-berita>
       </v-col>
     </v-row>
+    
+    <!--
+    <router-view></router-view>
+    -->
   </v-app>
-  <!-- <div class="app">
-    <navbar></navbar>
-  </div> -->
 </template>
 
 <script>
@@ -25,6 +26,5 @@ export default {
 };
 </script>
 
-<style>
-  
+<style scoped>
 </style>

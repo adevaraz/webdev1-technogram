@@ -83,4 +83,8 @@ router.get("/popular", beritaController.popularNews);
 */
 router.get("/:id", beritaController.getNewsById);
 
+router.post('/new-image' , uploadPhoto.imageUpload , beritaController.uploadImgHandler);
+
+router.post('/delete-image'  , beritaController.deleteImgHandler);
+
 module.exports = router;
