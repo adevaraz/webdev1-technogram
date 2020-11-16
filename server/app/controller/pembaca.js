@@ -180,12 +180,12 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   const id = req.params.id;
   try {
-    if (id != req.decodedToken.id) {
-      const error = new Error("Not your id");
-      error.statusCode = 401;
-      error.cause = "Not your id";
-      throw error;
-    }
+    // if (id != req.decodedToken.id) {
+    //   const error = new Error("Not your id");
+    //   error.statusCode = 401;
+    //   error.cause = "Not your id";
+    //   throw error;
+    // }
     const account = await Pembaca.findByPk(id);
     if (account != null) {
       const destroy = await Pembaca.destroy({

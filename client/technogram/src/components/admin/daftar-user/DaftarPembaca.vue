@@ -71,8 +71,7 @@ export default {
   data () {
     return {
       account: [],
-      key: "",
-      id: ""
+      key: ""
     }
   },
   methods: {
@@ -103,9 +102,15 @@ export default {
       }
     },
 
-    deleteAccount() {
-      daftarPembaca.deleteBy(this.id);
-      this.retrieveAccount();
+    deleteAccount(id) {
+      daftarPembaca.deleteBy(id)
+      .then(response => {
+          console.log("Successfully Deleted Account with id "+response.data);
+          this.retrieveAccount();
+      })
+      .catch(e => {
+          console.log(e);
+      })
     }
   },
   mounted() {

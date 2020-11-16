@@ -29,7 +29,7 @@ const deleteBy = async(id) => {
         {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1MzU4NzUxLCJleHAiOjE2MDUzNjIzNTF9.al2jvk0ejsOqLnaNi_fXgPSiP-FpOdrWj1c_fTLLUnI"
+                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1NTMxMjg1LCJleHAiOjE2MDU1MzQ4ODV9.4SPyiQaCxisglDhTWcqDiDWfnIwdUudNPH_xpHe8WRA"
             }
         }
         );

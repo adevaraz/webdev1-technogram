@@ -207,7 +207,7 @@ exports.delete = async (req, res, next) => {
         //jika result === 1 maka record berhasil di delete
         if (result === 1) {
             if (news.url_gambar) deleteImage(news.url_gambar); //delete gambar nya
-            notifyDeleteBerite(news)
+            notifyDeleteBerita(news)
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
