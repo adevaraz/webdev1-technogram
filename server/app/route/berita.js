@@ -48,6 +48,13 @@ Route untuk mendapatkan semua berita
 router.get("/all-news", beritaController.getAllNews);
 
 /*
+ @author 23 NM
+
+Route untuk mengambil berita berdasarkan kata kunci
+*/
+router.get("/search", beritaController.searchBy);
+
+/*
  @author 02 AP
 
 Route untuk update berita

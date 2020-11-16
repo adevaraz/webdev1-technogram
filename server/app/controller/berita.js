@@ -146,6 +146,33 @@ exports.getAllNews = async(req, res, next) => {
     }
 }
 
+
+/*
+ @author 23 NM
+
+ Mengambil berita berdasarkan key
+*/
+exports.searchBy = async (req, res, next) => {
+    try {
+      let key = req.query.key;
+      
+      const result = await Berita.findAll({
+        where: {
+          [Op.or] : [
+              { judul : key }, { kategori_berita : key }
+          ]
+        },
+      });
+      
+      res.status(200).json({
+        message: `Success retrieve news`,
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+
 /*
  @author 02 AP
 
@@ -457,8 +484,5 @@ const notifyNewBerita = async (berita) => {
             data : berita
         })
     }
-
-
-
     
 }
