@@ -1,17 +1,17 @@
 <template>
   <v-app>
+    <router-view />
   </v-app>
 </template>
 
 <script>
-import LoginAdmin from './components/admin/log-in/LoginAdmin.vue';
 export default {
-  components: {
-    LoginAdmin
-  }
+  name: "App",
+  // components: {
+  //   AddBerita,
+  // },
 };
 </script>
 
 <style>
-
 </style>
