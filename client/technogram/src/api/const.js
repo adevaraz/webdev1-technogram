@@ -4,6 +4,7 @@ const BASE_URL = "http://localhost:3000"
 const BERITA_URL = BASE_URL + "/news"
 const KATEGORI_URL = BASE_URL + "/kategori"
 const ADMIN_URL = BASE_URL + '/admin'
+const USER_URL = BASE_URL + '/account'
 
 const TIMEOUT = 10000;
 
@@ -12,5 +13,6 @@ export {
     KATEGORI_URL,
     BERITA_URL,
     TIMEOUT,
-    ADMIN_URL
+    ADMIN_URL,
+    USER_URL
 }

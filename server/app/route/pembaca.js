@@ -27,6 +27,13 @@ router.get("/all-account", pembacaController.getAll);
 router.get("/get-by-id", pembacaController.getById);
 
 /**
+ * @author 17 MU
+ * 
+ * Route untuk mencari akun pengguna berdasarkan username atau email
+ */
+router.get("/search", pembacaController.searchBy);
+
+/**
  * @author 23 NM
  * 
  * Route untuk update akun
