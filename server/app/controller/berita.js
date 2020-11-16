@@ -153,23 +153,22 @@ exports.getAllNews = async(req, res, next) => {
  Mengambil berita berdasarkan key
 */
 exports.searchBy = async (req, res, next) => {
-    try {
-      let key = req.query.key;
-      
-      const result = await Berita.findAll({
-        where: {
-          [Op.or] : [
-              { judul : key }, { kategori_berita : key }
-          ]
-        },
-      });
-      
-      res.status(200).json({
-        message: `Success retrieve news`,
-        data: result,
-      });
-    } catch (err) {
-      next(err);
+    try{
+        const key = req.query.key || ''
+        const result = await Berita.findAll({
+            where : {
+                [Op.or] : [
+                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                ]
+            }
+        });
+        res.status(200).json({
+            message : 'Success retrieve Posts',
+            data : result
+        });
+    }catch(err){
+        next(err)
     }
   };
 

@@ -4,11 +4,12 @@
       Berita
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="search"
+        v-model="key"
         append-icon="mdi-magnify"
         label="Search"
         single-line
         hide-details
+        v-on:keydown.enter="searchBerita"
       ></v-text-field>
     </v-card-title>
     <v-simple-table height="500px" width="600px" class="grey lighten-5" dense>
@@ -30,19 +31,19 @@
           <td class="text-xs-center">{{ item.waktu_publikasi }}</td>
           <td class="text-xs-center">{{ item.kategori_berita }}</td>
           <td class="text-center">
-            <v-btn v-if="item.waktu_publikasi!=null" class="ma-1" color="success" dark
-            v-on:click="publish(item.id_berita)">
+            <v-btn v-if="item.waktu_publikasi!=null"  class="ma-1" color="success" dark
+            @click.prevent="publishBerita(item.id_berita)">
                 Unpublish
             </v-btn>
             <v-btn v-else class="ma-1" color="success" dark
-            v-on:click="publish(item.id_berita)">
+            v-on:click="publishBerita(item.id_berita)">
                 Publish
             </v-btn>
             <v-btn class="ma-1" color="warning" dark>
                 Edit
             </v-btn>
             <v-btn class="ma-1" color="error" dark
-            v-on:click="deleteBerita(item.id_berita)">
+            @click.prevent="deleteBerita(item.id_berita)">
                 Delete
             </v-btn>
           </td>
@@ -76,43 +77,49 @@ import daftarBerita from "../../../api/admin/daftarberita";
         })
       },
 
-      searchBerita() {
-        if(this.key=="") {
-          this.retrieveBerita();
-        } else {
-          daftarBerita.searchBy(this.key)
-          .then(response => {
+      async searchBerita(){
+        if(this.key === ''){
+          this.retrieveBerita()
+        }else{
+          const response = await daftarBerita.searchBy(this.key);
+          if(response instanceof Error){
+            // Munculkan error dialog
+            return
+          } 
+          console.log(response.data)
           this.berita = response.data;
-          console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-          })
         }
       },
 
       deleteBerita(id) {
         daftarBerita.deleteBy(id)
-        this.retrieveBerita();
-      },
-
-      publish(id) {
-        daftarBerita.publish(id)
         .then(response => {
-          this.berita = response.data
-          console.log('ada apa ini');
           console.log(id);
+          this.retrieveBerita();
           console.log(response.data);
           })
           .catch(e => {
             console.log(e);
           })
-        this.retrieveBerita();
+      },
+
+      publishBerita(id) {
+        daftarBerita.publish(id)
+        .then(response => {
+          console.log(id);
+          this.berita = response.data;
+          this.retrieveBerita();
+          console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          })
       }
     },
 
     mounted() {
       this.searchBerita();
+      this.deleteBerita();
     }
   };
 </script>

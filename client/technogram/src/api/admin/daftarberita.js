@@ -28,7 +28,7 @@ const publish = async(id) => {
         const result = await axios.put(publishByURL, {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxOTUwMiwiZXhwIjoxNjA1NDIzMTAyfQ.wSHP7ZEu-9QReF8QSj720hWcgbCoyeJAMBi98C3Hcec"
+                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQ4OTg5OCwiZXhwIjoxNjA1NDkzNDk4fQ.sm6QzbAWBOKzkU5KT_34e9bg1ukRDnDVeQ6JcTxWyIM"
             }
         })
         return result.data;
@@ -44,7 +44,7 @@ const deleteBy = async(id) => {
         {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxOTUwMiwiZXhwIjoxNjA1NDIzMTAyfQ.wSHP7ZEu-9QReF8QSj720hWcgbCoyeJAMBi98C3Hcec"
+                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQ4OTg5OCwiZXhwIjoxNjA1NDkzNDk4fQ.sm6QzbAWBOKzkU5KT_34e9bg1ukRDnDVeQ6JcTxWyIM"
             }
         })
         return result.data;
