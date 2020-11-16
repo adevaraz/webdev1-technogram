@@ -24,14 +24,24 @@ exports.create = async (req, res, next) => {
             filePath = req.file.path.replace(/\\/gi, "/");
         }
 
-        
+        const kategori = await Kategori.findOne({
+            where : {
+                nama_kategori : req.body.kategori_berita.toLowerCase()
+            }
+        })
+
+        if(!kategori){
+            const error = new Error('No such Category');
+            error.statusCode = 401;
+            throw error;
+        }
 
         // Create a news
         const berita = {
             judul: req.body.judul,
             artikel: req.body.artikel,
             url_gambar: filePath,
-            kategori_berita: req.body.kategori_berita,
+            kategori_berita: req.body.kategori_berita.toLowerCase(),
             jumlah_reader: 0,
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
@@ -161,6 +171,20 @@ exports.update = async (req, res) => {
         error.cause = "Invaid Post ID";
         throw error;
       }
+
+     
+    const kategori = await Kategori.findOne({
+        where : {
+            nama_kategori : req.body.kategori_berita.toLowerCase()
+        }
+    })
+
+    if(!kategori){
+        const error = new Error('No such Category');
+        error.statusCode = 401;
+        throw error;
+    }
+
     const judul = req.body.judul;
     const artikel = req.body.artikel;
     const kategori_berita = req.body.kategori_berita;
@@ -432,16 +456,19 @@ const notifyDeleteBerita = async (berita) => {
 }
 
 const notifyNewBerita = async (berita) => {
+    
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : berita.kategori_berita
+            nama_kategori : berita.kategori_berita.toLowerCase()
         }
     })
+
     if(!kategori){
-        const error = new Error('Invalid Category');
+        const error = new Error('No such Category');
         error.statusCode = 401;
         throw error;
     }
+    
     const listOfPembaca = await Pembaca.findAll({
         where : {
             most_liked_category : kategori.id_kategori
