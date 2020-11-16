@@ -1,6 +1,10 @@
+const { where } = require("sequelize/types");
 const Kategori = require("../model/kategori");
-
+const Berita = require('../model/berita');
 const sequelize = require("../util/database");
+
+//GENERAL CATEGORY
+const GENERAL_CATEGORY = 'general'
 /*
  @author 16 MN
 
@@ -52,7 +56,29 @@ exports.deleteKategoriByID = async (req,res,next)=> {
             error.statusCode = 204;
             throw error;
         }
+        
 
+        //Find or create general category
+        const generalKategori = await Kategori.findOrCreate({
+            where : {
+                nama_kategori : GENERAL_CATEGORY
+            }
+        })
+
+        //News with its categorty deleted
+        const beritas = await Berita.findAll({
+            where : {
+                kategori_berita : kategori.nama_kategori
+            }
+        })
+
+        //if beritas with such category is exist , then update the category to general category
+        if(beritas.length > 0){
+            for (let i = 0; i < beritas.length; i++)  {
+                beritas[i].kategori = generalKategori.nama_kategori
+                await beritas[i].save();
+            }
+        }
         await kategori.destroy();
         res.status(200).json({
             message : 'Success delete kategori'
