@@ -552,7 +552,9 @@ const createRefreshToken = async (pembaca , res) => {
   res.cookie('refresh' , token , {
     signed : true,
     maxAge :  UserAuthConst.USER_COOKIES_EXPIRED,
-    httpOnly  : true
+    httpOnly  : true,
+    sameSite: 'None',
+    secure : true
   })
   return token; 
 }
@@ -592,7 +594,9 @@ const nullifyClientRefreshToken = (res) =>{
   res.cookie('refresh' , '' , {
     maxAge :  0,
     httpOnly  : true,
-    signed : true
+    signed : true,
+    sameSite: 'None',
+    secure : true
   })
 }
 
