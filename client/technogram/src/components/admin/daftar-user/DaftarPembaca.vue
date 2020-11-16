@@ -4,12 +4,6 @@
             <v-col>
                 <div class="text-h4">Daftar Akun Pembaca</div>
             </v-col>
-            <!-- <v-col cols="2">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-            </v-col> -->
             <v-col cols="4">
                 <v-text-field
                     class="field-size"
@@ -77,7 +71,7 @@
                                             text
                                             @click="dialog = false"
                                         >
-                                            Disagree
+                                            Batal
                                         </v-btn>
                                         <v-btn
                                             color="blue darken-1"
@@ -85,7 +79,7 @@
                                             @click="dialog = false"
                                             v-on:click="deleteAccount(item.id_pembaca)"
                                         >
-                                            Agree
+                                            Setuju
                                         </v-btn>
                                         </v-card-actions>
                                     </v-card>
@@ -97,6 +91,14 @@
                 </v-simple-table>
             </v-col>
         </v-row>
+        <v-progress-circular
+          class="progressbar"
+          v-if="isLoading"
+          color="#E52B38"
+          height="10"
+          indeterminate
+        ></v-progress-circular>
+        <v-overlay :value="isLoading" absolute></v-overlay>
     </v-container>
 </template>
 
@@ -107,18 +109,22 @@ export default {
     return {
       account: [],
       key: "",
-      dialog : false,
+      dialog: false,
+      isLoading: false
     }
   },
   methods: {
     retrieveAccount() {
+      this.isLoading = true;
       daftarPembaca.getAll()
         .then(response => {
           this.account = response.data;
           console.log(response.data);
+          this.isLoading = false;
         })
         .catch(e => {
           console.log(e);
+          this.isLoading = false;
         });
     },
 
@@ -127,18 +133,22 @@ export default {
         this.retrieveAccount();
       }
       else{
+        this.isLoading = true;
         daftarPembaca.searchBy(this.key)
         .then(response => {
           this.account = response.data;
           console.log(response.data);
+          this.isLoading = false;
         })
         .catch(e => {
           console.log(e);
+          this.isLoading = false;
         });
       }
     },
 
     deleteAccount(id) {
+      this.isLoading = true;
       daftarPembaca.deleteBy(id)
       .then(response => {
           console.log("Successfully Deleted Account with id "+response.data);
@@ -146,6 +156,7 @@ export default {
       })
       .catch(e => {
           console.log(e);
+          this.isLoading = false;
       })
     }
   },
@@ -156,10 +167,9 @@ export default {
 </script>
 
 <style scoped>
-  /* .field-size {
-    padding: 0 0;
-    transform: scale(0.8);
-    transform-origin: right;
-    background-color: aquamarine;
-  } */
+.progressbar {
+  position: relative;
+  bottom: 50%;
+  left: 50%;
+}
 </style>

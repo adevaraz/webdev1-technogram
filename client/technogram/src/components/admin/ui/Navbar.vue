@@ -1,12 +1,15 @@
 <template>
   <v-card
-    height="700"
-    color="#F4F4F4"
+    height="100%"
+    width="80%"
+
   >
     <v-navigation-drawer
       permanent
       left
       color="#3c3d40"
+      class="pa-2"
+      width="100%"
     >
       <template v-slot:prepend>
         <v-list-item two-line>
@@ -46,7 +49,7 @@
           :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.text }}</v-list-item-title>
+          <v-list-item-title @click="$router.push({ name: menu.route })">{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
 
@@ -67,7 +70,7 @@
           :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.text }}</v-list-item-title>
+          <v-list-item-title @click="$router.push({ name: menu.route })">{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
 
@@ -88,7 +91,7 @@
           :key="menu.text"
           link
         >
-          <v-list-item-title>{{ menu.text }}</v-list-item-title>
+          <v-list-item-title @click="$router.push({ name: menu.route })">{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
     </v-navigation-drawer>
@@ -118,16 +121,15 @@
           }
         ],
         beritas: [
-          { text: 'Daftar Berita' },
-          { text: 'Unggah Berita' },
-          { text: 'Kategori' }
+          { text: 'Daftar Berita', route: 'daftar-berita' },
+          { text: 'Unggah Berita', route: 'add-berita' },
+          { text: 'Kategori', route: 'kategori'}
         ],
         pembacas: [
-          { text: 'Daftar Akun' }
+          { text: 'Daftar Pembaca', route: 'daftar-pembaca' }
         ],
         admins: [
-          { text: 'Daftar Admin' },
-          { text: 'Tambah Admin' }
+          { text: 'Tambah Admin', route: 'add-admin' }
         ]
     })
   }

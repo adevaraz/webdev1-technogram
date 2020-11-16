@@ -1,4 +1,3 @@
-const { where } = require("sequelize/types");
 const Kategori = require("../model/kategori");
 const Berita = require('../model/berita');
 const sequelize = require("../util/database");
