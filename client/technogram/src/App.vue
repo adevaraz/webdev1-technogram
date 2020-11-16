@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <login-admin></login-admin>
   </v-app>
 </template>
 
@@ -14,5 +13,5 @@ export default {
 </script>
 
 <style>
-  
+
 </style>
