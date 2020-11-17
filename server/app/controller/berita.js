@@ -26,7 +26,7 @@ exports.create = async (req, res, next) => {
 
         const kategori = await Kategori.findOne({
             where : {
-                nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),req.body.kategori_berita.toLowerCase())
+                nama_kategori : req.body.kategori_berita.toLowerCase()
             }
         })
 
@@ -41,7 +41,7 @@ exports.create = async (req, res, next) => {
             judul: req.body.judul,
             artikel: req.body.artikel,
             url_gambar: filePath,
-            kategori_berita: kategori.nama_kategori,
+            kategori_berita: req.body.kategori_berita.toLowerCase(),
             jumlah_reader: 0,
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
@@ -175,7 +175,7 @@ exports.update = async (req, res) => {
      
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),req.body.kategori_berita.toLowerCase())
+            nama_kategori : req.body.kategori_berita.toLowerCase()
         }
     })
 
@@ -187,7 +187,7 @@ exports.update = async (req, res) => {
 
     const judul = req.body.judul;
     const artikel = req.body.artikel;
-    const kategori_berita = kategori.nama_kategori;
+    const kategori_berita = req.body.kategori_berita;
     const jurnalis = req.body.jurnalis;
     const deskripsi_jurnalis = req.body.deskripsi_jurnalis;
     let url_gambar = req.body.url_gambar;
@@ -428,7 +428,7 @@ exports.getNewsById = async (req, res, next) => {
 const notifyDeleteBerita = async (berita) => {
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),berita.kategori_berita.toLowerCase())
+            nama_kategori : berita.kategori_berita
         }
     })
     if(!kategori){
@@ -459,7 +459,7 @@ const notifyNewBerita = async (berita) => {
     
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),berita.kategori_berita.toLowerCase())
+            nama_kategori : berita.kategori_berita.toLowerCase()
         }
     })
 
