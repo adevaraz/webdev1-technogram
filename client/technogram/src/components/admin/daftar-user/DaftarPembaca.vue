@@ -104,6 +104,7 @@
 
 <script>
 import daftarPembaca from "../../../api/admin/daftarPembaca";
+import {store} from '../../../store/index';
 export default {
   data () {
     return {
@@ -149,7 +150,7 @@ export default {
 
     deleteAccount(id) {
       this.isLoading = true;
-      daftarPembaca.deleteBy(id)
+      daftarPembaca.deleteBy(id , store.getters['admin/getToken'])
       .then(response => {
           console.log("Successfully Deleted Account with id "+response.data);
           this.retrieveAccount();

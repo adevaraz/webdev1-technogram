@@ -83,6 +83,7 @@ export default [
     ]},
     { 
         path : '/admin/signin',
+        name : 'admin-signin',
         component : LoginAdmin
     }
 ];
