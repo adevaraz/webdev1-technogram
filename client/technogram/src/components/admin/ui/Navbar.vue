@@ -102,24 +102,6 @@
   export default {
     name: 'navbar',
     data: () => ({
-        menus: [
-          {
-            text: 'Home',
-            submenu: ''
-          },
-          {
-            text: 'Berita',
-            submenu: 'beritas'
-          },
-          {
-            text: 'Pembaca',
-            submenu: 'pembacas'
-          },
-          {
-            text: 'Admin',
-            submenu: 'admins'
-          }
-        ],
         beritas: [
           { text: 'Daftar Berita', route: 'daftar-berita' },
           { text: 'Unggah Berita', route: 'add-berita' },
