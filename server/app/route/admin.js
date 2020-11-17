@@ -6,7 +6,7 @@ const {createAdminValidationRules, updateAdminValidationRules, signInAdminValida
 
 const router = express.Router();
 
-/**
+/*
 * @author 17 MU
 *
 * Route untuk membuat admin baru

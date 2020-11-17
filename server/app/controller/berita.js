@@ -24,14 +24,24 @@ exports.create = async (req, res, next) => {
             filePath = req.file.path.replace(/\\/gi, "/");
         }
 
-        
+        const kategori = await Kategori.findOne({
+            where : {
+                nama_kategori : req.body.kategori_berita.toLowerCase()
+            }
+        })
+
+        if(!kategori){
+            const error = new Error('No such Category');
+            error.statusCode = 401;
+            throw error;
+        }
 
         // Create a news
         const berita = {
             judul: req.body.judul,
             artikel: req.body.artikel,
             url_gambar: filePath,
-            kategori_berita: req.body.kategori_berita,
+            kategori_berita: req.body.kategori_berita.toLowerCase(),
             jumlah_reader: 0,
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
@@ -161,12 +171,27 @@ exports.update = async (req, res) => {
         error.cause = "Invaid Post ID";
         throw error;
       }
+
+     
+    const kategori = await Kategori.findOne({
+        where : {
+            nama_kategori : req.body.kategori_berita.toLowerCase()
+        }
+    })
+
+    if(!kategori){
+        const error = new Error('No such Category');
+        error.statusCode = 401;
+        throw error;
+    }
+
     const judul = req.body.judul;
     const artikel = req.body.artikel;
     const kategori_berita = req.body.kategori_berita;
     const jurnalis = req.body.jurnalis;
     const deskripsi_jurnalis = req.body.deskripsi_jurnalis;
     let url_gambar = req.body.url_gambar;
+    if(url_gambar === 'null' || url_gambar === 'undefined') url_gambar = null;
     if (req.file) {
         const plainImageUrl = req.file.path;
         url_gambar = plainImageUrl.replace(/\\/gi, "/");
@@ -174,6 +199,7 @@ exports.update = async (req, res) => {
       }
     if (url_gambar !== news.url_gambar && news.url_gambar!= null) {
         deleteImage(news.url_gambar);
+        news.url_gambar = null;
       }
     news.judul = judul || news.judul;
     news.artikel = artikel || news.artikel;
@@ -207,7 +233,7 @@ exports.delete = async (req, res, next) => {
         //jika result === 1 maka record berhasil di delete
         if (result === 1) {
             if (news.url_gambar) deleteImage(news.url_gambar); //delete gambar nya
-            notifyDeleteBerite(news)
+            notifyDeleteBerita(news)
             res.status(200).json({
                 message: `Post with id=${id} was deleted successfully.`,
                 data: result
@@ -430,16 +456,19 @@ const notifyDeleteBerita = async (berita) => {
 }
 
 const notifyNewBerita = async (berita) => {
+    
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : berita.kategori_berita
+            nama_kategori : berita.kategori_berita.toLowerCase()
         }
     })
+
     if(!kategori){
-        const error = new Error('Invalid Category');
+        const error = new Error('No such Category');
         error.statusCode = 401;
         throw error;
     }
+    
     const listOfPembaca = await Pembaca.findAll({
         where : {
             most_liked_category : kategori.id_kategori
@@ -457,8 +486,42 @@ const notifyNewBerita = async (berita) => {
             data : berita
         })
     }
-
-
-
-    
 }
+
+exports.uploadImgHandler = async (req, res, next)  => {
+    try {
+        if(!req.file) {
+            const error = new Error("No image found.");
+            error.statusCode = 422;
+            throw error;
+        } else {
+            const filepath = req.file.path.replace(/\\/gi, "/");
+            res.status(201).json({
+                message: "Success upload image.",
+                data : {
+                    url : filepath
+                }
+            });
+        }
+    }catch(err) {
+        next(err);
+    }
+};
+
+exports.deleteImgHandler = async (req, res, next) => {
+    try {
+        const filepath = req.body.url_gambar;
+        if(!filepath) {
+            const error = new Error("No image url found.");
+            error.statusCode = 422;
+            throw error;
+        } else {
+            deleteImage(filepath);
+            res.status(201).json({
+                message: "Success delete image."
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+};
