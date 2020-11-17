@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL} from '../const'
+import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
@@ -34,23 +34,26 @@ const deleteImg = async (image) => {
     }
 };
 
-const save = async (data) => {
+const save = async (data , token) => {
     try {
         const saveUrl = BERITA_URL + "/new-news";
         const result = await axios.post(saveUrl, data, {timeout:TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxNjc3MCwiZXhwIjoxNjA1NDIwMzcwfQ.l4gT6f_h8vnb3p1HIUljvEC-Dyn2LeG2ecFgR7l-jRY",
+            "Authorization": token,
         }});
         return result.data;
     } catch (err) {
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
+            return await save(data , newToken);
+        })
+        return errorResult;
     }
 };
 
-const update = async (idBerita, data) => {
+const update = async (idBerita, data , token) => {
     try {
         const updateUrl = BERITA_URL + `/update/${idBerita}`;
         const result = await axios.put(updateUrl, data, {timeout: TIMEOUT, headers: {
-            "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTQxNjc3MCwiZXhwIjoxNjA1NDIwMzcwfQ.l4gT6f_h8vnb3p1HIUljvEC-Dyn2LeG2ecFgR7l-jRY",
+            "Authorization": token,
         }});
         return result.data;
     } catch (err) {

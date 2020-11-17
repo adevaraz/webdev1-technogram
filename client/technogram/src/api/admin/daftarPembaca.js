@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {USER_URL , TIMEOUT} from '../const'
+import {USER_URL , TIMEOUT , ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 const getAll = async() => {
     try{
@@ -22,20 +22,28 @@ const searchBy = async(key) => {
     }
 }
 
-const deleteBy = async(id) => {
+const deleteBy = async(id , token) => {
     try{
         const deleteByURL = USER_URL + `/delete/${id}` 
         const result = await axios.delete(deleteByURL,
         {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1NTMxMjg1LCJleHAiOjE2MDU1MzQ4ODV9.4SPyiQaCxisglDhTWcqDiDWfnIwdUudNPH_xpHe8WRA"
+                "Authorization": token
             }
         }
         );
         return result.data;
     }catch(err){
-        return ErrorHandler.errorHandler(err);
+
+        /*
+        Sangat berpotensi terjadi infinite loop bila access token memiliki waktu active yang sangat singkat
+        , loop akan berhenti saat user refresh page.
+        */
+        const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
+            return await deleteBy(id , newToken);
+        })
+        return errorResult;
     }
 
 }

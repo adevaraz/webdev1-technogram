@@ -6,6 +6,9 @@ const KATEGORI_URL = BASE_URL + "/kategori"
 const ADMIN_URL = BASE_URL + '/admin'
 const USER_URL = BASE_URL + '/account'
 
+const ADMIN_ROLE = 'ADMIN';
+const USER_ROLE = 'USER';
+
 const TIMEOUT = 10000;
 
 export {
@@ -14,5 +17,7 @@ export {
     BERITA_URL,
     TIMEOUT,
     ADMIN_URL,
-    USER_URL
+    USER_URL,
+    USER_ROLE,
+    ADMIN_ROLE
 }

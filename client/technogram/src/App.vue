@@ -7,5 +7,8 @@
 <script>
 </script>
 
-<style scoped>
+<style>
+#nprogress .bar {
+background: #E52B38 !important;
+}
 </style>

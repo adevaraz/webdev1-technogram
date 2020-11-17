@@ -26,6 +26,7 @@
                         :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="isPasswordShown ? 'text' : 'password'"
                         class="input-group--focused"
+                        @click:append="isPasswordShown = !isPasswordShown"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -67,6 +68,7 @@
 
 <script>
 import Auth from "../../../api/admin/auth";
+import {mapActions} from "vuex";
 export default {
   data() {
     return {
@@ -97,6 +99,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      setToken : 'admin/setToken'
+    }),
     async signin() {
       console.log(this.isMobile);
       this.error.isError = false;
@@ -108,7 +113,8 @@ export default {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-        console.log(loginResult);
+        await this.setToken(loginResult.token);
+        this.$router.push({path : '/admin'})
       }
     },
   },

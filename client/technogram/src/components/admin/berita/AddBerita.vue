@@ -119,6 +119,7 @@
 import { BASE_URL } from "../../../api/const";
 import { VueEditor } from "vue2-editor";
 import berita from "../../../api/berita/berita";
+import {store} from '../../../store/index';
 export default {
   name: "add-berita",
   components: { VueEditor },
@@ -241,7 +242,7 @@ export default {
         data.append("jurnalis", this.jurnalis);
         data.append("deskripsi_jurnalis", this.deskripsi_jurnalis);
         this.isLoading = true;
-        const result = await berita.save(data);
+        const result = await berita.save(data , store.getters['admin/getToken']);
         if (result instanceof Error) {
           throw result;
         }
