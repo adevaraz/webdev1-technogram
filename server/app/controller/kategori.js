@@ -62,26 +62,6 @@ exports.deleteKategoriByID = async (req,res,next)=> {
     }
 }
 
-/*
-@Author 14 KP
-Menghapus semua kategori
-*/
-
-exports.deleteAllKategori = async (req, res, next) => {
-    try{
-        const result = await Kategori.destroy({
-            where: {},
-            truncate: false
-          });
-          await sequelize.query("ALTER SEQUENCE kategori_id_kategori_seq RESTART WITH 1", {raw: true});
-          res.status(200).json({
-            message: `All post record was deleted successfully.`,
-            data: result
-        });
-    }catch(err){
-        next(err)
-    }
-};
 
 /*
  @author 16 MN

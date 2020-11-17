@@ -1,18 +1,24 @@
 <template>
-<v-row class="list px-3 mx-auto">
+<v-row  class="list px-3 mx-auto">
+
   <v-col cols="20" sm="20">
-    <h1 style="margin-top:20px; margin-bottom:20px">Daftar Kategori </h1>
-    <v-btn small color="#41916c" class="white--text" style ="margin-top:20px; margin-right:20px" @click="newItem"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-plus</v-icon> Tambah kategori</v-btn>
-    <v-btn small color="#E52B38" class="white--text" style ="margin-top:20px" @click="deleteAll"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-close</v-icon>Hapus semua kategori</v-btn>
-     
+    <h1 style=" margin-bottom:20px ; font-family:'Playfair Display' ">Daftar Kategori </h1>
+    <v-btn small color="#41916c" class="white--text font-weight-regular" style ="margin-top:10px; margin-right:20px; font-family:'work sans'" @click="newItem"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-plus</v-icon> Tambah kategori</v-btn>
+    <!-- <v-btn small color="#E52B38" class="white--text font-weight-regular" style ="margin-top:10px; font-family:'work sans'" @click="deleteAll"> <v-icon style= "margin-right: 3px; margin-bottom: 1px" small>mdi-close</v-icon>Hapus semua kategori</v-btn> -->
+    
     <v-data-table :headers="headers" 
                   :items="kategori" 
+                  :loading="loadingItem"
                   hide-default-footer
                   class="elevation-3"
-                  style="margin-top: 20px; margin-left: auto; margin-right: auto; width:600px"
+                  style="margin-top: 20px; margin-left: auto; margin-right: auto; width:600px; font-family:'work sans'"
     >
+    <v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
     <template v-slot:top="">
-        <v-dialog v-model="dialog" max-width="300px">
+        <v-dialog v-model="dialog" :loading="loading" lazy-validation max-width="300px">
           <v-card :loading="loading" max-width="300">
             <template slot="progress">
               <v-progress-linear
@@ -22,27 +28,28 @@
               ></v-progress-linear>
             </template>
             <v-card-title>
-              <span style="margin-bottom: 40px;" class="headline">{{formTitle}}</span>
+              <span style="margin-bottom: 10px;" class="headline">{{formTitle}}</span>
             </v-card-title>
+            <v-form ref="form" v-model="isFormValid" lazy-validation>
             <v-card-text>
-              <v-container>
                 <v-row>
-                  <div v-if="dialogDelete === false && dialogDeleteAll=== false">                 
+                  <div v-if="dialogDelete === false">                 
                     <v-col cols="20" sm="10" md="10">
-                      <v-text-field :rules="[(v) => !!v || 'Kategori tidak boleh kosong']" style="max-width: 200px; margin-top=20px" v-model="editedItem.nama_kategori" label="Nama kategori" ></v-text-field>
+                      <v-text-field :rules='rules()' style="max-width: 200px; margin-top=20px; margin-left:5px" v-model="editedItem.nama_kategori" label="Nama kategori" ></v-text-field>
                     </v-col>
                   </div>                 
                 </v-row>
-              </v-container>
+             
             </v-card-text>
 
             <v-card-actions>
               <div class="flex-grow-1"></div>
                 <div v-if="dialogDelete === false">
                   <v-btn color="blue darken-1" text="" @click="close">Cancel</v-btn>
-                  <v-btn color="blue darken-1" text="" @click="save">Save</v-btn>
+                  <v-btn color="blue darken-1" text="" @click="save" :disabled="!isFormValid" >Save</v-btn>
                 </div>
             </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
 
@@ -61,12 +68,7 @@
 
             <v-card-text>
               <v-container>
-                <div v-if="dialogDeleteAll=== false">
                   Apakah anda yakin ingin menghapus kategori "{{editedItem.nama_kategori}}" ?
-                </div>
-                <div v-else-if="dialogDeleteAll===true">
-                  Apakah anda yakin ingin menghapus semua kategori?
-                </div>
               </v-container>
             </v-card-text>
 
@@ -81,8 +83,8 @@
     </template>
 
     <template v-slot:[`item.pilihan`]="{ item }">
-      <v-btn small color="#FAB339" class="white--text" style="margin-right:5px" @click="editItem(item)"> edit </v-btn>
-      <v-btn small color="#E52B38" class="white--text" @click="deleteItem(item)"> delete</v-btn>        
+      <v-btn depressed small color="#FAB339" class="text-capitalize font-weight-regular white--text" style="margin-right:5px" @click="editItem(item)"> edit </v-btn>
+      <v-btn depressed small color="#E52B38" class="text-capitalize font-weight-regular white--text" @click="deleteItem(item)"> delete</v-btn>        
     </template>
 
   </v-data-table>
@@ -95,9 +97,11 @@ import categoriesData from "../../../../api/kategori/daftarKategori";
 export default {
   data: () => ({
     dialogDelete: false,
-    dialogDeleteAll: false,
     dialog: false,
     loading: false,
+    loadingItem: false,
+    isFormValid: false,
+    progressBar: false,
     headers: [
       { text: "Id", value: "id_kategori"},
       { text: "Category Name", align: "left", sortable: true, value: "nama_kategori" },
@@ -106,10 +110,10 @@ export default {
     kategori: [],
     editedIndex: -1,
     editedItem: {
-      nama_kategori: " "
+      nama_kategori: ""
     },
     defaultItem: {
-      nama_kategori: " "
+      nama_kategori: ""
     }
   }),
 
@@ -121,6 +125,7 @@ export default {
       } else if (this.editedIndex === -1) {
         return "New Category";
       } else if (this.editedIndex > -1) {
+        console.log(this.kategori)
         return "Edit Category";
       }
       
@@ -133,20 +138,41 @@ export default {
     dialog(val) {
       val || this.close();
     },
-    loading (val) {
-        if (!val) return
-
-        setTimeout(() => (this.loading = false), 3000)
-      },
   },
-
 
   methods: {
     refreshList() {
-      this.kategori = []
-      this.retrieveKategori();
+        this.kategori = [],
+        this.retrieveKategori()
     },
+    reset () {
+        this.$refs.form.reset()
+      },
+    rules() {
+     const rules = [
+       (v) => {
+          const lowerArray = [];
+          for (var i = 0; i < this.kategori.length; i++) {
+            lowerArray.push(this.kategori[i]);
+          }
+          const lowercasedInput = v.toLowerCase();
+          for (var j = 0; j < lowerArray.length; j++) {
+            if(lowerArray[j].nama_kategori.toLowerCase()===lowercasedInput){
+              return 'Kategori sudah ada'
+            }
+          }
+          
+         return true
+        },
+         (v) => (!!v || "") || 'Kategori tidak boleh kosong',
+        
+      ]
+      return rules;
+    },
+
+  
     async retrieveKategori() {
+      this.loadingItem= true;
       try {
         const kategoriResult = await categoriesData.retrieveAll();
         if (kategoriResult instanceof Error) {
@@ -157,6 +183,7 @@ export default {
               this.kategori.push(element);
             });
           }
+          this.loadingItem=false;
         }
       } catch (error) {
         console.log(error);
@@ -165,12 +192,10 @@ export default {
 
     newItem(){
       this.dialog = true;
-      this.dialogDeleteAll = false;
-      this.dialogDelet= false;
+      this.dialogDelete= false;
     },
     editItem(item) {
       this.dialogDelete = false;
-      this.dialogDeleteAll = false;
       this.editedIndex = this.kategori.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -180,32 +205,29 @@ export default {
       this.dialogDelete = true;
       this.editedIndex = this.kategori.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      this.dialogDeleteAll=false
-    },
-
-    deleteAll() {
-      this.dialogDeleteAll = true;
-      this.dialogDelete= true;
     },
 
     close() {
       this.dialog = false;
+      this.loading=false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
         this.dialogDelete = false;
-        this.dialogDeleteAll = false;
+        this.reset();
       }, 300);
     },
 
     async save() {
       this.loading=true;
       if (this.editedIndex > -1) {  // Edited save
-        Object.assign(this.kategori[this.editedIndex], this.editedItem);
-        await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori);
-      
-      } else {  // New save
-        this.kategori.push(this.editedItem);
+       const updateResult = await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori);
+        if (updateResult instanceof Error) {
+          throw updateResult;
+        } else {
+          console.log(updateResult);
+        }     
+      } else {  // New save     
         const addResult = await categoriesData.addKategori(this.editedItem.nama_kategori);
          if (addResult instanceof Error) {
           throw addResult;
@@ -213,7 +235,6 @@ export default {
           console.log(addResult);
         }
       }
-      
       this.close();
       this.refreshList();
     },
@@ -223,17 +244,18 @@ export default {
       if(this.editedIndex>-1){ //delete one
         this.kategori.splice(this.editedIndex, 1);
         await categoriesData.deleteOneKategori(this.editedItem.id_kategori);
-      } else {  // delete all
-        const deleteResult = await categoriesData.deleteAllKategori();
-         if (deleteResult instanceof Error) {
-          throw deleteResult;
-        } else {
-          console.log(deleteResult);
-        }
+      // } else {  // delete all
+      //   const deleteResult = await categoriesData.deleteAllKategori();
+      //    if (deleteResult instanceof Error) {
+      //     throw deleteResult;
+      //   } else {
+      //     console.log(deleteResult);
+      //   }
       }
       
       this.close();
       this.refreshList();
+      
     },
     
   },  mounted() {
@@ -241,4 +263,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.h1{
+  font-family: 'Playfair Display';
+}
+</style>
 

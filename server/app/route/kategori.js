@@ -10,8 +10,6 @@ router.post('/create', authenticate.validateAdmin, kategoriValidationRules() , v
 
 router.delete('/delete/:id', authenticate.validateAdmin, kategoriController.deleteKategoriByID);
 
-router.delete('/delete', authenticate.validateAdmin, kategoriController.deleteAllKategori);
-
 router.get('/get/:id', kategoriController.getKategoriByID);
 
 router.get('/get', kategoriController.getAllKategori);
