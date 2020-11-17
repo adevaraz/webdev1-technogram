@@ -1,16 +1,16 @@
 <template>
-    <v-container >
-        <v-row class="pa-10" >
+    <v-container>
+        <v-row class="pa-md-10 pa-xl-10 pa-lg-10 pa-xs-3 pa-sm-3" >
             <v-col cols="12">
                 <h1 class="playfair-font">Popular News</h1>
             </v-col>
-            <v-col lg="5" md="5" xl="5" sm="12" xs=12 class="popular-container"> 
-                <headline-berita  ></headline-berita>
+            <v-col cols="12" lg="5" md="5" xl="5" sm="12" xs="12" class="popular-container"> 
+                <headline-berita class="item"></headline-berita>
             </v-col>
-            <v-col lg="7" md="7" xl="7" sm="12" xs=12 class="popular-container">
+            <v-col cols="12" lg="7" md="7" xl="7" sm="12"  class="popular-container">
                 <v-row>
-                    <v-col lg="6" md="6" xl="6" sm="12" xs=12 v-for="index in 6" :key="index" class="pt-0"> 
-                        <small-berita ></small-berita>
+                    <v-col cols="12" xl="6" lg="6" md="6"  sm="12"  v-for="index in 6" :key="index" class="pt-0"> 
+                        <small-berita class="item"></small-berita>
                     </v-col>
                 </v-row>
             </v-col>
@@ -55,6 +55,10 @@ export default {
     background: rgb(112,112,112,0.56);
     width: 100%;
     height: 2px;
+}
+
+.item{
+    cursor: pointer;
 }
 
 </style>
