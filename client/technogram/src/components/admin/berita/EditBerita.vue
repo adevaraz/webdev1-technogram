@@ -9,11 +9,11 @@
       <v-row>
         <v-col cols="12" md="10">
           <v-alert
-            type="success"
-            :value="alert"
+            :type="alert.type"
+            :value="alertStatus"
             transition="slide-y-transition"
           >
-            Sukses Update berita.
+            {{ alert.message }}
           </v-alert>
         </v-col>
       </v-row>
@@ -132,11 +132,20 @@ export default {
     return {
       isReset: false,
       isLoading: false,
-      alert: false,
+      alertStatus: false,
+      alert: {
+        type: "",
+        message: "",
+      },
       valid: true,
       urlTemp: null,
       url_gambar: null,
       url_gambar_ori: null,
+      error: {
+        isError: false,
+        message: "",
+        statusCode: "",
+      },
       id: "",
       judul: "",
       jurnalis: "",
@@ -188,8 +197,16 @@ export default {
     },
     async retrieveKategori() {
       try {
+        this.isLoading = true;
         const kategoriResult = await berita.getAllKategori();
         if (kategoriResult instanceof Error) {
+          this.error.message = kategoriResult.cause;
+          this.error.isError = true;
+          this.error.statusCode = kategoriResult.statusCode;
+          this.alert.type = "error";
+          this.alert.message = this.error.message;
+          this.alertStatus = true;
+          this.isLoading = false;
           throw kategoriResult;
         } else {
           if (kategoriResult.data.length > 0) {
@@ -197,6 +214,7 @@ export default {
               this.listKategori.push(this.toTitleCase(element.nama_kategori));
             });
           }
+          this.isLoading = false;
         }
       } catch (error) {
         console.log(error);
@@ -210,6 +228,12 @@ export default {
 
         const result = await berita.uploadImg(formData);
         if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+          this.error.statusCode = result.statusCode;
+          this.alert.type = "error";
+          this.alert.message = this.error.message;
+          this.alertStatus = true;
           throw result;
         }
         const url = BASE_URL + "/" + result.data.url;
@@ -227,6 +251,12 @@ export default {
       try {
         const result = await berita.deleteImg(image);
         if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+          this.error.statusCode = result.statusCode;
+          this.alert.type = "error";
+          this.alert.message = this.error.message;
+          this.alertStatus = true;
           throw result;
         }
         console.log(result.message);
@@ -253,12 +283,22 @@ export default {
         this.isLoading = true;
         const result = await berita.update(this.id, data);
         if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+          this.error.statusCode = result.statusCode;
+          this.alert.type = "error";
+          this.alert.message = this.error.message;
+          this.alertStatus = true;
+          this.isLoading = false;
+          window.scrollTo(0, 0);
           throw result;
         }
-        this.isLoading = false;
         console.log(result);
         this.getBeritabyId(this.id);
-        this.alert = true;
+        this.alert.type = "success";
+        this.alert.message = result.message;
+        this.alertStatus = true;
+        this.isLoading = false;
         window.scrollTo(0, 0);
       } catch (error) {
         console.log(error);
@@ -316,10 +356,12 @@ export default {
     },
   },
   watch: {
-    alert: function (val) {
+    alertStatus: function (val) {
       if (val) {
         setTimeout(() => {
-          this.alert = false;
+          this.alertStatus = false;
+          this.alert.type = "";
+          this.alert.message = "";
         }, 5000);
       }
     },
