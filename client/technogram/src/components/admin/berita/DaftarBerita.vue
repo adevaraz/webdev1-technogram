@@ -19,7 +19,7 @@
 
     <v-row>
       <v-col>
-        <v-simple-table height="500px" class="grey lighten-5" dense>
+        <v-simple-table height="500px" class="grey lighten-5">
         <template v-slot:default>
         <thead>
             <tr>
@@ -39,14 +39,14 @@
               <td class="text-xs-center">{{ item.kategori_berita }}</td>
               <td class="text-center">
                 <v-btn v-if="item.waktu_publikasi!=null"  class="ma-1" color="success" outlined
-                @click.prevent="publishBerita(item.id_berita)"
-                width="110px">
-                  Unpublish
+                  @click.prevent="publishBerita(item.id_berita)"
+                  width="110px">
+                    Unpublish
                 </v-btn>
                 <v-btn v-else class="ma-1" color="success" dark
-                v-on:click="publishBerita(item.id_berita)"
-                width="110px">
-                      Publish
+                  @click.prevent="publishBerita(item.id_berita)"
+                  width="110px">
+                    Publish
                   </v-btn>
                 <v-btn class="ma-2" color="warning" dark
                 width="110px">
@@ -62,16 +62,17 @@
                     <v-btn class="ma-2" color="error"
                     width="110px"
                     v-bind="attrs"
-                    v-on="on">
+                    v-on="on"
+                    @click.prevent="selectedBerita(item.id_berita)">
                       Delete
                     </v-btn>
                   </template>
-                    <v-card>
-                      <v-card-title class="text-h6">
-                        Apakah Anda yakin untuk menghapus berita ini?
-                      </v-card-title>
-                      <v-card-text></v-card-text>
-                      <v-card-actions>
+                  <v-card>
+                    <v-card-title class="text-h6">
+                      Apakah Anda yakin untuk menghapus berita ini?
+                    </v-card-title>
+                    <v-card-text></v-card-text>
+                    <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
                         color="grey darken-1"
@@ -84,13 +85,13 @@
                         color="blue darken-1"
                         text
                         @click="dialog = false"
-                        v-on:click="deleteBerita(item.id_berita)"
+                        @click.prevent="deleteBerita"
                       >
                         Yakin
                       </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </td>
             </tr>
           </tbody>
@@ -116,7 +117,7 @@ import daftarBerita from "../../../api/admin/daftarberita";
       return {
         berita: [],
         key: "",
-        id: "",
+        id: 0,
         dialog: false,
         isLoading: false
       }
@@ -148,10 +149,9 @@ import daftarBerita from "../../../api/admin/daftarberita";
         }
       },
 
-      deleteBerita(id) {
-        daftarBerita.deleteBy(id)
+      deleteBerita() {
+        daftarBerita.deleteBy(this.id)
         .then(response => {
-          console.log(id);
           console.log(this.id);
           this.retrieveBerita();
           console.log(response.data);
@@ -161,8 +161,8 @@ import daftarBerita from "../../../api/admin/daftarberita";
           })
       },
 
-      test(id) {
-        console.log(id)
+      selectedBerita(id) {
+        this.id=id
       },
 
       publishBerita(id) {
@@ -178,17 +178,17 @@ import daftarBerita from "../../../api/admin/daftarberita";
           })
       },
 
-      deleteAll() {
-        daftarBerita.deleteAll()
-        .then(response => {
-          this.retrieveBerita();
-          console.log(response.data);
-          })
-          .catch(e => {
-            console.log(e);
-          })
-      }
-    },
+    //   deleteAll() {
+    //     daftarBerita.deleteAll()
+    //     .then(response => {
+    //       this.retrieveBerita();
+    //       console.log(response.data);
+    //       })
+    //       .catch(e => {
+    //         console.log(e);
+    //       })
+    //   }
+     },
 
     mounted() {
       this.searchBerita();
