@@ -115,7 +115,7 @@
           >
         </v-col>
       </v-row>
-      <v-overlay :value="isLoading" absolute>
+      <v-overlay :value="isLoading">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
     </v-container>
