@@ -1,3 +1,3 @@
 <template>
-    <h1>Kasar</h1>
+    <h1>Kategori</h1>
 </template>
