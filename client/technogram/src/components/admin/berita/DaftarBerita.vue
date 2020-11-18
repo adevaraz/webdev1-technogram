@@ -128,16 +128,17 @@
 
 <script>
 import daftarBerita from "../../../api/admin/daftarberita";
-export default {
-  data() {
-    return {
-      berita: [],
-      key: "",
-      id: 0,
-      dialog: false,
-      isLoading: false,
-    };
-  },
+import {store} from '../../../store/index';
+  export default {
+    data () {
+      return {
+        berita: [],
+        key: "",
+        id: 0,
+        dialog: false,
+        isLoading: false
+      }
+    },
 
   methods: {
     retrieveBerita() {
@@ -166,10 +167,10 @@ export default {
       }
     },
 
-    deleteBerita() {
-      daftarBerita
-        .deleteBy(this.id)
-        .then((response) => {
+      deleteBerita() {
+        daftarBerita
+        .deleteBy(this.id, store.getters['admin/getToken'])
+        .then(response => {
           console.log(this.id);
           this.retrieveBerita();
           console.log(response.data);
@@ -183,10 +184,10 @@ export default {
       this.id = id;
     },
 
-    publishBerita(id) {
-      daftarBerita
-        .publish(id)
-        .then((response) => {
+      publishBerita(id) {
+        daftarBerita
+        .publish(id, store.getters['admin/getToken'])
+        .then(response => {
           console.log(id);
           this.berita = response.data;
           this.retrieveBerita();
