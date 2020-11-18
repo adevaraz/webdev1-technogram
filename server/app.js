@@ -14,11 +14,19 @@ const cors = require('cors');
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
 
+
+const corstOptionDelegate = (req , callback ) => {
+  callback(null , {
+    origin : req.header('Origin'),
+    credentials : true
+  })
+}
+
 /*
 @author 16 MN
 untuk mengatsi cors
 */
-app.use(cors())
+app.use(cors(corstOptionDelegate))
 
 
 

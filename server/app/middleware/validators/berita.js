@@ -30,7 +30,8 @@ const newsValidationRules = () => {
             .isLength({max:255}).withMessage("Deskripsi jurnalis maksimal 255 karakter."),
         body('url_gambar')
             .custom(value => {
-                if(!value) return true;
+                console.log("VALUE : " + value);
+                if(!value || value === 'null' || value === 'undefined') return true;
                 if(value) {
                     let objPath = path.parse(value);
                     let extType = objPath.ext.toLowerCase();
