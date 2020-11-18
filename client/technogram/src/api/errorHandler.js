@@ -7,16 +7,18 @@ const  errorHandler = async (error ,  role , callback) =>  {
     if(error.code === 'ECONNABORTED'){
         return processTimeoutError();
     }
+  
     if(error.response === undefined){
         return processUnknownError(); 
     }
+
     if(error.response.data.message === EXPIRED_JWT){
         //If jwt expired process this handler
         const result =  await expiredAccessToken(role , callback);
         return result;
     }
+  
     return processError(error);
-
 }
 
 const processError = error => {

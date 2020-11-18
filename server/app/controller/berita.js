@@ -46,7 +46,7 @@ exports.create = async (req, res, next) => {
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
             deskripsi_jurnalis: req.body.deskripsi_jurnalis,
-            id_admin_pembuat: req.query.admin
+            id_admin_pembuat: req.decodedToken.id
         };
         // save to database
         await Berita.create(berita)
@@ -73,7 +73,7 @@ exports.create = async (req, res, next) => {
 exports.updatePublish = async(req, res, next) => {
     try{
         const id = req.params.id;
-        const idAdmin = req.query.admin;
+        const idAdmin = req.decodedToken.id;
         const news = await Berita.findByPk(id)
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
@@ -140,7 +140,11 @@ exports.getByCat = async(req, res, next) => {
 
 exports.getAllNews = async(req, res, next) => {
     try {
-        const artikel = await Berita.findAll()
+        const artikel = await Berita.findAll({
+            order : [
+                ['id_berita' , 'ASC']
+            ]
+        })
         if(artikel.length > 0) {
             res.status(200).json({
                 message : 'Success retrieve all data',
@@ -155,6 +159,32 @@ exports.getAllNews = async(req, res, next) => {
         next(err)
     }
 }
+
+
+/*
+ @author 23 NM
+
+ Mengambil berita berdasarkan key
+*/
+exports.searchBy = async (req, res, next) => {
+    try{
+        const key = req.query.key || ''
+        const result = await Berita.findAll({
+            where : {
+                [Op.or] : [
+                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                ]
+            }
+        });
+        res.status(200).json({
+            message : 'Success retrieve Posts',
+            data : result
+        });
+    }catch(err){
+        next(err)
+    }
+  };
 
 /*
  @author 02 AP
@@ -486,7 +516,6 @@ const notifyNewBerita = async (berita) => {
             data : berita
         })
     }
-}
 
 exports.uploadImgHandler = async (req, res, next)  => {
     try {
