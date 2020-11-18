@@ -9,6 +9,7 @@
       <v-row>
         <v-col cols="12" md="10">
           <v-alert
+            v-if="alert.type"
             :type="alert.type"
             :value="alertStatus"
             transition="slide-y-transition"
@@ -125,7 +126,7 @@
 import { BASE_URL } from "../../../api/const";
 import { VueEditor } from "vue2-editor";
 import berita from "../../../api/berita/berita";
-import {store} from '../../../store/index'
+import { store } from "../../../store/index";
 export default {
   name: "edit-berita",
   components: { VueEditor },
@@ -282,7 +283,11 @@ export default {
         data.append("jurnalis", this.jurnalis);
         data.append("deskripsi_jurnalis", this.deskripsi_jurnalis);
         this.isLoading = true;
-        const result = await berita.update(this.id, data , store.getters['admin/getToken']);
+        const result = await berita.update(
+          this.id,
+          data,
+          store.getters["admin/getToken"]
+        );
         if (result instanceof Error) {
           this.error.message = result.cause;
           this.error.isError = true;
