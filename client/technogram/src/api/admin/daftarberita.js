@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {BERITA_URL, TIMEOUT} from '../const'
+import {BERITA_URL, TIMEOUT, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAll = async() => {
@@ -22,34 +22,40 @@ const searchBy = async(key) => {
     }
 }
 
-const publish = async(id) => {
+const publish = async(id, token) => {
     try {
         const publishByURL = BERITA_URL + `/publish/${id}`
         const result = await axios.put(publishByURL, {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTY3ODk3NSwiZXhwIjoxNjA1NjgyNTc1fQ.enNWV5rcH0PtbeWBwg1yKSd9b3dApK6VHq3whVCCSEw"
+                "Authorization": token
             }
         })
         return result.data;
     } catch(err) {
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
+            return await deleteBy(id , newToken);
+        })
+        return errorResult;
     }
 }
 
-const deleteBy = async(id) => {
+const deleteBy = async(id, token) => {
     try{
         const deleteByURL = BERITA_URL + `/delete/${id}` 
         const result = await axios.delete(deleteByURL,
         {
             timeout : TIMEOUT,
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInJvbGVzIjoiXCJhZG1pblwiOyIsImlhdCI6MTYwNTY3ODk3NSwiZXhwIjoxNjA1NjgyNTc1fQ.enNWV5rcH0PtbeWBwg1yKSd9b3dApK6VHq3whVCCSEw"
+                "Authorization": token
             }
         })
         return result.data;
     }catch(err){
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
+            return await deleteBy(id , newToken);
+        })
+        return errorResult;
     }
 }
 
