@@ -94,6 +94,7 @@
 
 <script>
 import categoriesData from "../../../../api/kategori/daftarKategori";
+import { store } from '../../../../store/index'
 export default {
   data: () => ({
     dialogDelete: false,
@@ -194,6 +195,7 @@ export default {
       this.dialog = true;
       this.dialogDelete= false;
     },
+    
     editItem(item) {
       this.dialogDelete = false;
       this.editedIndex = this.kategori.indexOf(item);
@@ -221,14 +223,14 @@ export default {
     async save() {
       this.loading=true;
       if (this.editedIndex > -1) {  // Edited save
-       const updateResult = await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori);
+       const updateResult = await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori, store.getters['admin/getToken']);
         if (updateResult instanceof Error) {
           throw updateResult;
         } else {
           console.log(updateResult);
         }     
       } else {  // New save     
-        const addResult = await categoriesData.addKategori(this.editedItem.nama_kategori);
+        const addResult = await categoriesData.addKategori(this.editedItem.nama_kategori, store.getters['admin/getToken']);
          if (addResult instanceof Error) {
           throw addResult;
         } else {
@@ -243,7 +245,7 @@ export default {
       this.loading=true;
       if(this.editedIndex>-1){ //delete one
         this.kategori.splice(this.editedIndex, 1);
-        await categoriesData.deleteOneKategori(this.editedItem.id_kategori);
+        await categoriesData.deleteOneKategori(this.editedItem.id_kategori, store.getters['admin/getToken']);
       // } else {  // delete all
       //   const deleteResult = await categoriesData.deleteAllKategori();
       //    if (deleteResult instanceof Error) {
