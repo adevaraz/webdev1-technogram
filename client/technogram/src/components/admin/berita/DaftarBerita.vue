@@ -112,6 +112,7 @@
 
 <script>
 import daftarBerita from "../../../api/admin/daftarberita";
+import {store} from '../../../store/index';
   export default {
     data () {
       return {
@@ -150,7 +151,7 @@ import daftarBerita from "../../../api/admin/daftarberita";
       },
 
       deleteBerita() {
-        daftarBerita.deleteBy(this.id)
+        daftarBerita.deleteBy(this.id, store.getters['admin/getToken'])
         .then(response => {
           console.log(this.id);
           this.retrieveBerita();
@@ -166,7 +167,7 @@ import daftarBerita from "../../../api/admin/daftarberita";
       },
 
       publishBerita(id) {
-        daftarBerita.publish(id)
+        daftarBerita.publish(id, store.getters['admin/getToken'])
         .then(response => {
           console.log(id);
           this.berita = response.data;
