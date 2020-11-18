@@ -1,22 +1,14 @@
 <template>
-<div id="app">
-  <v-app>
-    <daftar-berita></daftar-berita>
+    <router-view></router-view>
   </v-app>
-</div>
 </template>
 
 <script>
-//import Navbar from "./components/admin/ui/Navbar"
-import DaftarBerita from './components/admin/berita/DaftarBerita.vue';
-export default {
-  components: {
-  //  "navbar": Navbar, <navbar></navbar>
-    DaftarBerita
-  }
-};
 </script>
 
 <style>
-  
+#nprogress .bar {
+  background: #E52B38 !important;
+}
 </style>
+

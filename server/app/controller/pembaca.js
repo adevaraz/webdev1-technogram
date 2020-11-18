@@ -86,6 +86,32 @@ exports.getById = async (req, res, next) => {
   }
 };
 
+/**
+ * @author 17 MU
+ *
+ * Mencari akun pembaca dengan berdasarkan key
+ */
+exports.searchBy = async (req, res, next) => {
+  try {
+    let key = req.query.key;
+    
+    const result = await Pembaca.findAll({
+      where: {
+        [Op.or] : [
+            { username : key }, { email : key }
+        ]
+      },
+    });
+    
+    res.status(200).json({
+      message: `Success retrieve accounts`,
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 /*
  @author 23 NM
 
@@ -154,12 +180,12 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   const id = req.params.id;
   try {
-    if (id != req.decodedToken.id) {
-      const error = new Error("Not your id");
-      error.statusCode = 401;
-      error.cause = "Not your id";
-      throw error;
-    }
+    // if (id != req.decodedToken.id) {
+    //   const error = new Error("Not your id");
+    //   error.statusCode = 401;
+    //   error.cause = "Not your id";
+    //   throw error;
+    // }
     const account = await Pembaca.findByPk(id);
     if (account != null) {
       const destroy = await Pembaca.destroy({
@@ -552,7 +578,9 @@ const createRefreshToken = async (pembaca , res) => {
   res.cookie('refresh' , token , {
     signed : true,
     maxAge :  UserAuthConst.USER_COOKIES_EXPIRED,
-    httpOnly  : true
+    httpOnly  : true,
+    sameSite: 'None',
+    secure : true
   })
   return token; 
 }
@@ -592,7 +620,9 @@ const nullifyClientRefreshToken = (res) =>{
   res.cookie('refresh' , '' , {
     maxAge :  0,
     httpOnly  : true,
-    signed : true
+    signed : true,
+    sameSite: 'None',
+    secure : true
   })
 }
 
