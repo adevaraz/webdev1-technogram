@@ -57,7 +57,10 @@ const update = async (idBerita, data , token) => {
         }});
         return result.data;
     } catch (err) {
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
+            return await save(data , newToken);
+        })
+        return errorResult;
     }
 };
 

@@ -105,6 +105,15 @@
       <v-row>
         <v-col cols="12" md="10">
           <v-btn
+            class="mt-2"
+            elevation="6"
+            color="error"
+            outlined
+            large
+            :to="'all'"
+            >Batalkan</v-btn
+          >
+          <v-btn
             class="float-right mt-2"
             elevation="6"
             color="success"
@@ -340,7 +349,7 @@ export default {
         this.judul = result.data.judul;
         this.jurnalis = result.data.jurnalis;
         this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
-        this.kategori_berita = result.data.kategori_berita;
+        this.kategori_berita = this.toTitleCase(result.data.kategori_berita);
         this.artikel = result.data.artikel;
       } catch (error) {
         console.log(error);
