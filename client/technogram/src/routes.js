@@ -1,4 +1,5 @@
 import Admin from './components/admin/Admin.vue';
+import ListBerita from './components/admin/berita/DaftarBerita';
 import AddBerita from './components/admin/berita/AddBerita';
 import EditBerita from './components/admin/berita/EditBerita';
 import LoginAdmin from './components/admin/log-in/LoginAdmin.vue';
@@ -43,6 +44,11 @@ export default [
         path : '/admin', 
         component : Admin,
         children: [
+        {
+            path: "/admin/berita/all",
+            name: "daftar-berita",
+            component: ListBerita,
+        },
         {
             path: "/admin/berita/create",
             name: "add-berita",
