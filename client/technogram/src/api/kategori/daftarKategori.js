@@ -2,7 +2,6 @@ import axios from 'axios'
 import {KATEGORI_URL, TIMEOUT} from '../const'
 import errorHandler from '../errorHandler'
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZXMiOiJcImFkbWluXCI7IiwiaWF0IjoxNjA1NjE0NDc0LCJleHAiOjE2MDU2MTgwNzR9.iEy2lCzFnRMjqxMu1NSt0RJ4TBILF70MpqqCGiXSXOM'
 const retrieveAll = async() => {
     try{
         const retrieveURL = KATEGORI_URL + '/get' 
@@ -13,7 +12,7 @@ const retrieveAll = async() => {
     }
 
 }
-const addKategori = async(namakategori) => {
+const addKategori = async(namakategori, token) => {
     try{
         const addKategoriURL = KATEGORI_URL + '/create' 
         const result = await axios.post(addKategoriURL , {
@@ -32,7 +31,7 @@ const addKategori = async(namakategori) => {
     }
 }
 
-const updateKategori = async(namakategori, id) => {
+const updateKategori = async(namakategori, id, token) => {
     try{
         const updateKategoriURL = KATEGORI_URL + '/update/' +id; 
         const result = await axios.put(updateKategoriURL , {
@@ -51,7 +50,7 @@ const updateKategori = async(namakategori, id) => {
     }
 }
 
-const deleteOneKategori = async(id) => {
+const deleteOneKategori = async(id, token) => {
     try{
         const deleteKategoriURL = KATEGORI_URL + '/delete/' +id; 
         const result = await axios.delete(deleteKategoriURL ,  {
@@ -68,26 +67,9 @@ const deleteOneKategori = async(id) => {
     }
 }
 
-const deleteAllKategori = async() => {
-    try{
-        const deleteKategoriURL = KATEGORI_URL + '/delete-all'; 
-        const result = await axios.delete(deleteKategoriURL ,  {
-            timeout : TIMEOUT,
-            headers: {
-                'Authorization' : `${token}`
-            }
-        }
-        );
-        return result.data;
-    }catch(err){
-
-        return errorHandler.errorHandler(err);
-    }
-}
 export default{
     retrieveAll ,
     addKategori ,
     updateKategori ,
-    deleteOneKategori,
-    deleteAllKategori
+    deleteOneKategori
 }
