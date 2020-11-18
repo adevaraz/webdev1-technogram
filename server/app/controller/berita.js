@@ -516,6 +516,7 @@ const notifyNewBerita = async (berita) => {
             data : berita
         })
     }
+}
 
 exports.uploadImgHandler = async (req, res, next)  => {
     try {
