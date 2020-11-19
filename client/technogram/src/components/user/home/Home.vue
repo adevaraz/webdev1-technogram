@@ -1,8 +1,7 @@
 <template>
   <v-container>
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-      <v-col cols="12" v-if="isError">
-      </v-col>
+      <v-col cols="12" v-if="isError"></v-col>
       <v-col cols="12">
         <h1
           :class="!isMobile? 'playfair-font text-start' : 'playfair-font text-center'"
@@ -15,7 +14,14 @@
         <div class="middle-border"></div>
       </v-col>
       <v-col cols="12" lg="6" offset-lg="1" md="12" xl="6" offset-xl="1" sm="12">
-        <v-row>
+        <v-row class="top-right-container">
+          <v-progress-circular
+            class="progressbar"
+            v-if="popularLoading"
+            color="#E52B38"
+            height="10"
+            indeterminate
+          ></v-progress-circular>
           <v-col
             cols="12"
             sm="6"
@@ -65,9 +71,9 @@ import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 
 export default {
-  async created() {
-    await this.retrieveRecentBerita();
-    await this.retrievePopularBerita();
+  created() {
+    this.retrieveRecentBerita();
+    this.retrievePopularBerita();
   },
   components: {
     HeadlineBerita,
@@ -79,20 +85,21 @@ export default {
     return {
       recentBerita: [],
       popularBerita: [],
-      isError : false,
-      errorMessage : '',
-      recentLoading : false,
-      popularLoading : false
+      isError: false,
+      errorMessage: "",
+      recentLoading: false,
+      popularLoading: false,
     };
   },
   methods: {
     async retrieveRecentBerita() {
-      this.recentLoading = true
+      this.recentLoading = true;
       const result = await beritaApi.recentBerita();
-      this.recentLoading = false
+      this.recentLoading = false;
       if (result instanceof Error) {
-        this.isError = true
-        this.errorMessage = 'Gagal mendapatkan berita terkini karena ' + result.cause;
+        this.isError = true;
+        this.errorMessage =
+          "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
       result.data.forEach((element) => {
@@ -101,10 +108,13 @@ export default {
       });
     },
     async retrievePopularBerita() {
+      this.popularLoading = true;
       const result = await beritaApi.popularBerita();
+      this.popularLoading = false;
       if (result instanceof Error) {
-        this.isError = true
-        this.errorMessage = 'Gagal mendapatkan berita populer karena ' + result.cause;
+        this.isError = true;
+        this.errorMessage =
+          "Gagal mendapatkan berita populer karena " + result.cause;
         return;
       }
       result.data.forEach((element) => {
@@ -139,5 +149,15 @@ export default {
 
 .item {
   cursor: pointer;
+}
+
+.top-right-container {
+  position: relative;
+}
+
+.progressbar {
+  position: absolute;
+  left: 45%;
+  top: 45%;
 }
 </style>

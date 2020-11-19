@@ -1,14 +1,14 @@
 <template>
   <v-container >
-    <v-progress-circular
+    <v-row align="start">
+      <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
+            <v-progress-circular
       class="progressbar"
       v-if="isLoading"
       color="#E52B38"
       height="10"
       indeterminate
     ></v-progress-circular>
-    <v-row align="start">
-      <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
       </v-col>
       <v-col cols="12" class="cols-container">
         <h2 class="playfair-font news-tittle">{{berita.judul || ''}}</h2>
@@ -70,15 +70,14 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.container{
-  position: relative;
-}
+
 
 .img-container {
   background: #eeeeee;
   background-size: cover;
   background-position: center;
   height: 18rem;
+    position: relative;
   width: 100%;
 }
 
