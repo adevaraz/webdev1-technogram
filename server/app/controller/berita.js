@@ -26,7 +26,7 @@ exports.create = async (req, res, next) => {
 
         const kategori = await Kategori.findOne({
             where : {
-                nama_kategori : req.body.kategori_berita.toLowerCase()
+                nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),req.body.kategori_berita.toLowerCase())
             }
         })
 
@@ -41,12 +41,12 @@ exports.create = async (req, res, next) => {
             judul: req.body.judul,
             artikel: req.body.artikel,
             url_gambar: filePath,
-            kategori_berita: req.body.kategori_berita.toLowerCase(),
+            kategori_berita: kategori.nama_kategori,
             jumlah_reader: 0,
             jumlah_likes: 0,
             jurnalis: req.body.jurnalis,
             deskripsi_jurnalis: req.body.deskripsi_jurnalis,
-            id_admin_pembuat: req.query.admin
+            id_admin_pembuat: req.decodedToken.id
         };
         // save to database
         await Berita.create(berita)
@@ -73,7 +73,7 @@ exports.create = async (req, res, next) => {
 exports.updatePublish = async(req, res, next) => {
     try{
         const id = req.params.id;
-        const idAdmin = req.query.admin;
+        const idAdmin = req.decodedToken.id;
         const news = await Berita.findByPk(id)
         if(news.waktu_publikasi!=null){
             news.waktu_publikasi = null;
@@ -140,7 +140,11 @@ exports.getByCat = async(req, res, next) => {
 
 exports.getAllNews = async(req, res, next) => {
     try {
-        const artikel = await Berita.findAll()
+        const artikel = await Berita.findAll({
+            order : [
+                ['id_berita' , 'ASC']
+            ]
+        })
         if(artikel.length > 0) {
             res.status(200).json({
                 message : 'Success retrieve all data',
@@ -155,6 +159,32 @@ exports.getAllNews = async(req, res, next) => {
         next(err)
     }
 }
+
+
+/*
+ @author 23 NM
+
+ Mengambil berita berdasarkan key
+*/
+exports.searchBy = async (req, res, next) => {
+    try{
+        const key = req.query.key || ''
+        const result = await Berita.findAll({
+            where : {
+                [Op.or] : [
+                    {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                ]
+            }
+        });
+        res.status(200).json({
+            message : 'Success retrieve Posts',
+            data : result
+        });
+    }catch(err){
+        next(err)
+    }
+  };
 
 /*
  @author 02 AP
@@ -175,7 +205,7 @@ exports.update = async (req, res) => {
      
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : req.body.kategori_berita.toLowerCase()
+            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),req.body.kategori_berita.toLowerCase())
         }
     })
 
@@ -187,7 +217,7 @@ exports.update = async (req, res) => {
 
     const judul = req.body.judul;
     const artikel = req.body.artikel;
-    const kategori_berita = req.body.kategori_berita;
+    const kategori_berita = kategori.nama_kategori;
     const jurnalis = req.body.jurnalis;
     const deskripsi_jurnalis = req.body.deskripsi_jurnalis;
     let url_gambar = req.body.url_gambar;
@@ -428,7 +458,7 @@ exports.getNewsById = async (req, res, next) => {
 const notifyDeleteBerita = async (berita) => {
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : berita.kategori_berita
+            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),berita.kategori_berita.toLowerCase())
         }
     })
     if(!kategori){
@@ -459,7 +489,7 @@ const notifyNewBerita = async (berita) => {
     
     const kategori = await Kategori.findOne({
         where : {
-            nama_kategori : berita.kategori_berita.toLowerCase()
+            nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),berita.kategori_berita.toLowerCase())
         }
     })
 
@@ -524,4 +554,4 @@ exports.deleteImgHandler = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-};
+}

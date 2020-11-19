@@ -16,6 +16,17 @@
             </v-col>
         </v-row>
         <v-row>
+          <v-col>
+            <v-alert
+              v-model="alert"
+              dismissible
+              type="success"
+            >
+              {{ message }}
+            </v-alert>
+          </v-col>
+        </v-row>
+        <v-row>
             <v-col>
                 <v-simple-table class="grey lighten-5">
                     <template v-slot:default>
@@ -55,6 +66,7 @@
                                             dark
                                             v-bind="attrs"
                                             v-on="on"
+                                            @click="selectedAccount(item.id_pembaca)"
                                         >
                                         Delete
                                         </v-btn>
@@ -77,7 +89,7 @@
                                             color="blue darken-1"
                                             text
                                             @click="dialog = false"
-                                            v-on:click="deleteAccount(item.id_pembaca)"
+                                            v-on:click="deleteAccount()"
                                         >
                                             Setuju
                                         </v-btn>
@@ -104,13 +116,17 @@
 
 <script>
 import daftarPembaca from "../../../api/admin/daftarPembaca";
+import {store} from '../../../store/index';
 export default {
   data () {
     return {
       account: [],
       key: "",
       dialog: false,
-      isLoading: false
+      isLoading: false,
+      id: "",
+      alert: false,
+      message: ""
     }
   },
   methods: {
@@ -118,9 +134,16 @@ export default {
       this.isLoading = true;
       daftarPembaca.getAll()
         .then(response => {
+          if(this.alert==true){
+            this.alert = false;
+            this.message = "";
+          }
           this.account = response.data;
           console.log(response.data);
           this.isLoading = false;
+          if(this.message!=""){
+            this.alert = true;
+          }
         })
         .catch(e => {
           console.log(e);
@@ -147,17 +170,21 @@ export default {
       }
     },
 
-    deleteAccount(id) {
+    deleteAccount() {
       this.isLoading = true;
-      daftarPembaca.deleteBy(id)
+      daftarPembaca.deleteBy(this.id , store.getters['admin/getToken'])
       .then(response => {
-          console.log("Successfully Deleted Account with id "+response.data);
+          this.message = response.message;
           this.retrieveAccount();
       })
       .catch(e => {
           console.log(e);
           this.isLoading = false;
       })
+    },
+
+    selectedAccount(id){
+      this.id = id;
     }
   },
   mounted() {

@@ -94,6 +94,19 @@
           <v-list-item-title @click="$router.push({ name: menu.route })">{{ menu.text }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
+
+      <!-- Sign Out Button -->
+      <v-list-group
+        :value="false"
+        color="white"
+        active-class="grey darken-4"
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Sign Out</v-list-item-title>
+          </v-list-item-content>
+        </template>
+      </v-list-group>
     </v-navigation-drawer>
   </v-card>
 </template>
@@ -102,24 +115,6 @@
   export default {
     name: 'navbar',
     data: () => ({
-        menus: [
-          {
-            text: 'Home',
-            submenu: ''
-          },
-          {
-            text: 'Berita',
-            submenu: 'beritas'
-          },
-          {
-            text: 'Pembaca',
-            submenu: 'pembacas'
-          },
-          {
-            text: 'Admin',
-            submenu: 'admins'
-          }
-        ],
         beritas: [
           { text: 'Daftar Berita', route: 'daftar-berita' },
           { text: 'Unggah Berita', route: 'add-berita' },

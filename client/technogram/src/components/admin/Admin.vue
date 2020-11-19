@@ -16,10 +16,25 @@
 
 <script>
 import Navbar from './ui/Navbar.vue';
+import {store} from '../../store/index';
 export default {
   components: {
     "navbar" : Navbar,
-  }
+  },
+  async beforeRouteEnter (to, from, next) {
+
+       //Check if access token ready in vuex
+      if(!store.getters['admin/isTokenExist']){
+          //Try to get access token
+          await store.dispatch("admin/getNewToken")
+          const isTokenExist = store.getters['admin/isTokenExist']
+          if(!isTokenExist){
+            console.log('not authorized');
+            next('/admin/signin')
+          }
+      }
+      next();
+  },  
 };
 </script>
 
