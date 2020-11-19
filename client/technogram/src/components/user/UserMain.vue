@@ -3,7 +3,9 @@
     <nav-bar :toogleDrawer="toogleDrawer"></nav-bar>
     <transition name="fade">
       <div class="container" v-if="isContentShown">
-        <router-view class="content-container"></router-view>
+        <div class="content-container">
+          <router-view></router-view>
+        </div>
       </div>
     </transition>
   </div>
@@ -45,7 +47,7 @@ export default {
   justify-content: center;
 }
 .content-container {
-  padding: 10rem 1rem 0 1rem;
+  padding: 7rem 1rem 0 1rem;
   width: 100%;
   max-width: 1488px;
 }

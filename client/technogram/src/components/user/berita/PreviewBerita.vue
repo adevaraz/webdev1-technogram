@@ -1,20 +1,29 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col class="pa-0" cols="4" >
-        <div class="img-container" style="">
-          <img
-            src="https://akcdn.detik.net.id/visual/2019/10/01/f48a29f7-0148-4f67-9cd4-0de9431b66fe_169.jpeg?w=650"
-            alt="header_img"
-          />
-        </div>
+      <v-col class="pa-0 img-container" cols="4" :style="backgroundImg">
       </v-col>
-      <v-col class="" cols="7" offset="1">
-        <v-row>
-          <v-col cols="12" class="pa-0 ma-0"><h2 class="playfair-font new-tittle">Bill Gates dan Corona</h2></v-col>
-          <v-col cols="12" class="pa-0 ma-0"><p class="text-subtitle-1 playfair-font ma-0 pa-0">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit voluptas numquam aperiam earum odit repudiandae iure voluptatem incidunt magni corrupti.</p></v-col>
-          <v-col cols="12" class="pa-0 ma-0"><p class="text-caption playfair-font ma-0 pa-0">by Writer</p></v-col>
-          <v-col cols="12" class="pa-0 ma-0"><p class="text-caption playfair-font ma-0 pa-0">Friday, 09/10/2020 15:49</p></v-col>
+      <v-col class="py-0" cols="7" offset="1" >
+        <v-row class="fill-height">
+          <v-col cols="12" class="pa-0 ma-0">
+            <v-col cols="12" class="pa-0 ma-0">
+              <h2 class="playfair-font news-category">Hardware</h2>
+            </v-col>
+            <v-col cols="12" class="pa-0 ma-0">
+              <h2 class="playfair-font news-title">
+                Nvidia launches GeForce RTX 3090, 3080 and 3070
+                with Ampere
+              </h2>
+            </v-col>
+          </v-col>
+          <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
+            <v-col cols="12" class="pa-0 ma-0">
+              <h3 class="worksans-font news-writer">by Lee Ruby</h3>
+            </v-col>
+            <v-col cols="12" class="pa-0 ma-0">
+              <h3 class="worksans-font news-time">Friday, 09/10/2020 15:49</h3>
+            </v-col>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -23,16 +32,63 @@
 
 <script>
 export default {
-}
+  data() {
+    return {
+      img:
+        "https://6.viki.io/image/6927caca84014bc0a81315585a9a1ac0.jpeg?s=900x600&e=t",
+    };
+  },
+  computed: {
+    backgroundImg() {
+      return `background-image: url('${this.img}')`;
+    },
+  },
+
+};
 </script>
 
 <style scoped>
-.img-container {
-  width: 100%;
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
+
+.playfair-font {
+  font-family: "Playfair Display", serif;
 }
 
-.img-container img {
-  width: 100%;
-  height: auto;
+.worksans-font {
+  font-family: "Work Sans", sans-serif;
 }
+.img-container {
+  width: 100%;
+   cursor: pointer; 
+     background: #eeeeee;
+  background-size: cover;
+  background-position: center;
+}
+
+.news-category {
+  color: #e52b38;
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.news-title {
+  color: black;
+  font-weight: 600;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.news-writer{
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.news-time{
+  font-weight: 400;
+   font-size: 0.9rem;
+}
+
+
 </style>
