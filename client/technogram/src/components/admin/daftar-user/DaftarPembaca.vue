@@ -46,8 +46,8 @@
                         </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr
+                    <transition-group tag="tbody" name="fade" mode="out-in">
+                       <tr
                         v-for="item in account"
                         :key="item.id_pembaca"
                         >
@@ -98,7 +98,7 @@
                                 </v-dialog>
                             </td>
                         </tr>
-                    </tbody>
+                    </transition-group>
                     </template>
                 </v-simple-table>
             </v-col>
@@ -198,5 +198,19 @@ export default {
   position: relative;
   bottom: 50%;
   left: 50%;
+}
+
+/* Fade */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 1s;
+}
+
+.fade-leave-active {
+  transition: opacity 1s;
+  opacity: 0;
 }
 </style>

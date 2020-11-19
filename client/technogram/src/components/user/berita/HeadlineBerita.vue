@@ -1,18 +1,25 @@
 <template>
-  <v-container fluid class="fill-height">
-    <v-row>
+  <v-container >
+    <v-progress-circular
+      class="progressbar"
+      v-if="isLoading"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    ></v-progress-circular>
+    <v-row align="start">
       <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
       </v-col>
       <v-col cols="12" class="cols-container">
-        <h2 class="playfair-font news-tittle">Luluh lantahnya kenyataan the abraharm lincoln</h2>
+        <h2 class="playfair-font news-tittle">{{berita.judul || ''}}</h2>
       </v-col>
       <v-col cols="12">
         <v-row class="align-center"  align-self="end">
           <v-col cols="6" class="cols-container">
-            <p class="worksans-font news-writer">by Adam Smith</p>
+            <p class="worksans-font news-writer">by {{berita.jurnalis || ''}}</p>
           </v-col>
           <v-col cols="6" class="cols-container pt-1">
-            <p class="worksans-font news-time text-end">Friday, 09/10/2020 15:49</p>
+            <p class="worksans-font news-time text-end">{{date || ''}}</p>
           </v-col>
         </v-row>
       </v-col>
@@ -22,17 +29,33 @@
 
 <script>
 export default {
-  data() {
-    return {
-      img:
-        "https://6.viki.io/image/6927caca84014bc0a81315585a9a1ac0.jpeg?s=900x600&e=t",
-    };
+  props : {
+    berita : {
+      type : Object,
+      default(){
+        return {}
+      }
+    },
+    isLoading : {
+      type : Boolean ,
+      default(){
+        return true;
+      }
+    }
   },
   computed: {
     backgroundImg() {
-      return `background-image: url('${this.img}')`;
+      return `background-image: url('${this.berita.url_gambar}')`;
     },
-  },
+    date(){
+      //Format : 'Friday, 09/10/2020 15:49'
+      const fullDate = new Date(this.berita.waktu_publikasi);
+      const day = fullDate.toString().split(' ')[0];
+      const date = fullDate.toLocaleDateString();
+      const time =  `${fullDate.getHours()}:${fullDate.getMinutes()}`
+      return `${day} ${date} ${time}`;
+    }
+  }
 };
 </script>
 
@@ -47,6 +70,9 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
+.container{
+  position: relative;
+}
 
 .img-container {
   background: #eeeeee;
@@ -56,6 +82,11 @@ export default {
   width: 100%;
 }
 
+.progressbar{
+  position: absolute;
+  left: 50%;
+  top:50%;
+}
 
 .cols-container {
   padding: 0;

@@ -382,6 +382,13 @@ nav .header .right .btn {
     transition: opacity 1s;
   }
 
+  .slide-leave-active {
+    animation: slide-out 0.5s ease-out forwards;
+    transition: opacity 1s;
+    opacity: 0;
+    position: absolute;
+  }
+
   @keyframes slide-in {
     from {
       transform: translateX(-100%);
@@ -427,11 +434,5 @@ nav .header .right .btn {
     transform: rotate(45deg) translate(-3px, -4px);
   }
 
-  .slide-leave-active {
-    animation: slide-out 0.5s ease-out forwards;
-    transition: opacity 1s;
-    opacity: 0;
-    position: absolute;
-  }
 }
 </style>

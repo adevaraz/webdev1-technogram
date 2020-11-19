@@ -5,23 +5,21 @@
         <v-row class="justify-center">
           <v-col cols="11" class="pa-0 ma-0">
             <h2 class="playfair-font news-title">
-              Daily Crunch: Waymo opens up
-              driverless ride-hailing
+              {{berita.judul || ''}}
             </h2>
           </v-col>
           <v-col cols="11" class="pa-0 ma-0 mt-4">
-            <h4 class="work-sans news-preview">
-              Alphabet's self-driving technology company hits a
-              major milestone, Apple TV+ extends its free...
+            <h4 class="work-sans news-preview" >
+              {{preview}}...
             </h4>
           </v-col>
           <v-col cols="11" class="pa-0 ma-0 mt-4">
             <v-row class="justify-center">
               <v-col cols="5" class="pa-0 ma-0">
-                <h4 class="work-sans news-writer text-start">by Adam Smith</h4>
+                <h4 class="work-sans news-writer text-start">by {{berita.jurnalis || ''}}</h4>
               </v-col>
               <v-col cols="6" class="pa-0 ma-0">
-                <h4 class="work-sans news-category">| by Adam Smith</h4>
+                <h4 class="work-sans news-category">| {{berita.kategori_berita || ''}}</h4>
               </v-col>
             </v-row>
           </v-col>
@@ -40,12 +38,12 @@
                     <img src="../../../assets/icons/heart-filled.png" />
                   </v-col>
                   <v-col cols="2" class="pa-0 ma-0">
-                    <h4 class="work-sans news-likes text-start">21</h4>
+                    <h4 class="work-sans news-likes text-start">{{berita.jumlah_likes}}</h4>
                   </v-col>
                 </div>
               </v-col>
               <v-col  cols="6" class="pa-0 ma-0">
-                <h4 class="work-sans news-date text-end">September 30</h4>
+                <h4 class="work-sans news-date text-end">{{date || ''}}</h4>
               </v-col>
             </v-row>
           </v-col>
@@ -56,17 +54,37 @@
 </template>
 
 <script>
+const PRIVIEW_MAX_WORDS = 70
 export default {
-    data(){
-        return{
-            img : 'https://cdn.idntimes.com/content-images/community/2020/09/118663959-182348943336222-2440784317563878445-n-d7c2d0196898a32b168f34569c076fa6.jpg'
-        }
+  props : {
+    berita : {
+      type : Object,
+      default(){
+        return {}
+      }
+    }
+  },
+  computed: {
+    backgroundImg() {
+      return `background-image: url('${this.berita.url_gambar}')`;
     },
-    computed:{
-        backgroundImg(){
-            return `background-image: url('${this.img}')`
-        }
-    } 
+    date(){
+      //Format : 'Friday, 09/10/2020 15:49'
+      const fullDate = new Date(this.berita.waktu_publikasi);
+      const month = fullDate.toString().split(' ')[1];
+      const date = fullDate.getDate();
+      return `${month} ${date}`;
+    },
+    preview(){
+      console.log('woy ini nih');
+      const firstSentences = this.berita.artikel.toString().split('>')[2];
+      let preview = firstSentences;
+      if(firstSentences.length > PRIVIEW_MAX_WORDS){
+        preview = firstSentences.slice(0 , PRIVIEW_MAX_WORDS);
+      }
+      return preview.split('<')[0];
+    }
+  }
 };
 </script>
 
@@ -103,7 +121,7 @@ export default {
 
 .news-writer {
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.55rem;
 }
 
 .news-time {
@@ -113,7 +131,7 @@ export default {
 
 .news-category {
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 0.55rem;
   color: #e52b38;
 }
 

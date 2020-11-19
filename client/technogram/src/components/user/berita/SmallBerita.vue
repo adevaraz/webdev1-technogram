@@ -7,13 +7,13 @@
       <v-col class="pa-0" cols="6" offset="1" align-self="center">
         <v-row class="justify-center">
           <v-col cols="11" class="pa-0 ma-0">
-            <h2 class="playfair-font news-title">Bill Gates dan Corona</h2>
+            <h2 class="playfair-font news-title">{{berita.judul || ''}}</h2>
           </v-col>
           <v-col cols="11" class="pa-0 ma-0">
-            <h4 class="work-sans news-writer">by Adam Smith</h4>
+            <h4 class="work-sans news-writer">by {{berita.jurnalis || ''}}</h4>
           </v-col>
           <v-col cols="11" class="pa-0 ma-0" v-if="!showTime">
-            <h4 class="work-sans news-time">Friday, 09/10/2020 15:49</h4>
+            <h4 class="work-sans news-time">{{date}}</h4>
           </v-col>
         </v-row>
       </v-col>
@@ -28,18 +28,27 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  data() {
-    return {
-      img:
-        "https://cdn.idntimes.com/content-images/community/2020/09/118663959-182348943336222-2440784317563878445-n-d7c2d0196898a32b168f34569c076fa6.jpg",
-    };
-  },
-  computed: {
-    backgroundImg() {
-      return `background-image: url('${this.img}')`;
+    berita: {
+      type: Object,
+      default(){
+        return {}
+      }
     },
   },
+
+  computed: {
+    backgroundImg() {
+      return `background-image: url('${this.berita.url_gambar}')`;
+    },
+    date() {
+      //Format : 'Friday, 09/10/2020 15:49'
+      const fullDate = new Date(this.berita.waktu_publikasi);
+      const day = fullDate.toString().split(" ")[0];
+      const date = fullDate.toLocaleDateString();
+      const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
+      return `${day} ${date} ${time}`;
+    },
+  }
 };
 </script>
 

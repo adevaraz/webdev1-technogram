@@ -7,21 +7,20 @@
         <v-row class="fill-height">
           <v-col cols="12" class="pa-0 ma-0">
             <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-category">Hardware</h2>
+              <h2 class="playfair-font news-category">{{berita.kategori_berita || ''}}</h2>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
               <h2 class="playfair-font news-title">
-                Nvidia launches GeForce RTX 3090, 3080 and 3070
-                with Ampere
+                {{berita.judul || ''}}
               </h2>
             </v-col>
           </v-col>
-          <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
+          <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8 ">
             <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-writer">by Lee Ruby</h3>
+              <h3 class="worksans-font news-writer">by {{berita.jurnalis || ''}}</h3>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-time">Friday, 09/10/2020 15:49</h3>
+              <h3 class="worksans-font news-time">{{date}}</h3>
             </v-col>
           </v-col>
         </v-row>
@@ -32,18 +31,26 @@
 
 <script>
 export default {
-  data() {
-    return {
-      img:
-        "https://6.viki.io/image/6927caca84014bc0a81315585a9a1ac0.jpeg?s=900x600&e=t",
-    };
+  props : {
+    berita : {
+      type : Object,
+      default(){
+        return {}
+      }
+    }
   },
   computed: {
     backgroundImg() {
-      return `background-image: url('${this.img}')`;
+      return `background-image: url('${this.berita.url_gambar}')`;
     },
-  },
-
+    date(){
+      //Format : 'Friday, 09/10/2020 15:49'
+      const fullDate = new Date(this.berita.waktu_publikasi);
+      const month = fullDate.toString().split(' ')[1];
+      const date = fullDate.getDate();
+      return `${month} ${date}`;
+    }
+  }
 };
 </script>
 
