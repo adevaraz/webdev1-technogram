@@ -109,6 +109,24 @@ const popularBerita = async ( perPage , key , page ) => {
     }
 }
 
+const getByCat = async (perPage, category, page) => {
+    try {
+        const currentUrl = BERITA_URL + '/';
+
+        const result = await axios.get(currentUrl, {
+            params: {
+                perpage: perPage || 1,
+                category: category || '',
+                page: page || 1
+            }
+        })
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
+
 export default{
     getAllKategori,
     uploadImg,
@@ -117,5 +135,6 @@ export default{
     update,
     get,
     recentBerita,
-    popularBerita
+    popularBerita,
+    getByCat
 };

@@ -49,37 +49,57 @@
             </div>
         </v-sheet>
 
-        <v-card>
-            <!-- Pake component yang ada di nopalpadil -->
-        </v-card>
+        <div class="pr-16 mr-12 my-16">
+            <h3 class="worksans-font red-text">Recommendations</h3>
+            <div
+                v-for="berita in relatedBerita"
+                :key="berita.id_berita"
+                class="d-flex flex-col py-10"
+            >
+                <small-berita class="item" :berita="berita"></small-berita>
+            </div>
+        </div>
     </v-container>
 </template>
 
 <script>
 import { BASE_URL } from "../../../api/const";
 import berita from "../../../api/berita/berita";
+import SmallBerita from "../berita/SmallBerita.vue";
 // import { store } from "../../../store/index";
 
 export default {
+    created() {
+        this.getBeritabyId(this.$route.params.id);
+        console.log(this.kategori);
+    },
+
     name: "read-berita",
+
+    components: {
+        SmallBerita
+    },
 
     data: () => ({
         judul: '',
         artikel: '',
         waktu_publikasi: '',
         url_gambar: '',
+        kategori: '',
         jumlah_reader: 0,
         jumlah_likes: 0,
         jurnalis: '',
         deskripsi_jurnalis: '',
+        relatedBerita: [],
         urlTemp: null,
         urlGambar: null,
-        isLoading: false
+        isLoading: false,
+        relatedBeritaLoading: false
     }),
 
     computed: {
         date() {
-            // Format : Day, DD/MM/YYYY HH:MM
+            // Format : DayName, DD/MM/YYYY HH:MM
             const fullDate = new Date(this.waktu_publikasi);
             const day = fullDate.toString().split(' ')[0];
             const date = fullDate.toLocaleDateString();
@@ -91,6 +111,7 @@ export default {
 
     mounted() {
         this.getBeritabyId(this.$route.params.id);
+        this.retrieveRelatedBerita(this.kategori);
     },
 
     methods: {
@@ -115,6 +136,7 @@ export default {
                 this.artikel = result.data.artikel;
                 this.waktu_publikasi = result.data.waktu_publikasi;
                 this.url_gambar = result.data.url_gambar;
+                this.kategori = result.data.kategori_berita;
                 this.jumlah_reader = result.data.jumlah_reader;
                 this.jumlah_likes = result.data.jumlah_likes;
                 this.jurnalis = result.data.jurnalis;
@@ -123,6 +145,7 @@ export default {
                 console.log(error);
             }
         },
+
         async getImageObj(ImageUrl) {
             try {
                 const path = require("path");
@@ -139,6 +162,29 @@ export default {
                 console.log(error);
             }
         },
+
+        async retrieveRelatedBerita(kategori) {
+            try {
+                this.relatedBeritaLoading = true;
+                const result = await berita.getByCat(kategori);
+                this.relatedBeritaLoading = false;
+
+                if(result instanceof Error) {
+                    this.errorMessage =
+          "Gagal mendapatkan berita populer karena " + result.cause;
+                    return;
+                }
+
+                result.data.forEach(element => {
+                    element.url_gambar = BASE_URL + "/" + element.url_gambar;
+                    this.relatedBerita.push(element);
+                });
+                
+                console.log(this.relatedBerita);
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 </script>
@@ -156,17 +202,17 @@ export default {
 }
 
 .item {
-  margin-right: 1rem;
   cursor: pointer;
+  height: 16px;
+  max-height: 16px;
 }
 
 .img-btn:hover {
   background: rgba(80, 80, 80, 0.164);
 }
 
-.item {
-    height: 16px;
-    max-height: 16px;
+.red-text {
+    color: #e52b38;
 }
 
 #header {
