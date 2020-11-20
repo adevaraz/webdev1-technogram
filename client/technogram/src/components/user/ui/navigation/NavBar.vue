@@ -5,7 +5,7 @@
         <div class="left">
           <div
             ref="greetingText"
-            class="greeting-text  font-weight-bold"
+            class="greeting-text font-weight-bold"
             v-if="!isMobile"
           >{{getGreetings}}</div>
           <div @click="slideDrawer" ref="burger" class="burger" v-else>
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="middle">
-          <div ref='logo' class="logo">
+          <div ref="logo" class="logo">
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
@@ -29,6 +29,9 @@
             <div class="public" v-else>
               <v-btn class="item btn text-none" color="#E52B38" small>Sign in</v-btn>
             </div>
+          </div>
+          <div class="navigation" v-if="isMobile && isLoggedIn">
+            <img class="item img-btn" src="../../../../assets/icons/bell.png" />
           </div>
         </div>
       </div>
@@ -50,6 +53,7 @@
           :menus="menus"
           :onClicked="onDrawerMenuSelected"
           :currentSelected="selectedMenuIndex"
+          :isLoggedIn="isLoggedIn"
         ></nav-drawer>
       </div>
     </transition>
@@ -82,7 +86,7 @@ export default {
     setInterval(() => {
       this.currentTime = new Date().getHours();
     }, TEN_MINUTES);
-      window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
   },
   components: { NavDrawer },
   props: {
@@ -94,7 +98,7 @@ export default {
   },
   data() {
     return {
-      navbarClass : 'navbar',
+      navbarClass: "navbar",
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
       menus: [
@@ -160,13 +164,13 @@ export default {
     handleScroll() {
       if (!this.isMobile) {
         if (window.top.scrollY > 100) {
-          this.$refs.logo.classList.add('toogle');
-          this.$refs.greetingText.classList.add('toogle');
-          this.navbarClass = 'navbar floating'
-        }else{
-           this.$refs.logo.classList.remove('toogle');
-           this.$refs.greetingText.classList.remove('toogle');
-           this.navbarClass = 'navbar'
+          this.$refs.logo.classList.add("toogle");
+          this.$refs.greetingText.classList.add("toogle");
+          this.navbarClass = "navbar floating";
+        } else {
+          this.$refs.logo.classList.remove("toogle");
+          this.$refs.greetingText.classList.remove("toogle");
+          this.navbarClass = "navbar";
         }
       }
     },
@@ -216,13 +220,13 @@ export default {
     },
   },
   destroy() {
-      window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -240,11 +244,10 @@ export default {
   z-index: 5;
 }
 
-.floating  {
+.floating {
   border-bottom: 0.1px solid white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
 }
-
 
 nav {
   display: flex;
@@ -270,14 +273,13 @@ nav .header .left {
   align-items: center;
 }
 
-
-.greeting-text{
+.greeting-text {
   font-size: 1.2rem;
   transition: width 0.15s ease-in;
 }
 
-.left .toogle{
-  font-size : 0.8rem;
+.left .toogle {
+  font-size: 0.8rem;
 }
 /* Middle section */
 nav .header .middle {
@@ -293,17 +295,15 @@ nav .header .middle .logo img {
   transition: width 0.15s ease-in;
 }
 
-nav .header .middle .toogle  img{
+nav .header .middle .toogle img {
   width: 5rem;
 }
-
 
 /* Right section */
 nav .header .right img {
   width: 1.2rem;
   height: 1.2rem;
 }
-
 
 nav .header .right {
   flex: 0 1 42.5%;
@@ -339,15 +339,18 @@ nav .header .right .btn {
   margin: 0.25rem 1rem 0.25rem 1rem;
 }
 
-
 @media screen and (max-width: 960px) {
   .navbar {
     max-height: 6rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
   }
 
   nav .header {
     border-bottom: none;
+  }
+
+  nav .header .middle .logo img {
+    width: 6rem;
   }
 
   .burger {
@@ -366,7 +369,7 @@ nav .header .right .btn {
     padding: 1rem;
     width: 100%;
     position: absolute;
-    top: 5rem;
+    top: 4rem;
     z-index: 5;
   }
 
@@ -433,6 +436,5 @@ nav .header .right .btn {
   .toogle .line3 {
     transform: rotate(45deg) translate(-3px, -4px);
   }
-
 }
 </style>
