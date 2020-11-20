@@ -103,7 +103,7 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title>Sign Out</v-list-item-title>
+            <v-list-item-title @click="signout()">Sign Out</v-list-item-title>
           </v-list-item-content>
         </template>
       </v-list-group>
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { store } from '../../../store/index'
   export default {
     name: 'navbar',
     data: () => ({
@@ -124,9 +125,27 @@
           { text: 'Daftar Pembaca', route: 'daftar-pembaca' }
         ],
         admins: [
-          { text: 'Tambah Admin', route: 'add-admin' }
-        ]
-    })
+          { text: 'Tambah Admin', route: 'add-admin' },
+        ],
+    }),
+     methods: {
+      async signout(){
+        const status = await store.getters["admin/isTokenExist"]
+        console.log("status token:")
+        console.log(status)
+       const logoutResult = await store.dispatch("admin/logOut") 
+       if(logoutResult instanceof Error){
+          this.error.message = logoutResult.cause;
+          this.error.isError = true;
+       } else {
+         const status2 = await store.getters["admin/isTokenExist"]
+         console.log("status2 token:")
+        console.log(status2)
+        this.$router.push("/admin/signin")
+       }
+      
+      }
+    }
   }
 </script>
 
