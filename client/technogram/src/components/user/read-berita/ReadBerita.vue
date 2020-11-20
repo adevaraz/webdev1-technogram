@@ -1,8 +1,8 @@
 <template>
     <v-container class="d-flex flex-row mb-6">
         <v-sheet class="mx-16 px-16">
-            <h1 class="playfair-font">{{ berita.judul || '' }}</h1>
-            <p class="worksans-font">{{ date || '' }}</p>
+            <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
+            <p class="worksans-font">{{ date }}</p>
 
             <!-- Information section -->
             <v-card
@@ -10,21 +10,22 @@
                 flat
                 tile
             >
-                <h4 class="mr-auto">by {{ berita.jurnalis }}</h4>
+                <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
                 <div class="d-flex flex-row">
                     <div id="likes" class="d-flex flex-row">
                         <img class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                        <p class="text-caption text-left mr-3 worksans-font">{{ berita.jumlah_likes || 0 }} likes</p>
+                        <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                     </div>
 
                     <div id="view" class="d-flex flex-row">
                         <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
-                        <p class="text-caption text-left mr-3 worksans-font">{{ berita.jumlah_reader || 0}} viewers</p>
+                        <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
                     </div>
                     
                     <div id="save" class="d-flex flex-row">
                         <img class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                        <p> </p>
                     </div>
                 </div>
             </v-card>
@@ -40,13 +41,11 @@
                     />
                 </div>
 
-                <p>
-                    {{ berita.artikel || '' }}
-                </p>
+                <div v-html=artikel></div>
 
-                <p>Written by</p>
-                <h4>{{ berita.jurnalis || '' }}</h4>
-                <p>{{ berita.deskripsi_jurnalis || '' }}</p>
+                <p class="grey--text text--darken-2">Written by</p>
+                <h4>{{ jurnalis }}</h4>
+                <p>{{ deskripsi_jurnalis }}</p>
             </div>
         </v-sheet>
 
@@ -57,35 +56,31 @@
 </template>
 
 <script>
-// import { BASE_URL } from "../../../api/const";
-// import berita from "../../../api/berita/berita";
+import { BASE_URL } from "../../../api/const";
+import berita from "../../../api/berita/berita";
 // import { store } from "../../../store/index";
 
 export default {
     name: "read-berita",
-    props: () => ({
-        berita: {
-            type: Object,
-            default() {
-                return {}
-            }
-        },
-        isLoading: {
-            type: Boolean,
-            default() {
-                return true;
-            }
-        }
-    }),
+
     data: () => ({
+        judul: '',
+        artikel: '',
+        waktu_publikasi: '',
+        url_gambar: '',
+        jumlah_reader: 0,
+        jumlah_likes: 0,
+        jurnalis: '',
+        deskripsi_jurnalis: '',
         urlTemp: null,
-        urlGambar: null
+        urlGambar: null,
+        isLoading: false
     }),
 
     computed: {
-        date: function() {
+        date() {
             // Format : Day, DD/MM/YYYY HH:MM
-            const fullDate = new Date(this.berita.waktu_publikasi);
+            const fullDate = new Date(this.waktu_publikasi);
             const day = fullDate.toString().split(' ')[0];
             const date = fullDate.toLocaleDateString();
             const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
@@ -94,7 +89,40 @@ export default {
         }
     },
 
-    method: {
+    mounted() {
+        this.getBeritabyId(this.$route.params.id);
+    },
+
+    methods: {
+        async getBeritabyId(id) {
+            try {
+                this.isLoading = true;
+                const result = await berita.get(id);
+
+                if (result instanceof Error) {
+                    throw result;
+                }
+
+                this.isLoading = false;
+
+                if (result.data.url_gambar) {
+                    this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
+                    this.urlGambar = await this.getImageObj(this.urlTemp);
+                    // console.log(this.urlGambar);
+                }
+
+                this.judul = result.data.judul;
+                this.artikel = result.data.artikel;
+                this.waktu_publikasi = result.data.waktu_publikasi;
+                this.url_gambar = result.data.url_gambar;
+                this.jumlah_reader = result.data.jumlah_reader;
+                this.jumlah_likes = result.data.jumlah_likes;
+                this.jurnalis = result.data.jurnalis;
+                this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async getImageObj(ImageUrl) {
             try {
                 const path = require("path");
