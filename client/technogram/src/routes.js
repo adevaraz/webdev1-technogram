@@ -33,7 +33,7 @@ export default [
             name : 'search-result'
         },
         {
-            path : '/read/:id',
+            path : '/berita/:id',
             component : ReadBerita,
             name : 'read-berita'
         }
