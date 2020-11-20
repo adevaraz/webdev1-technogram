@@ -335,6 +335,12 @@ export default {
         this.isLoading = true;
         const result = await berita.get(id);
         if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+          this.error.statusCode = result.statusCode;
+          if (this.error.statusCode == 404) {
+            this.$router.push({ name: "not-found-admin" });
+          }
           throw result;
         }
         this.isLoading = false;
