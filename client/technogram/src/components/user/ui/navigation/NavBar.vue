@@ -362,6 +362,7 @@ nav .header .right .btn {
     background: #707070;
     margin: 5px;
     cursor: pointer;
+    transition: all 500ms;
   }
 
   .drawer {
