@@ -5,7 +5,8 @@
             <a class="mx-4">Most likes</a>
         </div>
         <div class="search-result">
-            <v-row class="left-container mt-n5">
+            <v-row class="left-container mt-n5" v-for="berita in recentBerita"
+                :key="berita.id_berita">
                 <v-col class="pa-2" cols="4">
                     <v-row>
                         <v-col cols="5" class="mx-auto">
@@ -20,7 +21,7 @@
                                         </v-col>
                                         <v-col cols="2" class="pa-0 ma-0 ml-1">
                                             <h4 class="work-sans news-likes text-start">
-                                                {{recentBerita.jumlah_likes}}
+                                                {{berita[0].jumlah_likes}}
                                             </h4>
                                         </v-col>
                                     </div>
@@ -38,7 +39,7 @@
                     <v-row class="justify-center">
                         <v-col cols="11" class="pa-0 ma-0">
                             <h2 class="playfair-font news-title">
-                            {{recentBerita.judul || ''}}
+                            {{berita.judul || ''}}
                             </h2>
                         </v-col>
                         <v-col cols="11" class="pa-0 ma-0 mt-4">
@@ -50,12 +51,12 @@
                             <v-row class="justify-right ml-1">
                                 <v-col cols="5" class="pa-0 ma-0">
                                     <h4 class="work-sans news-writer text-start">
-                                        by {{recentBerita.jurnalis || ''}}
+                                        by {{berita.jurnalis || ''}}
                                     </h4>
                                 </v-col>
                                 <v-col cols="6" class="pa-0 ma-0 mr-2">
                                     <h4 class="work-sans news-category">
-                                        | {{recentBerita.kategori_berita || ''}}
+                                        | {{berita.kategori_berita || ''}}
                                     </h4>
                                 </v-col>
                             </v-row>
@@ -76,6 +77,7 @@ export default {
         this.retrieveRecentBerita();
         this.retrieveMostLikedBerita();
     },
+    
     data() {
         return {
             recentBerita: [],
@@ -86,6 +88,30 @@ export default {
             mostLikedLoading: false,
         };
     },
+
+    computed: {
+        backgroundImg() {
+            return `background-image: url('${this.recentBerita.url_gambar}')`;
+        },
+        date() {
+            //Format : 'Friday, 09/10/2020 15:49'
+            const fullDate = new Date(this.recentBerita.waktu_publikasi);
+            const month = fullDate.toString().split(' ')[1];
+            const date = fullDate.getDate();
+            console.log(this.recentBerita.waktu_publikasi)
+            return `${month} ${date}`;
+        },
+        preview() {
+            console.log('woy ini nih');
+            const firstSentences = this.recentBerita.artikel.toString().split('>')[2];
+            let preview = firstSentences;
+            if(firstSentences.length > PRIVIEW_MAX_WORDS){
+                preview = firstSentences.slice(0 , PRIVIEW_MAX_WORDS);
+            }
+            return preview.split('<')[0];
+        }
+    }, 
+
     methods: {
         async retrieveRecentBerita() {
             this.recentLoading = true;
@@ -101,6 +127,8 @@ export default {
                 element.url_gambar = BASE_URL + "/" + element.url_gambar;
                 this.recentBerita.push(element);
             });
+            console.log('RECENT BERITA');
+            console.log(this.recentBerita[0]);
         },
         async retrieveMostLikedBerita() {
             this.popularLoading = true;
@@ -116,27 +144,10 @@ export default {
                 element.url_gambar = BASE_URL + "/" + element.url_gambar;
                 this.mostLikedBerita.push(element);
             });
+            console.log('MOST LIKED BERITA');
         console.log(this.mostLikedBerita);
         },
     },
-    computed: {
-        date() {
-            //Format : 'Friday, 09/10/2020 15:49'
-            const fullDate = new Date(this.recentBerita.waktu_publikasi);
-            const month = fullDate.toString().split(' ')[1];
-            const date = fullDate.getDate();
-            return `${month} ${date}`;
-        },
-        preview() {
-            console.log('woy ini nih');
-            const firstSentences = this.recentBerita.artikel.toString().split('>')[2];
-            let preview = firstSentences;
-            if(firstSentences.length > PRIVIEW_MAX_WORDS){
-                preview = firstSentences.slice(0 , PRIVIEW_MAX_WORDS);
-            }
-            return preview.split('<')[0];
-        }
-    }
 };
 </script>
 
