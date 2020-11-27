@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
+import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
@@ -64,6 +64,64 @@ const update = async (idBerita, data , token) => {
     }
 };
 
+const like = async (id, category, token) => {
+    try {
+        console.log(id);
+        console.log(category);
+        console.log(token);
+        const currentUrl = USER_URL + `/like-news`;
+
+        const result = await axios.post(currentUrl , {
+            timeout : TIMEOUT,
+
+            params : {
+                news: id,
+                category: category || ''
+            },
+            
+            headers: {
+                "Authorization": token
+            }
+        });
+
+        console.log(result.data);
+        return result.data;
+    } catch (err) {
+        return ErrorHandler.errorHandler(err);
+        // const errorResult = await ErrorHandler.errorHandler(err , USER_ROLE , async (newToken) => {
+        //     // return await save(data , newToken);
+        // })
+
+        // return errorResult;
+    }
+}
+
+const saveBerita = async (id, token) => {
+    try {
+        console.log(id);
+        console.log(token);
+
+        const currentUrl = USER_URL + `/save-news`;
+
+        const result = await axios.post(currentUrl , {
+            timeout : TIMEOUT,
+
+            params : {
+                news: id
+            },
+            
+            headers: {
+                "Authorization": token
+            }
+        });
+
+        console.log(result.data);
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
+
 const get = async (id) => {
     try {
         const getUrl = BERITA_URL + `/${id}`;
@@ -112,17 +170,14 @@ const popularBerita = async ( perPage , key , page ) => {
 const getByCat = async (perPage, category, page) => {
     try {
         const currentUrl = BERITA_URL + '/';
-        console.log('DI GETBYCAT');
-        console.log(perPage);
         const result = await axios.get(currentUrl, {
             params: {
                 perpage: perPage || 4,
                 category: category || '',
                 page: page || 1
             }
-        })
+        });
 
-        console.log(result.data);
         return result.data;
     } catch (error) {
         return ErrorHandler.errorHandler(error);
@@ -135,6 +190,8 @@ export default{
     deleteImg,
     save,
     update,
+    like,
+    saveBerita,
     get,
     recentBerita,
     popularBerita,

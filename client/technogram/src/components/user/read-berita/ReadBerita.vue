@@ -1,20 +1,21 @@
 <template>
-    <v-container class="d-flex flex-row mb-6">
+    <v-container :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
         <v-sheet class="mx-16 px-2">
             <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
             <p class="worksans-font">{{ date }}</p>
 
             <!-- Information section -->
             <v-card
-                class="d-flex flex-col mb-6"
+                :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
                 flat
                 tile
             >
                 <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
-                <div class="d-flex flex-row">
+                <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
                     <div id="likes" class="d-flex flex-row">
-                        <img class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                        <img v-if="!isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                        <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                         <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                     </div>
 
@@ -24,7 +25,8 @@
                     </div>
                     
                     <div id="save" class="d-flex flex-row">
-                        <img class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                        <img v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                        <!-- <img class="item img-btn" src="../../../assets/icons/saved-icon.png" /> -->
                         <p> </p>
                     </div>
                 </div>
@@ -94,7 +96,8 @@ export default {
         urlTemp: null,
         urlGambar: null,
         isLoading: false,
-        relatedBeritaLoading: false
+        relatedBeritaLoading: false,
+        old_likes: 0
     }),
 
     computed: {
@@ -114,7 +117,19 @@ export default {
             } else {
                 return false;
             }
-        }
+        },
+
+        isLiked() {
+            if(this.jumlah_likes > this.old_likes) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        // isSaved() {
+            
+        // }
     },
 
     mounted() {
@@ -177,7 +192,7 @@ export default {
                 this.relatedBeritaLoading = true;
                 const result = await berita.get(id);
                 this.kategori_berita = result.data.kategori_berita;
-                const recommendResult = await berita.getByCat(2, this.kategori_berita, 1);
+                const recommendResult = await berita.getByCat(4, this.kategori_berita, 1);
                 this.relatedBeritaLoading = false;
 
                 if(recommendResult instanceof Error) {
@@ -191,6 +206,36 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+            }
+        },
+
+        async likeBerita() {
+            try {
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NDkxMDA3LCJleHAiOjE2MDY0OTgyMDd9.N5wP0fpIuMDrHiypVYoX3jxd8EreY3ByX1_hMwr-6RY'
+                this.old_likes = this.jumlah_likes;
+                const likeResult = await berita.like(this.$route.params.id, this.kategori_berita, token);
+
+                if(likeResult instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
+                    return;
+                }
+            } catch (error) {
+                console.error();
+            }
+        },
+
+        async saveBerita() {
+            try {
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NDkxMDA3LCJleHAiOjE2MDY0OTgyMDd9.N5wP0fpIuMDrHiypVYoX3jxd8EreY3ByX1_hMwr-6RY'
+
+                const saveResult = await berita.saveBerita(this.$route.params.id, token);
+
+                if(saveResult instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + saveResult.cause;
+                    return;
+                }
+            } catch (error) {
+                console.error();
             }
         }
     }
