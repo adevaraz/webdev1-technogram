@@ -51,18 +51,13 @@
 
         <div class="px-16 mx-12 my-16">
             <h3 class="worksans-font red-text">Recommendations</h3>
-            <v-col
-                cols="12"
-                sm="12"
-                md="12"
-                lg="12"
-                xl="12"
+            <div
                 v-for="berita in relatedBerita"
                 :key="berita.id_berita"
-                class="pt-0 pb-16"
+                class="d-flex flex-col"
             >
-                <small-berita class="item" :berita="berita"></small-berita>
-            </v-col>
+                <small-berita :berita="berita"></small-berita>
+            </div>
         </div>
     </v-container>
 </template>
@@ -99,8 +94,7 @@ export default {
         urlTemp: null,
         urlGambar: null,
         isLoading: false,
-        relatedBeritaLoading: false,
-        isMobile: false
+        relatedBeritaLoading: false
     }),
 
     computed: {
@@ -112,6 +106,14 @@ export default {
             const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
 
             return `${day} ${date} ${time}`;
+        },
+
+        isMobile() {
+            if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
 
