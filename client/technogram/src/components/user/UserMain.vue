@@ -3,7 +3,9 @@
     <nav-bar :toogleDrawer="toogleDrawer"></nav-bar>
     <transition name="fade">
       <div class="container" v-if="isContentShown">
-        <router-view class="content-container"></router-view>
+        <div class="content-container">
+          <router-view></router-view>
+        </div>
       </div>
     </transition>
   </div>
@@ -52,7 +54,7 @@ export default {
 
 @media screen and (max-width: 960px){
     .content-container {
-        padding: 7rem 1rem 0 1rem;
+        padding: 6rem 1rem 0 1rem;
     }
 }
 

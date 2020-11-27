@@ -4,6 +4,8 @@ const cache = require("../util/cache");
 
 const validateToken = async ( req  , role) => {
     const token = req.get('Authorization')
+    console.log('oyyyyyy');
+    console.log('ini tokennn : ' + token);
     try{
         if(!token){
             const error = new Error('Not Authenticated');

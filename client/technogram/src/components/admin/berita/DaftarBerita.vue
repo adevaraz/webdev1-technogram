@@ -29,7 +29,7 @@
                 <th class="text-center">Pilihan</th>
               </tr>
             </thead>
-            <tbody>
+            <transition-group tag="tbody" name="fade" mode="out-in">
               <tr v-for="item in berita" :key="item.id_berita">
                 <td class="text-xs-center">{{ item.id_berita }}</td>
                 <td class="text-xs-center">{{ item.judul }}</td>
@@ -43,9 +43,7 @@
                     outlined
                     @click.prevent="publishBerita(item.id_berita)"
                     width="110px"
-                  >
-                    Unpublish
-                  </v-btn>
+                  >Unpublish</v-btn>
                   <v-btn
                     v-else
                     class="ma-1"
@@ -53,24 +51,15 @@
                     dark
                     @click.prevent="publishBerita(item.id_berita)"
                     width="110px"
-                  >
-                    Publish
-                  </v-btn>
+                  >Publish</v-btn>
                   <v-btn
                     class="ma-2"
                     color="warning"
                     dark
                     width="110px"
                     :to="'/admin/berita/' + item.id_berita"
-                  >
-                    Edit
-                  </v-btn>
-                  <v-dialog
-                    v-model="dialog"
-                    persistent
-                    max-width="290"
-                    :retain-focus="false"
-                  >
+                  >Edit</v-btn>
+                  <v-dialog v-model="dialog" persistent max-width="290" :retain-focus="false">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         class="ma-2"
@@ -79,38 +68,26 @@
                         v-bind="attrs"
                         v-on="on"
                         @click.prevent="selectedBerita(item.id_berita)"
-                      >
-                        Delete
-                      </v-btn>
+                      >Delete</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="text-h6">
-                        Apakah Anda yakin untuk menghapus berita ini?
-                      </v-card-title>
+                      <v-card-title class="text-h6">Apakah Anda yakin untuk menghapus berita ini?</v-card-title>
                       <v-card-text></v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          color="grey darken-1"
-                          text
-                          @click="dialog = false"
-                        >
-                          Batal
-                        </v-btn>
+                        <v-btn color="grey darken-1" text @click="dialog = false">Batal</v-btn>
                         <v-btn
                           color="blue darken-1"
                           text
                           @click="dialog = false"
                           @click.prevent="deleteBerita"
-                        >
-                          Yakin
-                        </v-btn>
+                        >Yakin</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
                 </td>
               </tr>
-            </tbody>
+            </transition-group>
           </template>
         </v-simple-table>
       </v-col>
@@ -128,17 +105,17 @@
 
 <script>
 import daftarBerita from "../../../api/admin/daftarberita";
-import {store} from '../../../store/index';
-  export default {
-    data () {
-      return {
-        berita: [],
-        key: "",
-        id: 0,
-        dialog: false,
-        isLoading: false
-      }
-    },
+import { store } from "../../../store/index";
+export default {
+  data() {
+    return {
+      berita: [],
+      key: "",
+      id: 0,
+      dialog: false,
+      isLoading: false,
+    };
+  },
 
   methods: {
     retrieveBerita() {
@@ -167,10 +144,10 @@ import {store} from '../../../store/index';
       }
     },
 
-      deleteBerita() {
-        daftarBerita
-        .deleteBy(this.id, store.getters['admin/getToken'])
-        .then(response => {
+    deleteBerita() {
+      daftarBerita
+        .deleteBy(this.id, store.getters["admin/getToken"])
+        .then((response) => {
           console.log(this.id);
           this.retrieveBerita();
           console.log(response.data);
@@ -184,10 +161,10 @@ import {store} from '../../../store/index';
       this.id = id;
     },
 
-      publishBerita(id) {
-        daftarBerita
-        .publish(id, store.getters['admin/getToken'])
-        .then(response => {
+    publishBerita(id) {
+      daftarBerita
+        .publish(id, store.getters["admin/getToken"])
+        .then((response) => {
           console.log(id);
           this.berita = response.data;
           this.retrieveBerita();
@@ -222,5 +199,19 @@ import {store} from '../../../store/index';
   position: relative;
   bottom: 50%;
   left: 50%;
+}
+
+/* Fade */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 1s;
+}
+
+.fade-leave-active {
+  transition: opacity 1s;
+  opacity: 0;
 }
 </style>

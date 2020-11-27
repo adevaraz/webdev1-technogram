@@ -25,7 +25,7 @@ const searchBy = async(key) => {
 const publish = async(id, token) => {
     try {
         const publishByURL = BERITA_URL + `/publish/${id}`
-        const result = await axios.put(publishByURL, {
+        const result = await axios.put(publishByURL, {}, {
             timeout : TIMEOUT,
             headers: {
                 "Authorization": token
