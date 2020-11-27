@@ -1,6 +1,6 @@
 <template>
     <v-container class="d-flex flex-row mb-6">
-        <v-sheet class="mx-16 px-16">
+        <v-sheet class="mx-16 px-2">
             <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
             <p class="worksans-font">{{ date }}</p>
 
@@ -49,15 +49,20 @@
             </div>
         </v-sheet>
 
-        <div class="pr-16 mr-12 my-16">
+        <div class="px-16 mx-12 my-16">
             <h3 class="worksans-font red-text">Recommendations</h3>
-            <div
+            <v-col
+                cols="12"
+                sm="12"
+                md="12"
+                lg="12"
+                xl="12"
                 v-for="berita in relatedBerita"
                 :key="berita.id_berita"
-                class="d-flex flex-col py-10"
+                class="pt-0 pb-16"
             >
                 <small-berita class="item" :berita="berita"></small-berita>
-            </div>
+            </v-col>
         </div>
     </v-container>
 </template>
@@ -71,7 +76,6 @@ import SmallBerita from "../berita/SmallBerita.vue";
 export default {
     created() {
         this.getBeritabyId(this.$route.params.id);
-        console.log(this.kategori);
     },
 
     name: "read-berita",
@@ -81,11 +85,12 @@ export default {
     },
 
     data: () => ({
+        id: 0,
         judul: '',
         artikel: '',
         waktu_publikasi: '',
         url_gambar: '',
-        kategori: '',
+        kategori_berita: '',
         jumlah_reader: 0,
         jumlah_likes: 0,
         jurnalis: '',
@@ -94,7 +99,8 @@ export default {
         urlTemp: null,
         urlGambar: null,
         isLoading: false,
-        relatedBeritaLoading: false
+        relatedBeritaLoading: false,
+        isMobile: false
     }),
 
     computed: {
@@ -110,8 +116,8 @@ export default {
     },
 
     mounted() {
+        this.retrieveRelatedBerita(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.kategori);
     },
 
     methods: {
@@ -132,11 +138,12 @@ export default {
                     // console.log(this.urlGambar);
                 }
 
+                this.id = result.data.id;
                 this.judul = result.data.judul;
                 this.artikel = result.data.artikel;
                 this.waktu_publikasi = result.data.waktu_publikasi;
                 this.url_gambar = result.data.url_gambar;
-                this.kategori = result.data.kategori_berita;
+                this.kategori_berita = result.data.kategori_berita;
                 this.jumlah_reader = result.data.jumlah_reader;
                 this.jumlah_likes = result.data.jumlah_likes;
                 this.jurnalis = result.data.jurnalis;
@@ -163,24 +170,23 @@ export default {
             }
         },
 
-        async retrieveRelatedBerita(kategori) {
+        async retrieveRelatedBerita(id) {
             try {
                 this.relatedBeritaLoading = true;
-                const result = await berita.getByCat(kategori);
+                const result = await berita.get(id);
+                this.kategori_berita = result.data.kategori_berita;
+                const recommendResult = await berita.getByCat(2, this.kategori_berita, 1);
                 this.relatedBeritaLoading = false;
 
-                if(result instanceof Error) {
-                    this.errorMessage =
-          "Gagal mendapatkan berita populer karena " + result.cause;
+                if(recommendResult instanceof Error) {
+                    this.errorMessage = "Gagal mendapatkan berita dengan topik sama karena " + recommendResult.cause;
                     return;
                 }
 
-                result.data.forEach(element => {
+                recommendResult.data.forEach(element => {
                     element.url_gambar = BASE_URL + "/" + element.url_gambar;
                     this.relatedBerita.push(element);
                 });
-                
-                console.log(this.relatedBerita);
             } catch (error) {
                 console.log(error);
             }

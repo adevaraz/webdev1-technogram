@@ -112,15 +112,17 @@ const popularBerita = async ( perPage , key , page ) => {
 const getByCat = async (perPage, category, page) => {
     try {
         const currentUrl = BERITA_URL + '/';
-
+        console.log('DI GETBYCAT');
+        console.log(perPage);
         const result = await axios.get(currentUrl, {
             params: {
-                perpage: perPage || 1,
+                perpage: perPage || 4,
                 category: category || '',
                 page: page || 1
             }
         })
 
+        console.log(result.data);
         return result.data;
     } catch (error) {
         return ErrorHandler.errorHandler(error);
