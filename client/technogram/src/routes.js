@@ -10,6 +10,7 @@ import SearchResult from './components/user/Search/SearchResult.vue';
 import ListCategoryAdm from './components/admin/kategori/daftar-kategori/Category.vue';
 import ListPembacaAdm from './components/admin/daftar-user/DaftarPembaca';
 import AddAdmin from './components/admin/admin/AddAdmin';
+import NotificationDetail from './components/user/notifications/NotificationDetail.vue'
 
 export default [
     {
@@ -30,6 +31,11 @@ export default [
             path : '/search',
             component : SearchResult,
             name : 'search-result'
+        },
+        {
+            path : '/notifcation',
+            component : NotificationDetail ,
+            name : 'notification'
         }
     ]},
     {
@@ -73,7 +79,8 @@ export default [
             path: "/admin/create",
             name: "add-admin",
             component: AddAdmin
-        }
+        },
+        
     ]},
     { 
         path : '/admin/signin',
