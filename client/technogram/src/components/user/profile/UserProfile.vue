@@ -1,59 +1,67 @@
 <template>
   <v-container>
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-      <v-col cols="12" lg="12" md="12" xl="12" sm="12" xs="12">
-        <headline-berita class="item" :berita="recentBerita[0]" :isLoading="recentLoading"></headline-berita>
-      </v-col>
-     
-      <v-col cols="8" :class= "mt-n3" >
-        <h1 :class= "playfair-font">Saved Articles</h1>
+  
+      <v-col cols="12" :class="isMobile? 'mt-n3 mb-n5' : ''">
+        <h1 :class="isMobile? 'title-font ml-n2': 'title-font save-page-title'">Saved Articles</h1>
 
       </v-col>
-     
-        <div class="middle-border"></div>
-  
+     <div :class="isMobile? 'middle-border-mobile' : 'middle-border' "></div>
+     <v-overlay :value="overlay">
       <v-col cols="12">
-        <v-row :class= "justify-center">
+        <v-progress-circular
+          v-if = beritaLoading
+          indeterminate
+          color="red"
+        ></v-progress-circular>
+      </v-col>
+     </v-overlay>
+      <v-col cols="12">
+        <v-row :class="isMobile? 'pa-0' : 'justify-center'">
           <v-col
-            :cols= '12'
+            :cols="isMobile? '12' : '10' "
             class="mt-n2"
-            v-for="berita in recentBerita"
+            v-for="berita in savedBerita"
             :key="berita.id_berita"
           >
-            
-            <mobile-preview-berita :berita="berita"></mobile-preview-berita>
+            <preview-berita v-if="!isMobile" :berita="berita"></preview-berita>
+            <mobile-preview-berita v-else :berita="berita"></mobile-preview-berita>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+    
   </v-container>
 </template>
 
 <script>
-import MobilePreviewBerita from "../berita/BeritaPreview.vue";
+import PreviewBerita from "../berita/BeritaPreview.vue";
+import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 
 export default {
   created() {
-    this.retrieveRecentBerita();
+    this.retrieveSavedBerita();
   },
   components: {
+    PreviewBerita,
     MobilePreviewBerita,
   },
   data() {
     return {
-      recentBerita: [],
+      savedBerita: [],
       isError: false,
       errorMessage: "",
-      recentLoading: false,
+      beritaLoading: false,
     };
   },
   methods: {
-    async retrieveRecentBerita() {
-      this.recentLoading = true;
+    async retrieveSavedBerita() {
+      this.beritaLoading = true;
       const result = await beritaApi.recentBerita();
-      this.recentLoading = false;
+      this.beritaLoading = false;
+      this.overlay=false;
       if (result instanceof Error) {
         this.isError = true;
         this.errorMessage =
@@ -62,25 +70,38 @@ export default {
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
-        this.recentBerita.push(element);
+        this.savedBerita.push(element);
       });
     },
     
   },
   computed: {
-    
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
-.playfair-font {
-  font-family: "Playfair Display", serif;
+.title-font{
+  font-family: "Work sans", serif;
 }
-
+.save-page-title{
+  margin-left: 18%;
+}
 .middle-border {
-  background: rgb(112, 112, 112, 0.3);
+  background: rgb(0, 0, 0, 0.6);
+  width: 63%;
+  height: 2px;
+  margin-left: 18%;
+}
+.middle-border-mobile {
+  background: rgb(0, 0, 0, 0.6);
   width: 100%;
   height: 2px;
 }

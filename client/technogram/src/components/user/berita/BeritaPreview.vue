@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row class="center-container mt-n5">
-        <v-col class="pa-0" cols="4" align-self="center">
+    <v-row class="center-container mt-2">
+        <v-col class="pa-0" cols="4">
             <v-row class="justify-center" >
                 <v-col cols="5" >
                     <div class="img-container" :style="backgroundImg"></div>
@@ -10,17 +10,17 @@
             <v-row class="justify-center">
                 <v-col cols="5" class="pa-0 ma-0 mr-4">
                     <v-row class="justify-center right-col" align="center">
-                    <v-col cols="3" class="pa-0 ma-0">
+                    <v-col cols="3" class="pa-0 ma-0 ">
                         <div class="like-container">
-                        <v-col cols="1" class="pa-0 ma-0 mr-2">
-                            <img src="../../../assets/icons/heart-filled.png" />
-                        </v-col>
-                        <v-col cols="2" class="pa-0 ma-0">
-                            <h3 class="work-sans news-likes text-start">{{berita.jumlah_likes}}</h3>
-                        </v-col>
+                          <v-col cols="1" class="pa-0 ma-0 mr-4">
+                              <img src="../../../assets/icons/heart-filled.png" />
+                          </v-col>
+                          <v-col cols="2" class="pa-0 ma-0">
+                              <h3 class="work-sans news-likes text-start">{{berita.jumlah_likes}}</h3>
+                          </v-col>
                         </div>
                     </v-col>
-                    <v-col  cols="6" class="pa-0 ma-0">
+                    <v-col  cols="8" class="pa-0 ma-0">
                         <h3 class="work-sans news-date text-end">{{date || ''}}</h3>
                     </v-col>
                     </v-row>
@@ -28,38 +28,37 @@
             </v-row>
       </v-col>
 
-      <v-col class="pa-0" cols="8" align-self="center">
-        <v-row class="justify">
+      <v-col class="pa-0 mt-1" cols="8" >
+        <v-row class="justify ml-4">
           <v-col cols="9" class="pa-0 ma-0">
             <h1 class="playfair-font news-title">
               {{berita.judul || ''}}
             </h1>
           </v-col>
-          <v-col cols="9" class="pa-0 ma-0 mt-2">
+          <v-col cols="9" class="pa-0 mt-4">
             <h3 class="work-sans news-preview" >
               {{preview}}...
             </h3>
           </v-col>
-          <v-col cols="9" class=" ma-0 mt-2">
+          <v-col cols="9" class=" ma-0 mt-3">
             <v-row class="justify">
-              <v-col cols="4" class="pa-0 ma-0">
+              <v-col cols="6" class="pa-0 ma-0">
                 <h3 class="work-sans news-writer text-start">by {{berita.jurnalis || ''}}</h3>
               </v-col>
-              <v-col cols="8" class="pa-0 mx-auto">
+              <v-col cols="6" class="pa-0 mx-auto">
                 <h3 class="work-sans news-category">| {{berita.kategori_berita || ''}}</h3>
               </v-col>
             </v-row>
           </v-col>
         </v-row>
-      </v-col>
-      <div class="middle-border"></div>
+      </v-col>     
     </v-row>
-    
+    <div class="middle-border"></div>
   </v-container>
 </template>
 
 <script>
-const PRIVIEW_MAX_WORDS = 70
+const PRIVIEW_MAX_WORDS = 100
 export default {
   props : {
     berita : {
@@ -103,28 +102,29 @@ export default {
 }
 .middle-border {
   background: rgb(112, 112, 112, 0.3);
-  width: 50%;
-  height: 2px;
-  margin-left: 350px;
+  width: 55%;
+  height: 1px;
+  margin-left: 35%;
 }
 .worksans-font {
   font-family: "Work Sans", sans-serif;
 }
 .center-container{
-    margin-left: 130px;
+    margin-left: auto;
 }
 .img-container {
-  width: 200px;
+  height: 100%;
+  width: 150%;
   background: #EEEEEE;
   background-size: cover;
   background-position: center;
   padding-top: 100%;
-  margin-left: 20px;
+  margin-left: 10%;
   
 }
 
 .news-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
 }
 
@@ -135,7 +135,7 @@ export default {
 }
 
 .news-writer {
-  font-weight: 400;
+  font-weight: 1000;
   font-size: 12px;
 }
 
@@ -159,7 +159,7 @@ export default {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-left: 30px;
+    margin-left: 105%;
 }
 
 .news-likes{
