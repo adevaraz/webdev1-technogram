@@ -1,5 +1,5 @@
 <template>
-    <small-berita :berita="source"></small-berita>
+    <small-berita :berita="source" style="bakcground:red;"></small-berita>
 </template>
 
 <script>

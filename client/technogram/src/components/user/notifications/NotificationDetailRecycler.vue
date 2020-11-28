@@ -2,10 +2,9 @@
   <v-container fluid>
     <virtual-list
       class="list-infinite scroll-touch"
-      :data-key="'id_berita'"
+      :data-key="'id'"
       :data-sources="items"
       :data-component="itemComponent"
-      :estimate-size="200"
     >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
@@ -65,6 +64,7 @@ export default {
       // }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
+        element.id = new Date().toString();
         this.items.push(element);
       });
     },
@@ -93,4 +93,5 @@ export default {
 .no-item {
   border-top: 2px solid black;
 }
+
 </style>
