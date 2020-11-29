@@ -39,6 +39,7 @@
         <v-btn
           text
           small
+          class="text-capitalize"
           :class="menuClass(index)"
           v-for="(menu,index) in menus"
           :key="menu.routerName"
@@ -62,6 +63,7 @@
 
 <script>
 import NavDrawer from "./NavDrawer.vue";
+import categoriesData from "../../../../api/kategori/daftarKategori";
 const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
@@ -73,6 +75,9 @@ const getFullRoute = (name, query) => {
 
 export default {
   created() {
+    this.retrieveKategori();
+
+    console.log(this.menus[1].query);
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -82,10 +87,12 @@ export default {
         this.selectedMenu = this.$router.currentRoute.fullPath;
       }
     });
+
     this.currentTime = new Date().getHours();
     setInterval(() => {
       this.currentTime = new Date().getHours();
     }, TEN_MINUTES);
+
     window.addEventListener("scroll", this.handleScroll);
   },
   components: { NavDrawer },
@@ -104,25 +111,26 @@ export default {
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
-          name: "Software",
+          name: "Cat-1",
           routeName: "search-result",
           route: "search",
           query: "software",
         },
         {
-          name: "Brainware",
+          name: "Cat-2",
           routeName: "search-result",
           route: "search",
           query: "brainware",
         },
         {
-          name: "Hardware",
+          name: "Cat-3",
           routeName: "search-result",
           route: "search",
           query: "hardware",
         },
         { name: "More", routeName: "more-categories", route: "categories" },
       ],
+      kategori: [],
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
       currentTime: null,
@@ -208,6 +216,30 @@ export default {
       this.selectedMenuIndex = index;
       this.selectedMenu = this.$router.currentRoute.fullPath;
       this.toogleDrawer(this.isDrawerShown);
+    },
+
+    async retrieveKategori() {
+      try {
+        const kategoriResult = await categoriesData.retrieveAll();
+        if (kategoriResult instanceof Error) {
+          throw kategoriResult;
+        } else {
+          if (kategoriResult.data.length > 0) {
+            kategoriResult.data.forEach((element) => {
+              this.kategori.push(element);
+            });
+          }
+
+          var i;
+          for(i = 1; i <= 3; i++) {
+            const nameTmp = this.kategori[i - 1].nama_kategori;
+            this.menus[i].name = nameTmp.charAt(0).toUpperCase() + nameTmp.slice(1);
+            this.menus[i].query = this.kategori[i - 1].nama_kategori;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   watch: {

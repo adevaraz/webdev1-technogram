@@ -7,7 +7,7 @@ import UserMain from './components/user/UserMain.vue';
 import Home from './components/user/home/Home.vue';
 import Category from './components/user/category/Category.vue';
 import SearchResult from './components/user/Search/SearchResult.vue';
-import Search from './components/user/Search/Search.vue'
+import ReadBerita from './components/user/read-berita/ReadBerita'
 import ByRecent from './components/user/Search/ByRecent.vue'
 import ByMostLikes from './components/user/Search/ByMostLikes.vue'
 import ListCategoryAdm from './components/admin/kategori/daftar-kategori/Category.vue';
@@ -55,6 +55,11 @@ export default [
 
             ]
         },
+        {
+            path : '/berita/:id',
+            component : ReadBerita,
+            name : 'read-berita'
+        }
     ]},
     {
         path : '/signin',
