@@ -93,14 +93,22 @@ exports.getById = async (req, res, next) => {
  */
 exports.searchBy = async (req, res, next) => {
   try {
-    let key = req.query.key;
-    
-    const result = await Pembaca.findAll({
+    const key = req.query.key || '';
+    const currentPage = req.query.page || 1;
+    const perPage = req.query.perpage || 10;
+    const offset = (currentPage-1) * perPage;
+    const result = await Pembaca.findAndCountAll({
       where: {
         [Op.or] : [
-            { username : key }, { email : key }
+            {username : sequelize.where(sequelize.fn('LOWER', sequelize.col('username')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+            {email : sequelize.where(sequelize.fn('LOWER', sequelize.col('email')),'LIKE' , '%' + key.toLowerCase()  + '%')}
         ]
       },
+      limit : perPage,
+      offset : offset,
+      order : [
+        ['id_pembaca' , 'ASC']
+    ]
     });
     
     res.status(200).json({
@@ -335,6 +343,42 @@ exports.likeNews = async(req, res, next) => {
 /**
  * @author 31 ZV
  *
+ * Memeriksa apakah sudah menyimpan berita atau belum
+ */
+exports.isLiked = async (req, res, next) => {
+  const readerId = req.decodedToken.id;
+  const newsId = req.query.news;
+
+  try {
+    const account = await Pembaca.findByPk(readerId);
+    const news = await Berita.findByPk(newsId);
+
+    if (account != null && news != null) {
+      // Check whether account has bookmarked news or not
+      const status = await account.hasLike(news);
+
+      var message = "Liked";
+      if(!status) {
+        message = "Not liked"
+      }
+
+      res.status(200).json({
+        message: `${message}`,
+        data: status
+      });
+    } else {
+      res.status(404).json({
+        message: `Data not found`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @author 31 ZV
+ *
  * Menyimpan berita (bookmark berita)
  */
 exports.saveNews = async (req, res, next) => {
@@ -363,6 +407,42 @@ exports.saveNews = async (req, res, next) => {
             message: `Success saved news with id : ${newsId}`,
           });
         }
+      });
+    } else {
+      res.status(404).json({
+        message: `Data not found`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @author 31 ZV
+ *
+ * Memeriksa apakah sudah menyimpan berita atau belum
+ */
+exports.isSaved = async (req, res, next) => {
+  const readerId = req.decodedToken.id;
+  const newsId = req.query.news;
+
+  try {
+    const account = await Pembaca.findByPk(readerId);
+    const news = await Berita.findByPk(newsId);
+
+    if (account != null && news != null) {
+      // Check whether account has bookmarked news or not
+      const status = await account.hasSaved(news);
+
+      var message = "Saved";
+      if(!status) {
+        message = "Not saved"
+      }
+
+      res.status(200).json({
+        message: `${message}`,
+        data: status
       });
     } else {
       res.status(404).json({

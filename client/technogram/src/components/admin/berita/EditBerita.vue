@@ -335,9 +335,14 @@ export default {
         this.isLoading = true;
         const result = await berita.get(id);
         if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+          this.error.statusCode = result.statusCode;
+          if (this.error.statusCode == 404) {
+            this.$router.push({ name: "not-found-admin" });
+          }
           throw result;
         }
-        this.isLoading = false;
         console.log(result.data);
         if (result.data.url_gambar) {
           this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
@@ -351,6 +356,7 @@ export default {
         this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
         this.kategori_berita = this.toTitleCase(result.data.kategori_berita);
         this.artikel = result.data.artikel;
+        this.isLoading = false;
       } catch (error) {
         console.log(error);
       }
@@ -383,11 +389,21 @@ export default {
     url_gambar: function (val) {
       if (val instanceof File) {
         this.imgRules = [
-          (v) =>
-            v.type === "image/png" ||
-            v.type === "image/jpg" ||
-            v.type === "image/jpeg" ||
-            "Gambar harus bertipe *.jpg, *.jpeg, atau *.png",
+          (v) => {
+            if (v == null) {
+              return true;
+            } else {
+              if (
+                v.type === "image/png" ||
+                v.type === "image/jpg" ||
+                v.type === "image/jpeg"
+              ) {
+                return true;
+              } else {
+                return "Gambar harus bertipe *.jpg, *.jpeg, atau *.png";
+              }
+            }
+          },
         ];
       } else {
         this.imgRules = [];

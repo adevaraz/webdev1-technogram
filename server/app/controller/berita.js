@@ -168,14 +168,23 @@ exports.getAllNews = async(req, res, next) => {
 */
 exports.searchBy = async (req, res, next) => {
     try{
-        const key = req.query.key || ''
-        const result = await Berita.findAll({
+        const key = req.query.key || '';
+        const currentPage = req.query.page || 1;
+        const perPage = req.query.perpage || 10;
+        const offset = (currentPage-1) * perPage;
+        const result = await Berita.findAndCountAll({
             where : {
                 [Op.or] : [
                     {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
-                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {kategori_berita : sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')),'LIKE' , '%' + key.toLowerCase()  + '%')}
                 ]
-            }
+            },
+            limit : perPage,
+            offset : offset,
+            order : [
+                ['id_berita' , 'ASC']
+            ]
         });
         res.status(200).json({
             message : 'Success retrieve Posts',
@@ -247,6 +256,30 @@ exports.update = async (req, res) => {
 
 };
 
+/**
+ * @author 31 ZV
+ * 
+ * Update viewer/reader berita
+ */
+exports.updateReader = async (req, res) => {
+    const id = req.params.id;
+    
+    const news = await Berita.findByPk(id);
+    if (!news) {
+        const error = new Error("Could not find specific post");
+        error.statusCode = 404;
+        error.cause = "Invaid Post ID";
+        throw error;
+    }
+
+    news.jumlah_reader += 1;
+    await news.save();
+
+    res.status(200).json({
+      message: "Reader updated",
+      data: news
+    });
+};
 
 /*
  @author 28 RA

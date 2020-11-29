@@ -6,11 +6,17 @@ import LoginAdmin from './components/admin/log-in/LoginAdmin.vue';
 import UserMain from './components/user/UserMain.vue';
 import Home from './components/user/home/Home.vue';
 import Category from './components/user/category/Category.vue';
+import Search from './components/user/Search/Search.vue';
 import SearchResult from './components/user/Search/SearchResult.vue';
+import ReadBerita from './components/user/read-berita/ReadBerita'
+import ByRecent from './components/user/Search/ByRecent.vue'
+import ByMostLikes from './components/user/Search/ByMostLikes.vue'
 import ListCategoryAdm from './components/admin/kategori/daftar-kategori/Category.vue';
 import ListPembacaAdm from './components/admin/daftar-user/DaftarPembaca';
 import AddAdmin from './components/admin/admin/AddAdmin';
 import NotificationDetail from './components/user/notifications/NotificationDetail.vue'
+import NotFoundAdmin from './components/error/ErrorAdmin.vue';
+import NotFoundUser from './components/error/ErrorUser.vue';
 
 export default [
     {
@@ -29,8 +35,32 @@ export default [
         },
         { 
             path : '/search',
+            component : Search,
+            name : 'search'
+        },
+        { 
+            path : '/search-result',
             component : SearchResult,
-            name : 'search-result'
+            name : 'search-result',
+            children : [
+                {
+                    path : '/search-result/recent',
+                    component : ByRecent,
+                    name : 'recent-result',
+                },
+
+                {
+                    path : '/search-result/most-likes',
+                    component : ByMostLikes,
+                    name : 'mostlikes-result',
+                },
+
+            ]
+        },
+        {
+            path : '/berita/:id',
+            component : ReadBerita,
+            name : 'read-berita'
         },
         {
             path : '/notifcation',
@@ -80,11 +110,20 @@ export default [
             name: "add-admin",
             component: AddAdmin
         },
-        
     ]},
     { 
         path : '/admin/signin',
         name : 'admin-signin',
         component : LoginAdmin
+    },
+    {
+        path: "/admin/*",
+        name: "not-found-admin",
+        component: NotFoundAdmin
+    },
+    {
+        path: "/*",
+        name: "not-found-user",
+        component: NotFoundUser
     }
 ];
