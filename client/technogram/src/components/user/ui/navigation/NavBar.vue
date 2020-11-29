@@ -21,7 +21,7 @@
         </div>
         <div class="right">
           <div class="navigation" v-if="!isMobile">
-            <img class="item img-btn" src="../../../../assets/icons/search-icon.png" />
+            <img @click="$router.push({name: search})" class="item img-btn" src="../../../../assets/icons/search-icon.png" />
             <div class="loggedin" v-if="isLoggedIn">
               <img class="item img-btn" src="../../../../assets/icons/bell.png" />
               <img class="item img-btn" src="../../../../assets/icons/profile.png" />
