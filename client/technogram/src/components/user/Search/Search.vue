@@ -1,15 +1,13 @@
 <template>
-    <v-container>
+    <v-container d-block>
         <div class="d-flex flex-row-reverse">
-            <img class="cross-icon" src='../../../assets/icons/cross.png'>
+            <img class="cross-icon" @click="$router.go(-1)" src='../../../assets/icons/cross.png'>
         </div>
         <div class="d-flex flex-row" align-center>
-            <img class="search-icon" src='../../../assets/icons/search-icon.png'>
+            <img class="search-icon" @click="$router.push({ name: 'recent-result', query: {q: key} })" src='../../../assets/icons/search-icon.png'>
             <v-text-field 
                 v-model="key"
                 placeholder="Enter keyword here..."
-                v-on:keydown.enter="searchBerita"
-                :to="'/search'"
             >
             </v-text-field>
         </div>
@@ -17,11 +15,18 @@
 </template>
 
 <script>
+export default {
+    data() {
+        return {
+             key: '',
+        }
+    }
+}
 </script>
 
 <style scoped>
 .v-text-field {
-    width: 200px;
+    width: 100px;
     min-height: 40px;
     font-size: 24px;
     margin-top: 230px;
@@ -32,6 +37,8 @@
     margin-top: 20px;
     height: 24px;
     max-height: 24px;
+    margin-right: 15px;
+    cursor: pointer;
 }
 .search-icon {
     margin-top: 240px;
