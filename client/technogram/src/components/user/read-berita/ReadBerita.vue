@@ -238,7 +238,7 @@ export default {
         async likeBerita() {
             try {
                 if(this.isLoggedIn) {
-                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
+                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ'
 
                     this.old_likes = this.jumlah_likes;
                     const kategoriBerita = await kategori.getByName(this.kategori_berita);
@@ -258,7 +258,7 @@ export default {
 
         async getLikeState(id) {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc';
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ';
 
                 const result = await berita.isLiked(token, id);
                 this.isLiked = result.data;
@@ -270,7 +270,7 @@ export default {
         async saveBerita() {
             try {
                 if(this.isLoggedIn) {
-                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
+                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ'
 
                     const saveResult = await berita.saveBerita(this.$route.params.id, token);
 
@@ -288,7 +288,7 @@ export default {
 
         async getSaveState(id) {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc';
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ';
 
                 const result = await berita.isSaved(token, id);
                 this.isSaved = result.data;
