@@ -93,14 +93,22 @@ exports.getById = async (req, res, next) => {
  */
 exports.searchBy = async (req, res, next) => {
   try {
-    let key = req.query.key;
-    
-    const result = await Pembaca.findAll({
+    const key = req.query.key || '';
+    const currentPage = req.query.page || 1;
+    const perPage = req.query.perpage || 10;
+    const offset = (currentPage-1) * perPage;
+    const result = await Pembaca.findAndCountAll({
       where: {
         [Op.or] : [
-            { username : key }, { email : key }
+            {username : sequelize.where(sequelize.fn('LOWER', sequelize.col('username')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+            {email : sequelize.where(sequelize.fn('LOWER', sequelize.col('email')),'LIKE' , '%' + key.toLowerCase()  + '%')}
         ]
       },
+      limit : perPage,
+      offset : offset,
+      order : [
+        ['id_pembaca' , 'ASC']
+    ]
     });
     
     res.status(200).json({
