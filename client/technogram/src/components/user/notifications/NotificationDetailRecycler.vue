@@ -26,7 +26,6 @@ import { BASE_URL } from "../../../api/const";
 const NEWS_PERCALL = 10;
 export default {
   created() {
-    window.addEventListener("scroll", this.handleScroll);
     this.getNotificatedBerita();
   },
   data() {
@@ -79,10 +78,7 @@ export default {
         this.onScrollToBottom();
       }
     },
-  },
-  destroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
+  }
 };
 </script>
 

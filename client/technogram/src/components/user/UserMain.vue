@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar :toogleDrawer="toogleDrawer"></nav-bar>
+    <nav-bar :toogleDrawer="toogleDrawer" :isLoggedIn="isLoggedIn"></nav-bar>
     <transition name="fade">
       <div class="container" v-if="isContentShown">
         <div class="content-container">
@@ -13,13 +13,16 @@
 
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
+import {mapGetters} from 'vuex'
 export default {
+  created(){
+  },
   components: {
     NavBar,
   },
   data() {
     return {
-      isContentShown: true,
+      isContentShown: true
     };
   },
   methods: {
@@ -28,6 +31,13 @@ export default {
       console.log(this.isContentShown);
     },
   },
+  computed : {
+    ...mapGetters(
+      {
+        isLoggedIn : 'user/isLoggedIn'
+      }
+    )
+  }
 };
 </script>
 
@@ -52,10 +62,10 @@ export default {
   max-width: 1488px;
 }
 
-@media screen and (max-width: 960px){
-    .content-container {
-        padding: 6rem 1rem 0 1rem;
-    }
+@media screen and (max-width: 960px) {
+  .content-container {
+    padding: 6rem 1rem 0 1rem;
+  }
 }
 
 /* fade */

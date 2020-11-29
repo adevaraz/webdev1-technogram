@@ -32,7 +32,7 @@
               <img class="item img-btn"  src="../../../../assets/icons/profile.png"/>
             </div>
             <div class="public" v-else>
-              <v-btn class="item btn text-none" color="#E52B38" small>Sign in</v-btn>
+              <v-btn class="item btn text-none" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
             </div>
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
@@ -68,6 +68,7 @@
 <script>
 import NotificationDropdown from '../../notifications/NotificationDropdown.vue';
 import NavDrawer from "./NavDrawer.vue";
+import { mapActions } from 'vuex'
 const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
@@ -170,6 +171,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      loggedInToggle : 'user/loginToogle'
+    }),
     handleScroll() {
       if (!this.isMobile) {
         if (window.top.scrollY > 100) {
