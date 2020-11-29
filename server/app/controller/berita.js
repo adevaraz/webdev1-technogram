@@ -247,6 +247,30 @@ exports.update = async (req, res) => {
 
 };
 
+/**
+ * @author 31 ZV
+ * 
+ * Update viewer/reader berita
+ */
+exports.updateReader = async (req, res) => {
+    const id = req.params.id;
+    
+    const news = await Berita.findByPk(id);
+    if (!news) {
+        const error = new Error("Could not find specific post");
+        error.statusCode = 404;
+        error.cause = "Invaid Post ID";
+        throw error;
+    }
+
+    news.jumlah_reader += 1;
+    await news.save();
+
+    res.status(200).json({
+      message: "Reader updated",
+      data: news
+    });
+};
 
 /*
  @author 28 RA

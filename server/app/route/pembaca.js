@@ -82,6 +82,12 @@ router.post("/sign-out", authentication.validateUser, pembacaController.signout)
  */
 router.post("/save-news", authentication.validateUser, pembacaController.saveNews);
 
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk memeriksa apakah berita sudah disimpan (bookmark berita) atau belum
+ */
+router.get("/save-state", authentication.validateUser, pembacaController.isSaved);
 
 /**
  * @author 16 MN
@@ -96,6 +102,13 @@ router.get('/notifikasi' , authentication.validateUser, pembacaController.getUse
  * Route untuk menyukai berita (like berita)
  */
 router.post("/like-news", authentication.validateUser, pembacaController.likeNews);
+
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk memeriksa apakah berita sudah dilike atau belum
+ */
+router.get("/like-state", authentication.validateUser, pembacaController.isLiked);
 
 /**
  * @author 16 MN

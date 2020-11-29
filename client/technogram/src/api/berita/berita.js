@@ -66,12 +66,8 @@ const update = async (idBerita, data , token) => {
 
 const like = async (id, category, token) => {
     try {
-        console.log(id);
-        console.log(category);
-        console.log(token);
         const currentUrl = USER_URL + `/like-news`;
-
-        const result = await axios.post(currentUrl , {
+        const result = await axios.post(currentUrl, {}, {
             timeout : TIMEOUT,
 
             params : {
@@ -80,19 +76,35 @@ const like = async (id, category, token) => {
             },
             
             headers: {
-                "Authorization": token
+                "Authorization": token,
             }
         });
 
-        console.log(result.data);
         return result.data;
     } catch (err) {
         return ErrorHandler.errorHandler(err);
-        // const errorResult = await ErrorHandler.errorHandler(err , USER_ROLE , async (newToken) => {
-        //     // return await save(data , newToken);
-        // })
+    }
+}
 
-        // return errorResult;
+const isLiked = async (token, newsId) => {
+    try {
+        const currentUrl = USER_URL + `/like-state`;
+
+        const result = await axios.get(currentUrl, {
+            timeout : TIMEOUT,
+
+            params : {
+                news: newsId,
+            },
+            
+            headers: {
+                "Authorization": token,
+            }
+        });
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
     }
 }
 
@@ -103,7 +115,7 @@ const saveBerita = async (id, token) => {
 
         const currentUrl = USER_URL + `/save-news`;
 
-        const result = await axios.post(currentUrl , {
+        const result = await axios.post(currentUrl, {}, {
             timeout : TIMEOUT,
 
             params : {
@@ -122,6 +134,28 @@ const saveBerita = async (id, token) => {
     }
 }
 
+const isSaved = async (token, newsId) => {
+    try {
+        const currentUrl = USER_URL + `/save-state`;
+
+        const result = await axios.get(currentUrl, {
+            timeout : TIMEOUT,
+
+            params : {
+                news: newsId,
+            },
+            
+            headers: {
+                "Authorization": token,
+            }
+        });
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
+
 const get = async (id) => {
     try {
         const getUrl = BERITA_URL + `/${id}`;
@@ -132,6 +166,16 @@ const get = async (id) => {
     }
 };
 
+const incrementViewer = async(id) => {
+    try {
+        const currentUrl = BERITA_URL + `/update-reader/${id}`;
+        const result = await axios.put(currentUrl, {}, { timeout: TIMEOUT });
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
 
 const recentBerita = async ( perPage , key , page ) => {
     try{
@@ -191,8 +235,11 @@ export default{
     save,
     update,
     like,
+    isLiked,
     saveBerita,
+    isSaved,
     get,
+    incrementViewer,
     recentBerita,
     popularBerita,
     getByCat

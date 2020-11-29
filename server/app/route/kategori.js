@@ -16,4 +16,6 @@ router.get('/get', kategoriController.getAllKategori);
 
 router.put('/update/:id', authenticate.validateAdmin, kategoriValidationRules(), validate, kategoriController.updateKategoriById);
 
+router.get('/get-id', kategoriController.getByName);
+
 module.exports = router

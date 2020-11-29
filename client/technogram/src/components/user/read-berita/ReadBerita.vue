@@ -14,7 +14,7 @@
 
                 <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
                     <div id="likes" class="d-flex flex-row">
-                        <img v-if="!isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                        <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
                         <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                         <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                     </div>
@@ -25,8 +25,8 @@
                     </div>
                     
                     <div id="save" class="d-flex flex-row">
-                        <img v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                        <!-- <img class="item img-btn" src="../../../assets/icons/saved-icon.png" /> -->
+                        <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                        <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
                         <p> </p>
                     </div>
                 </div>
@@ -67,12 +67,16 @@
 <script>
 import { BASE_URL } from "../../../api/const";
 import berita from "../../../api/berita/berita";
+import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
 // import { store } from "../../../store/index";
 
 export default {
     created() {
+        this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
+        this.getLikeState(this.$route.params.id);
+        this.getSaveState(this.$route.params.id);
     },
 
     name: "read-berita",
@@ -96,8 +100,10 @@ export default {
         urlTemp: null,
         urlGambar: null,
         isLoading: false,
+        isLiked: false,
+        isSaved: false,
+        isLoggedIn: false,
         relatedBeritaLoading: false,
-        old_likes: 0
     }),
 
     computed: {
@@ -117,27 +123,24 @@ export default {
             } else {
                 return false;
             }
-        },
-
-        isLiked() {
-            if(this.jumlah_likes > this.old_likes) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-
-        // isSaved() {
-            
-        // }
+        }
     },
 
     mounted() {
-        this.retrieveRelatedBerita(this.$route.params.id);
+        this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
+        this.retrieveRelatedBerita(this.$route.params.id);
+        this.getLikeState(this.$route.params.id);
+        this.getSaveState(this.$route.params.id);
     },
 
     methods: {
+        async refreshValue() {
+            this.getBeritabyId(this.$route.params.id);
+            this.getLikeState(this.$route.params.id);
+            this.getSaveState(this.$route.params.id);
+        },
+
         async getBeritabyId(id) {
             try {
                 this.isLoading = true;
@@ -152,7 +155,6 @@ export default {
                 if (result.data.url_gambar) {
                     this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
                     this.urlGambar = await this.getImageObj(this.urlTemp);
-                    // console.log(this.urlGambar);
                 }
 
                 this.id = result.data.id;
@@ -187,6 +189,19 @@ export default {
             }
         },
 
+        async incrementViewer(id) {
+            try {
+                const result = await berita.incrementViewer(id);
+
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
+                    return;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         async retrieveRelatedBerita(id) {
             try {
                 this.relatedBeritaLoading = true;
@@ -211,31 +226,59 @@ export default {
 
         async likeBerita() {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NDkxMDA3LCJleHAiOjE2MDY0OTgyMDd9.N5wP0fpIuMDrHiypVYoX3jxd8EreY3ByX1_hMwr-6RY'
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
+
                 this.old_likes = this.jumlah_likes;
-                const likeResult = await berita.like(this.$route.params.id, this.kategori_berita, token);
+                const kategoriBerita = await kategori.getByName(this.kategori_berita);
+                const likeResult = await berita.like(this.$route.params.id, kategoriBerita.data.id_kategori, token);
 
                 if(likeResult instanceof Error) {
                     this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
                     return;
                 }
+
+                this.refreshValue();
             } catch (error) {
-                console.error();
+                console.log(error);
+            }
+        },
+
+        async getLikeState(id) {
+            try {
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc';
+
+                const result = await berita.isLiked(token, id);
+                this.isLiked = result.data;
+            } catch (error) {
+                console.log(error);
             }
         },
 
         async saveBerita() {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NDkxMDA3LCJleHAiOjE2MDY0OTgyMDd9.N5wP0fpIuMDrHiypVYoX3jxd8EreY3ByX1_hMwr-6RY'
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
 
                 const saveResult = await berita.saveBerita(this.$route.params.id, token);
 
                 if(saveResult instanceof Error) {
-                    this.errorMessage = "Gagal menyukai berita karena " + saveResult.cause;
+                    this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
                     return;
                 }
+
+                this.refreshValue();
             } catch (error) {
-                console.error();
+                console.log(error);
+            }
+        },
+
+        async getSaveState(id) {
+            try {
+                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc';
+
+                const result = await berita.isSaved(token, id);
+                this.isSaved = result.data;
+            } catch (error) {
+                console.log(error);
             }
         }
     }
