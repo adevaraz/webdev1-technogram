@@ -10,6 +10,8 @@ import SearchResult from './components/user/Search/SearchResult.vue';
 import ListCategoryAdm from './components/admin/kategori/daftar-kategori/Category.vue';
 import ListPembacaAdm from './components/admin/daftar-user/DaftarPembaca';
 import AddAdmin from './components/admin/admin/AddAdmin';
+import NotFoundAdmin from './components/error/ErrorAdmin.vue';
+import NotFoundUser from './components/error/ErrorUser.vue';
 
 export default [
     {
@@ -73,11 +75,21 @@ export default [
             path: "/admin/create",
             name: "add-admin",
             component: AddAdmin
-        }
+        },
     ]},
     { 
         path : '/admin/signin',
         name : 'admin-signin',
         component : LoginAdmin
+    },
+    {
+        path: "/admin/*",
+        name: "not-found-admin",
+        component: NotFoundAdmin
+    },
+    {
+        path: "/*",
+        name: "not-found-user",
+        component: NotFoundUser
     }
 ];
