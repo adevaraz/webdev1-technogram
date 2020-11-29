@@ -29,7 +29,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" v-if="!isLoggedIn">
-        <v-btn text small class="text-caption worksans-font text-none">Sign in</v-btn>
+        <v-btn text small class="text-caption worksans-font text-none" @click="loggedInToggle">Sign in</v-btn>
       </v-col>
       <v-col cols="12">
         <div class="border-btm mt-1"></div>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   props: {
     menus: {
@@ -57,6 +58,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      loggedInToggle : 'user/loginToogle'
+    }),
     menuClass(index) {
       const basicClass =
         "font-weight-bold text-caption worksans-font text-none";

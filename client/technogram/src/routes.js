@@ -14,6 +14,7 @@ import ByMostLikes from './components/user/Search/ByMostLikes.vue'
 import ListCategoryAdm from './components/admin/kategori/daftar-kategori/Category.vue';
 import ListPembacaAdm from './components/admin/daftar-user/DaftarPembaca';
 import AddAdmin from './components/admin/admin/AddAdmin';
+import NotificationDetail from './components/user/notifications/NotificationDetail.vue'
 import NotFoundAdmin from './components/error/ErrorAdmin.vue';
 import NotFoundUser from './components/error/ErrorUser.vue';
 
@@ -60,6 +61,11 @@ export default [
             path : '/berita/:id',
             component : ReadBerita,
             name : 'read-berita'
+        },
+        {
+            path : '/notifcation',
+            component : NotificationDetail ,
+            name : 'notification'
         }
     ]},
     {

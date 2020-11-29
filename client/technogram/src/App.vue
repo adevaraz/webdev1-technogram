@@ -9,7 +9,7 @@
 
 <style>
 #nprogress .bar {
-  background: #E52B38 !important;
+  background: #e52b38 !important;
 }
 </style>
 

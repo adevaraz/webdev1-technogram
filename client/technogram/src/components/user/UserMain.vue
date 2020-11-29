@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar :toogleDrawer="toogleDrawer"></nav-bar>
+    <nav-bar :toogleDrawer="toogleDrawer" :isLoggedIn="isLoggedIn"></nav-bar>
     <transition name="fade">
       <div class="container" v-if="isContentShown">
         <div class="content-container">
@@ -13,13 +13,24 @@
 
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
+import {mapGetters} from 'vuex'
+import openSocket from "socket.io-client";
+import {BASE_URL} from '../../api/const.js';
 export default {
+  created()  {
+      this.socket = openSocket.connect(BASE_URL);
+      this.socket.emit("room", 'software');
+      this.socket.on('notification', result => {
+        console.log(result);
+      });
+  },
   components: {
     NavBar,
   },
   data() {
     return {
       isContentShown: true,
+      socket : null,
     };
   },
   methods: {
@@ -28,6 +39,14 @@ export default {
       console.log(this.isContentShown);
     },
   },
+
+  computed : {
+    ...mapGetters(
+      {
+        isLoggedIn : 'user/isLoggedIn'
+      }
+    )
+  }
 };
 </script>
 
@@ -52,10 +71,10 @@ export default {
   max-width: 1488px;
 }
 
-@media screen and (max-width: 960px){
-    .content-container {
-        padding: 6rem 1rem 0 1rem;
-    }
+@media screen and (max-width: 960px) {
+  .content-container {
+    padding: 6rem 1rem 0 1rem;
+  }
 }
 
 /* fade */
