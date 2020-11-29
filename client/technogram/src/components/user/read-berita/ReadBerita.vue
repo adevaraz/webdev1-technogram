@@ -1,6 +1,9 @@
 <template>
     <v-container :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
-        <v-sheet class="mx-16 px-2">
+        <v-sheet
+            class="mx-16 px-2"
+            :isLoading="isLoading"
+        >
             <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
             <p class="worksans-font">{{ date }}</p>
 
@@ -53,12 +56,20 @@
 
         <div class="px-16 mx-12 my-16">
             <h3 class="worksans-font red-text">Recommendations</h3>
+            <v-progress-circular
+                class="progressbar"
+                v-if="relatedBeritaLoading"
+                color="#E52B38"
+                height="10"
+                indeterminate
+            ></v-progress-circular>
             <div
                 v-for="berita in relatedBerita"
                 :key="berita.id_berita"
                 class="d-flex flex-col"
+                @click="onBeritaSelected(berita.id_berita)"
             >
-                <small-berita :berita="berita"></small-berita>
+                <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
             </div>
         </div>
     </v-container>
@@ -157,7 +168,7 @@ export default {
                     this.urlGambar = await this.getImageObj(this.urlTemp);
                 }
 
-                this.id = result.data.id;
+                this.id = result.data.id_berita;
                 this.judul = result.data.judul;
                 this.artikel = result.data.artikel;
                 this.waktu_publikasi = result.data.waktu_publikasi;
@@ -226,18 +237,20 @@ export default {
 
         async likeBerita() {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
+                if(this.isLoggedIn) {
+                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
 
-                this.old_likes = this.jumlah_likes;
-                const kategoriBerita = await kategori.getByName(this.kategori_berita);
-                const likeResult = await berita.like(this.$route.params.id, kategoriBerita.data.id_kategori, token);
+                    this.old_likes = this.jumlah_likes;
+                    const kategoriBerita = await kategori.getByName(this.kategori_berita);
+                    const likeResult = await berita.like(this.$route.params.id, kategoriBerita.data.id_kategori, token);
 
-                if(likeResult instanceof Error) {
-                    this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
-                    return;
+                    if(likeResult instanceof Error) {
+                        this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
+                        return;
+                    }
+
+                    this.refreshValue();
                 }
-
-                this.refreshValue();
             } catch (error) {
                 console.log(error);
             }
@@ -256,16 +269,18 @@ export default {
 
         async saveBerita() {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
+                if(this.isLoggedIn) {
+                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NTcxMDg0LCJleHAiOjE2MDY1NzgyODR9.fzEzPT3_V4LlFA5cb5pSJXcpGSAiWXlVilm-s2gpqMc'
 
-                const saveResult = await berita.saveBerita(this.$route.params.id, token);
+                    const saveResult = await berita.saveBerita(this.$route.params.id, token);
 
-                if(saveResult instanceof Error) {
-                    this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
-                    return;
+                    if(saveResult instanceof Error) {
+                        this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
+                        return;
+                    }
+
+                    this.refreshValue();
                 }
-
-                this.refreshValue();
             } catch (error) {
                 console.log(error);
             }
@@ -280,6 +295,19 @@ export default {
             } catch (error) {
                 console.log(error);
             }
+        },
+
+        onBeritaSelected(id) {
+            this.$router
+                .push({
+                    path: `/berita/${id}`
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+
+            this.incrementViewer(id);
+            this.refreshValue();
         }
     }
 }
@@ -299,8 +327,11 @@ export default {
 
 .item {
   cursor: pointer;
-  height: 16px;
-  max-height: 16px;
+}
+
+.img-btn {
+    height: 16px;
+    max-height: 16px;
 }
 
 .img-btn:hover {
