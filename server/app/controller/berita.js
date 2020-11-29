@@ -486,7 +486,6 @@ const notifyDeleteBerita = async (berita) => {
 }
 
 const notifyNewBerita = async (berita) => {
-    
     const kategori = await Kategori.findOne({
         where : {
             nama_kategori : sequelize.where(sequelize.fn('LOWER', sequelize.col('nama_kategori')),berita.kategori_berita.toLowerCase())
@@ -504,18 +503,19 @@ const notifyNewBerita = async (berita) => {
             most_liked_category : kategori.id_kategori
         }
     });
-
     if(listOfPembaca.length > 0){
         for (let i = 0; i < listOfPembaca.length; i++)  {
             await listOfPembaca[i].addNotification(berita);
         }
-        const key = berita.kategori_berita
+        const key = berita.kategori_berita.toLowerCase();
+        console.log(`sending berita to ${key}`);
         socket.getIO().to(key).emit('notification',{
             action : 'publish',
             message : 'New Notification',
             data : berita
         })
     }
+
 }
 
 exports.uploadImgHandler = async (req, res, next)  => {
