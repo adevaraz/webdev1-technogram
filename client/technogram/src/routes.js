@@ -70,6 +70,18 @@ export default [
         }
     ]},
     {
+        path: '/account',
+        component: UserMain,
+        children : [
+            { 
+                path : '/account/get-save',
+                component : UserProfile,
+                name : 'profile'
+            }
+        ]
+    },
+    
+    {
         path : '/signin',
         component : Admin // kuduna user
     },
@@ -77,6 +89,7 @@ export default [
         path : '/signup',
         component : Admin // kuduna user
     },
+
     { 
         path : '/admin', 
         component : Admin,

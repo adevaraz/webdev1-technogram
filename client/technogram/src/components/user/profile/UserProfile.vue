@@ -7,15 +7,13 @@
 
       </v-col>
      <div :class="isMobile? 'middle-border-mobile' : 'middle-border' "></div>
-     <v-overlay :value="overlay">
-      <v-col cols="12">
+      <v-col cols="12" class="text-center progressbar">
         <v-progress-circular
           v-if = beritaLoading
           indeterminate
           color="red"
         ></v-progress-circular>
       </v-col>
-     </v-overlay>
       <v-col cols="12">
         <v-row :class="isMobile? 'pa-0' : 'justify-center'">
           <v-col
@@ -116,7 +114,7 @@ export default {
 
 .progressbar {
   position: absolute;
-  left: 45%;
   top: 45%;
+
 }
 </style>
