@@ -5,6 +5,7 @@
       :data-key="'id'"
       :data-sources="items"
       :data-component="itemComponent"
+      v-on:tobottom="onScrollToBottom"
     >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
@@ -72,7 +73,8 @@ export default {
       let bottomOfWindow =
         document.documentElement.scrollTop + window.innerHeight ===
         document.documentElement.offsetHeight;
-
+      console.log(document.documentElement.scrollTop + window.innerHeight);
+      console.log(document.documentElement.offsetHeight);
       if (bottomOfWindow) {
         this.onScrollToBottom();
       }
@@ -94,4 +96,10 @@ export default {
   border-top: 2px solid black;
 }
 
+.list-infinite{
+  width: 100%;
+  height: 99vh;
+  overflow-y: auto;
+  position: relative;
+}
 </style>
