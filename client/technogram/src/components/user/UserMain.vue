@@ -13,9 +13,13 @@
 
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
+
 import {mapGetters} from 'vuex'
 import openSocket from "socket.io-client";
 import {BASE_URL} from '../../api/const.js';
+
+//import LoginUser from "./LoginUser.vue";
+
 export default {
   created()  {
       this.socket = openSocket.connect(BASE_URL);
@@ -27,6 +31,7 @@ export default {
   components: {
     NavBar,
   },
+  
   data() {
     return {
       isContentShown: true,

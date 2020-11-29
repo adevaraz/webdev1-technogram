@@ -73,6 +73,7 @@ export default {
 </script>
 
 <style scoped>
+
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 .border-btm {
   border-bottom: 1px solid #bab4b8;
@@ -105,6 +106,11 @@ export default {
 
 .button{
   cursor: pointer;
+
+}
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+.border-btm{
+    border-bottom: 1px solid #BAB4B8;
 }
 
 .button:hover{

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --host 0.0.0.0 --allowed-hosts 192.168.100.58",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -16,6 +16,7 @@
     "path": "^0.12.7",
     "socket.io-client": "^3.0.1",
     "vue": "^2.6.11",
+    "vue-recaptcha": "^1.3.0",
     "vue-router": "^3.4.9",
     "vue-virtual-scroll-list": "^2.3.2",
     "vue2-editor": "^2.10.2",

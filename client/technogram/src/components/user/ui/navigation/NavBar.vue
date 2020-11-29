@@ -1,4 +1,4 @@
-<template>
+<template v-slot:activator="{ on, attrs }">
   <div :class="navbarClass">
     <nav>
       <div class="header">
@@ -32,7 +32,12 @@
               <img class="item img-btn"  src="../../../../assets/icons/profile.png"/>
             </div>
             <div class="public" v-else>
-              <v-btn class="item btn text-none" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
+
+            <v-flex>  
+            <LoginUser>
+            </LoginUser>
+            </v-flex>
+
             </div>
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
@@ -69,8 +74,12 @@
 <script>
 import NotificationDropdown from '../../notifications/NotificationDropdown.vue';
 import NavDrawer from "./NavDrawer.vue";
+
 import categoriesData from "../../../../api/kategori/daftarKategori";
 import { mapActions } from 'vuex'
+
+import LoginUser from "./../../auth/LoginUser.vue";
+
 const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
@@ -104,8 +113,10 @@ export default {
   },
   components: { 
     NavDrawer,
-    NotificationDropdown   
+    NotificationDropdown,
+    LoginUser
   },
+
   props: {
     isLoggedIn: {
       default: true,
@@ -139,6 +150,7 @@ export default {
           query: "hardware",
         },
         { name: "More", routeName: "more-categories", route: "categories" },
+       
       ],
       kategori: [],
       selectedMenu: this.$router.currentRoute.name,
