@@ -8,6 +8,7 @@
             <v-text-field 
                 v-model="key"
                 placeholder="Enter keyword here..."
+                v-on:keydown.enter="$router.push({ name: 'recent-result', query: {q: key} })"
             >
             </v-text-field>
         </div>
@@ -19,6 +20,11 @@ export default {
     data() {
         return {
              key: '',
+        }
+    },
+    methods: {
+        test() {
+            console.log('enter');
         }
     }
 }
