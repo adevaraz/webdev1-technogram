@@ -13,16 +13,14 @@
 
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
 import openSocket from "socket.io-client";
-import {BASE_URL} from '../../api/const.js';
+import { BASE_URL } from "../../api/const.js";
 export default {
-  created()  {
-      this.socket = openSocket.connect(BASE_URL);
-      this.socket.emit("room", 'software');
-      this.socket.on('notification', result => {
-        console.log(result);
-      });
+  created() {
+    if (this.isLoggedIn && this.mostLikedCategory !== "") {
+      this.initSocket();
+    }
   },
   components: {
     NavBar,
@@ -30,7 +28,7 @@ export default {
   data() {
     return {
       isContentShown: true,
-      socket : null,
+      socket: null,
     };
   },
   methods: {
@@ -38,15 +36,46 @@ export default {
       this.isContentShown = !isDrawerShown;
       console.log(this.isContentShown);
     },
+    initSocket() {
+      this.socket = openSocket.connect(BASE_URL);
+      this.socket.emit("room", this.mostLikedCategory);
+      this.socket.on("notification", (result) => {
+        if (result.action === "publish") {
+          const newsTitle = result.data.judul.slice(0, 20);
+          this.$swal(`${newsTitle}`);
+        }
+      });
+    },
+    disconnectSocket() {
+      this.socket.disconnect();
+      this.socket = null;
+    },
   },
-
-  computed : {
-    ...mapGetters(
-      {
-        isLoggedIn : 'user/isLoggedIn'
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "user/isLoggedIn",
+      mostLikedCategory: "user/getMostLikedKategori",
+    }),
+  },
+  watch: {
+    isLoggedIn(value) {
+      if (value) {
+        console.log("login");
+        this.initSocket();
+      } else {
+        console.log("dc socket");
+        this.disconnectSocket();
       }
-    )
-  }
+    },
+    mostLikedCategory(value) {
+      value;
+      this.disconnectSocket();
+      this.initSocket();
+    },
+  },
+  beforeDestroy() {
+    this.disconnectSocket();
+  },
 };
 </script>
 

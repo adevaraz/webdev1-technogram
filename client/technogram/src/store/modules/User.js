@@ -2,13 +2,14 @@ import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
     state: () => ({
-        token : '',
+        token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NzQxNzYzLCJleHAiOjE2MDY3NDg5NjN9.muAlkkzxeik3V9a61yndS-vT41CzQj4D717-nd31vWQ',
         username : '',
         status : {
             type : StatusType.IDLE,
             message : ''
         },
-        isLoggedIn : false
+        isLoggedIn : false,
+        mostLikedKategori : 'app',
     }),
     mutations :{
         SET_LOGGEDIN(state, isLoggedin){
@@ -43,6 +44,9 @@ const UserModule = {
                 type : StatusType.IDLE,
                 message : ''
             }
+        },
+        SET_MOSTLIKED_KATEGORI(state , mostLikedKategori){
+            state.mostLikedKategori = mostLikedKategori
         }
     },
     getters : {
@@ -57,6 +61,9 @@ const UserModule = {
         },
         isLoggedIn(state){
             return state.isLoggedIn;
+        },
+        getMostLikedKategori(state){
+            return state.mostLikedKategori;
         }
     },
     actions : {
@@ -66,6 +73,7 @@ const UserModule = {
             commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit('SET_SUCCESS' , 'Success get new Access token');
         }
+        
     }
 
     
