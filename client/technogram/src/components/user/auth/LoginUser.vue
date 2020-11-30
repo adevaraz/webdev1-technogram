@@ -11,7 +11,6 @@
               <v-card-title>
                 <h1> Sign in with email </h1> 
               </v-card-title>
-                        
                <form class="mt-10">
                   <v-row class="jutify-center">
                     <v-col cols="12">
@@ -47,6 +46,7 @@
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
+
                     </v-col>
                   </form>
                 </div>

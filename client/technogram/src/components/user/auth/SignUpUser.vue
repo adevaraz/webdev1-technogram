@@ -76,7 +76,6 @@
 <script>
 import Auth from "../../../api/pembaca/auth";
 
-import {mapActions} from "vuex";
 export default {
   data() {
     return {
@@ -116,10 +115,7 @@ export default {
         return () => (this.password === this.confirmPassword) || "Password must match"
     },
   },
-   methods: {
-    ...mapActions({
-      loggedInToggle : 'user/loginToogle'
-    }),
+  methods: {
     async signup() {
       console.log("HELLOOOO NYAMPE GA\n\n")
       this.error.isError = false;

@@ -24,9 +24,11 @@ const signin = async(email , password) => {
 const signup = async(email , username, password) => {
     try{
         const signupURL = USER_URL + '/create' 
+
         console.log(email)
         console.log(username)
         console.log(password)
+
         const result = await axios.post(signupURL , {
             email,
             username,
@@ -60,6 +62,7 @@ const getRefreshToken = async() => {
 const logout = async(token) => {
     try{
         const url = USER_URL + '/signout'
+        console.log("HELLO")
         const result = axios.post(url , {} , {
             headers : {
                 'Authorization' : token
