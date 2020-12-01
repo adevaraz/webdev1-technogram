@@ -480,6 +480,7 @@ exports.getSave = async (req, res, next) => {
         },
       ],
     });
+    console.log(saved.saved);
     if (saved.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
@@ -517,12 +518,19 @@ exports.signin = async (req, res, next) => {
         error.cause = "Wrong password";
         throw error;
       }
+      let mostLikeCategory;
+      //Get mostliked category name
+      console.log(pembaca);
+      if(pembaca.most_liked_category){
+         mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+      }
       //generate token 
       const accessToken = await createAccessToken(pembaca);
       await createRefreshToken(pembaca,res);
       res.status(200).json({
         message: "sign in Success",
-        token: accessToken
+        token: accessToken,
+        mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null
       });
     } else {
       const error = new Error("Invalid credential");
