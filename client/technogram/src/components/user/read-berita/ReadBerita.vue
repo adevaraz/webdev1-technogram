@@ -1,62 +1,97 @@
 <template>
-  <v-container :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
-    <v-sheet class="mx-16 px-2" :isLoading="isLoading">
-      <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
-      <p class="worksans-font">{{ date }}</p>
+    <div>
+        <v-progress-circular
+            v-if="isLoading"
+            class="progressbar"
+            color="#E52B38"
+            :size="50"
+            :width="7"
+            indeterminate
+        ></v-progress-circular>
+        <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
+            <v-sheet
+                class="mx-16 px-2"
+            >
+                <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
+                <p class="worksans-font">{{ date }}</p>
 
-      <!-- Information section -->
-      <v-card :class="isMobile ? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'" flat tile>
-        <h4 class="mr-auto">by {{ jurnalis }}</h4>
+                <!-- Information section -->
+                <v-card
+                    :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
+                    flat
+                    tile
+                >
+                    <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
-        <div :class="isMobile ? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-          <div id="likes" class="d-flex flex-row">
-            <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-            <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
-            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
-          </div>
+                    <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
+                        <div id="likes" class="d-flex flex-row">
+                            <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                            <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                        </div>
 
-          <div id="view" class="d-flex flex-row">
-            <img class="item mr-1" style="height: 13px" src="../../../assets/icons/view.png" />
-            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
-          </div>
+                        <div id="view" class="d-flex flex-row">
+                            <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
+                        </div>
+                        
+                        <div id="save" class="d-flex flex-row">
+                            <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                            <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
+                            <p> </p>
+                        </div>
+                    </div>
+                </v-card>
 
-          <div id="save" class="d-flex flex-row">
-            <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-            <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
-            <p></p>
-          </div>
-        </div>
-      </v-card>
+                <div id="content" class="worksans-font">
+                    <div id="header">
+                        <v-img
+                            v-if="this.urlTemp != null"
+                            :src="urlTemp"
+                            :aspect-ratio="16 / 9"
+                            contain
+                            class="grey darken-4"
+                        />
+                    </div>
 
-      <div id="content" class="worksans-font">
-        <div id="header">
-          <v-img v-if="this.urlTemp != null" :src="urlTemp" :aspect-ratio="16 / 9" contain class="grey darken-4" />
-        </div>
+                    <div v-html=artikel></div>
 
-        <div v-html="artikel"></div>
+                    <p class="grey--text text--darken-2">Written by</p>
+                    <h4>{{ jurnalis }}</h4>
+                    <p>{{ deskripsi_jurnalis }}</p>
+                </div>
+            </v-sheet>
 
-        <p class="grey--text text--darken-2">Written by</p>
-        <h4>{{ jurnalis }}</h4>
-        <p>{{ deskripsi_jurnalis }}</p>
-      </div>
-    </v-sheet>
-
-    <div class="px-16 mx-12 my-16">
-      <h3 class="worksans-font red-text">Recommendations</h3>
-      <v-progress-circular class="progressbar" v-if="relatedBeritaLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
-      <div v-for="berita in relatedBerita" :key="berita.id_berita" class="d-flex flex-col" @click="onBeritaSelected(berita.id_berita)">
-        <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
-      </div>
+            <div class="px-16 mx-12 my-16">
+                <h3 class="worksans-font red-text">Recommendations</h3>
+                <v-progress-circular
+                    class="small-progressbar"
+                    v-if="relatedBeritaLoading"
+                    color="#E52B38"
+                    indeterminate
+                ></v-progress-circular>
+                <div
+                    v-for="berita in relatedBerita"
+                    :key="berita.id_berita"
+                    class="d-flex flex-col"
+                    @click="onBeritaSelected(berita.id_berita)"
+                >
+                    <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
+                </div>
+            </div>
+        </v-container>
+        <div :v-else="beritaNotExist()" />
     </div>
-  </v-container>
 </template>
 
 <script>
 import { BASE_URL } from "../../../api/const";
+import { store } from "../../../store/index";
+import { mapGetters } from 'vuex';
 import berita from "../../../api/berita/berita";
+import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
-// import { store } from "../../../store/index";
 
 export default {
   name: "read-berita",
@@ -66,25 +101,27 @@ export default {
   },
 
   data: () => ({
-    id: 0,
-    judul: "",
-    artikel: "",
-    waktu_publikasi: "",
-    url_gambar: "",
-    kategori_berita: "",
-    jumlah_reader: 0,
-    jumlah_likes: 0,
-    jurnalis: "",
-    deskripsi_jurnalis: "",
-    relatedBerita: [],
-    urlTemp: null,
-    urlGambar: null,
-    isLoading: false,
-    isLiked: false,
-    isSaved: false,
-    isLoggedIn: false,
-    relatedBeritaLoading: false,
+        id: 0,
+        judul: '',
+        artikel: '',
+        waktu_publikasi: '',
+        url_gambar: '',
+        kategori_berita: '',
+        jumlah_reader: 0,
+        jumlah_likes: 0,
+        jurnalis: '',
+        deskripsi_jurnalis: '',
+        relatedBerita: [],
+        urlTemp: null,
+        urlGambar: null,
+        isLoading: false,
+        isExist: false,
+        isLiked: false,
+        isSaved: false,
+        relatedBeritaLoading: false,
+        errorMessage: ''
   }),
+  
   watch: {
     $route: function () {
       this.resetData();
@@ -95,6 +132,7 @@ export default {
       this.getSaveState(this.$route.params.id);
     },
   },
+  
   computed: {
     date() {
       // Format : DayName, DD/MM/YYYY HH:MM
@@ -113,6 +151,12 @@ export default {
         return false;
       }
     },
+    
+    ...mapGetters(
+        {
+             isLoggedIn : 'user/isLoggedIn'
+        }
+    )
   },
 
   mounted() {
@@ -143,6 +187,7 @@ export default {
       this.isLoggedIn = false;
       this.relatedBeritaLoading = false;
     },
+    
     async refreshValue() {
       this.getBeritabyId(this.$route.params.id);
       this.getLikeState(this.$route.params.id);
@@ -150,34 +195,35 @@ export default {
     },
 
     async getBeritabyId(id) {
-      try {
-        this.isLoading = true;
-        const result = await berita.get(id);
+            try {
+                this.isLoading = true;
+                const result = await berita.get(id);
 
-        if (result instanceof Error) {
-          throw result;
-        }
+                if (result instanceof Error) {
+                    throw result;
+                }
 
-        this.isLoading = false;
+                this.isLoading = false;
 
-        if (result.data.url_gambar) {
-          this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
-          this.urlGambar = await this.getImageObj(this.urlTemp);
-        }
+                if (result.data.url_gambar) {
+                    this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
+                    this.urlGambar = await this.getImageObj(this.urlTemp);
+                }
 
-        this.id = result.data.id_berita;
-        this.judul = result.data.judul;
-        this.artikel = result.data.artikel;
-        this.waktu_publikasi = result.data.waktu_publikasi;
-        this.url_gambar = result.data.url_gambar;
-        this.kategori_berita = result.data.kategori_berita;
-        this.jumlah_reader = result.data.jumlah_reader;
-        this.jumlah_likes = result.data.jumlah_likes;
-        this.jurnalis = result.data.jurnalis;
-        this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
-      } catch (error) {
-        console.log(error);
-      }
+                this.isExist = true;
+                this.id = result.data.id_berita;
+                this.judul = result.data.judul;
+                this.artikel = result.data.artikel;
+                this.waktu_publikasi = result.data.waktu_publikasi;
+                this.url_gambar = result.data.url_gambar;
+                this.kategori_berita = result.data.kategori_berita;
+                this.jumlah_reader = result.data.jumlah_reader;
+                this.jumlah_likes = result.data.jumlah_likes;
+                this.jurnalis = result.data.jurnalis;
+                this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+            } catch (error) {
+                console.log(error);
+            }
     },
 
     async getImageObj(ImageUrl) {
@@ -197,111 +243,118 @@ export default {
       }
     },
 
-    async incrementViewer(id) {
-      try {
-        const result = await berita.incrementViewer(id);
-
-        if (result instanceof Error) {
-          this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
-          return;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
     async retrieveRelatedBerita(id) {
-      try {
-        this.relatedBeritaLoading = true;
-        const result = await berita.get(id);
-        this.kategori_berita = result.data.kategori_berita;
-        const recommendResult = await berita.getByCat(4, this.kategori_berita, 1);
-        this.relatedBeritaLoading = false;
+            try {
+                this.relatedBeritaLoading = true;
+                const result = await berita.get(id);
+                this.kategori_berita = result.data.kategori_berita;
+                const recommendResult = await berita.getByCat(4, this.kategori_berita, 1);
+                this.relatedBeritaLoading = false;
 
-        if (recommendResult instanceof Error) {
-          this.errorMessage = "Gagal mendapatkan berita dengan topik sama karena " + recommendResult.cause;
-          return;
+                if(recommendResult instanceof Error) {
+                    this.errorMessage = "Gagal mendapatkan berita dengan topik sama karena " + recommendResult.cause;
+                    return;
+                }
+
+                recommendResult.data.forEach(element => {
+                    element.url_gambar = BASE_URL + "/" + element.url_gambar;
+                    this.relatedBerita.push(element);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+   },
+        async likeBerita() {
+            try {
+                if(this.isLoggedIn) {
+                    this.old_likes = this.jumlah_likes;
+                    const kategoriBerita = await kategori.getByName(this.kategori_berita);
+                    const likeResult = await pembacaAct.like(this.$route.params.id, kategoriBerita.data.id_kategori, store.getters['user/getToken']);
+
+                    if(likeResult instanceof Error) {
+                        this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
+                        return;
+                    }
+
+                    this.refreshValue();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async getLikeState(id) {
+            try {
+                const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                this.isLiked = result.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async saveBerita() {
+            try {
+                if(this.isLoggedIn) {
+                    const saveResult = await pembacaAct.saveBerita(this.$route.params.id, store.getters['user/getToken']);
+
+                    if(saveResult instanceof Error) {
+                        this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
+                        return;
+                    }
+
+                    this.refreshValue();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async getSaveState(id) {
+            try {
+                const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
+                
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                this.isSaved = result.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        onBeritaSelected(id) {
+            this.$router
+                .push({
+                    path: `/berita/${id}`
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+
+            this.incrementViewer(id);
+            this.refreshValue();
+        },
+
+        beritaNotExist() {
+            this.$router
+                .push({
+                    path: `/`
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
-
-        recommendResult.data.forEach((element) => {
-          element.url_gambar = BASE_URL + "/" + element.url_gambar;
-          this.relatedBerita.push(element);
-        });
       } catch (error) {
         console.log(error);
       }
-    },
-
-    async likeBerita() {
-      try {
-        if (this.isLoggedIn) {
-          const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ";
-
-          this.old_likes = this.jumlah_likes;
-          const kategoriBerita = await kategori.getByName(this.kategori_berita);
-          const likeResult = await berita.like(this.$route.params.id, kategoriBerita.data.id_kategori, token);
-
-          if (likeResult instanceof Error) {
-            this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
-            return;
-          }
-
-          this.refreshValue();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    async getLikeState(id) {
-      try {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ";
-
-        const result = await berita.isLiked(token, id);
-        this.isLiked = result.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    async saveBerita() {
-      try {
-        if (this.isLoggedIn) {
-          const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ";
-
-          const saveResult = await berita.saveBerita(this.$route.params.id, token);
-
-          if (saveResult instanceof Error) {
-            this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
-            return;
-          }
-
-          this.refreshValue();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    async getSaveState(id) {
-      try {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ";
-
-        const result = await berita.isSaved(token, id);
-        this.isSaved = result.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
     },
   },
 };
@@ -338,5 +391,17 @@ export default {
 
 #header {
   text-align: center;
+}
+
+.progressbar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transition: translate(-50%, -50%);
+}
+
+.small-progressbar {
+    left: 50%;
+    top: 20%;
 }
 </style>

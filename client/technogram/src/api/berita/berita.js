@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
+import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
@@ -63,98 +64,6 @@ const update = async (idBerita, data , token) => {
         return errorResult;
     }
 };
-
-const like = async (id, category, token) => {
-    try {
-        const currentUrl = USER_URL + `/like-news`;
-        const result = await axios.post(currentUrl, {}, {
-            timeout : TIMEOUT,
-
-            params : {
-                news: id,
-                category: category || ''
-            },
-            
-            headers: {
-                "Authorization": token,
-            }
-        });
-
-        return result.data;
-    } catch (err) {
-        return ErrorHandler.errorHandler(err);
-    }
-}
-
-const isLiked = async (token, newsId) => {
-    try {
-        const currentUrl = USER_URL + `/like-state`;
-
-        const result = await axios.get(currentUrl, {
-            timeout : TIMEOUT,
-
-            params : {
-                news: newsId,
-            },
-            
-            headers: {
-                "Authorization": token,
-            }
-        });
-
-        return result.data;
-    } catch (error) {
-        return ErrorHandler.errorHandler(error);
-    }
-}
-
-const saveBerita = async (id, token) => {
-    try {
-        console.log(id);
-        console.log(token);
-
-        const currentUrl = USER_URL + `/save-news`;
-
-        const result = await axios.post(currentUrl, {}, {
-            timeout : TIMEOUT,
-
-            params : {
-                news: id
-            },
-            
-            headers: {
-                "Authorization": token
-            }
-        });
-
-        console.log(result.data);
-        return result.data;
-    } catch (error) {
-        return ErrorHandler.errorHandler(error);
-    }
-}
-
-const isSaved = async (token, newsId) => {
-    try {
-        const currentUrl = USER_URL + `/save-state`;
-
-        const result = await axios.get(currentUrl, {
-            timeout : TIMEOUT,
-
-            params : {
-                news: newsId,
-            },
-            
-            headers: {
-                "Authorization": token,
-            }
-        });
-
-        return result.data;
-    } catch (error) {
-        return ErrorHandler.errorHandler(error);
-    }
-}
 
 const get = async (id) => {
     try {
@@ -259,10 +168,6 @@ export default{
     deleteImg,
     save,
     update,
-    like,
-    isLiked,
-    saveBerita,
-    isSaved,
     get,
     incrementViewer,
     recentBerita,

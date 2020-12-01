@@ -1,8 +1,9 @@
+import User from '../../api/pembaca/auth'
 import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
     state: () => ({
-        token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2ODI1MjE2LCJleHAiOjE2MDY4MzI0MTZ9.7zFmzvmxr7Y6KF1erzEhRvRilBCrSAoYnHBhfcDxs98',
+        token : '',
         username : '',
         status : {
             type : StatusType.IDLE,
@@ -72,8 +73,17 @@ const UserModule = {
             console.log('loading');            
             commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit('SET_SUCCESS' , 'Success get new Access token');
-        }
-        
+        },
+
+        async signOut({commit , state}){
+            commit('SET_LOADING');
+            if(state.token !== ''){
+                await User.signOut(state.token);
+                commit('SET_TOKEN' , '');
+                commit('SET_LOGGEDIN', !state.isLoggedIn);
+            }
+            commit('SET_SUCCESS' , 'Success get new Access token');
+        },
     }
 
     
