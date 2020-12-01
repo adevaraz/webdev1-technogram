@@ -77,10 +77,12 @@
 
 <script>
 import { BASE_URL } from "../../../api/const";
+import { store } from "../../../store/index";
+import { mapGetters } from 'vuex';
 import berita from "../../../api/berita/berita";
+import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
-// import { store } from "../../../store/index";
 
 export default {
     created() {
@@ -88,6 +90,9 @@ export default {
         this.getBeritabyId(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
+
+        console.log("logged: ")
+        console.log(this.isLoggedIn)
     },
 
     name: "read-berita",
@@ -113,8 +118,8 @@ export default {
         isLoading: false,
         isLiked: false,
         isSaved: false,
-        isLoggedIn: false,
         relatedBeritaLoading: false,
+        errorMessage: ''
     }),
 
     computed: {
@@ -134,7 +139,13 @@ export default {
             } else {
                 return false;
             }
-        }
+        },
+
+        ...mapGetters(
+            {
+                isLoggedIn : 'user/isLoggedIn'
+            }
+        )
     },
 
     mounted() {
@@ -151,7 +162,7 @@ export default {
             this.getLikeState(this.$route.params.id);
             this.getSaveState(this.$route.params.id);
         },
-
+        
         async getBeritabyId(id) {
             try {
                 this.isLoading = true;
@@ -238,11 +249,9 @@ export default {
         async likeBerita() {
             try {
                 if(this.isLoggedIn) {
-                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ'
-
                     this.old_likes = this.jumlah_likes;
                     const kategoriBerita = await kategori.getByName(this.kategori_berita);
-                    const likeResult = await berita.like(this.$route.params.id, kategoriBerita.data.id_kategori, token);
+                    const likeResult = await pembacaAct.like(this.$route.params.id, kategoriBerita.data.id_kategori, store.getters['user/getToken']);
 
                     if(likeResult instanceof Error) {
                         this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
@@ -258,9 +267,13 @@ export default {
 
         async getLikeState(id) {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ';
+                const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
 
-                const result = await berita.isLiked(token, id);
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
                 this.isLiked = result.data;
             } catch (error) {
                 console.log(error);
@@ -270,9 +283,7 @@ export default {
         async saveBerita() {
             try {
                 if(this.isLoggedIn) {
-                    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ'
-
-                    const saveResult = await berita.saveBerita(this.$route.params.id, token);
+                    const saveResult = await pembacaAct.saveBerita(this.$route.params.id, store.getters['user/getToken']);
 
                     if(saveResult instanceof Error) {
                         this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
@@ -288,9 +299,13 @@ export default {
 
         async getSaveState(id) {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NjUzODMzLCJleHAiOjE2MDY2NjEwMzN9.cWEz5Lr267LFcE4JEPvfd4XHvtZ44Al2JziFgmlZEXQ';
+                const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
+                
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
 
-                const result = await berita.isSaved(token, id);
                 this.isSaved = result.data;
             } catch (error) {
                 console.log(error);
