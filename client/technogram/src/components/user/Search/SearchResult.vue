@@ -32,6 +32,11 @@ export default {
             key: this.$route.query.q,
         }
     },
+    watch:{
+        '$route' : function(){
+            this.key = this.$route.query.q;
+        }
+    },
     computed: {
         isMobile() {
         if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
