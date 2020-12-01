@@ -1,78 +1,87 @@
 <template>
-    <v-container :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
-        <v-sheet
-            class="mx-16 px-2"
-            :isLoading="isLoading"
-        >
-            <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
-            <p class="worksans-font">{{ date }}</p>
-
-            <!-- Information section -->
-            <v-card
-                :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
-                flat
-                tile
+    <div>
+        <v-progress-circular
+            v-if="isLoading"
+            class="progressbar"
+            color="#E52B38"
+            :size="50"
+            :width="7"
+            indeterminate
+        ></v-progress-circular>
+        <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
+            <v-sheet
+                class="mx-16 px-2"
             >
-                <h4 class="mr-auto">by {{ jurnalis }}</h4>
+                <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
+                <p class="worksans-font">{{ date }}</p>
 
-                <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-                    <div id="likes" class="d-flex flex-row">
-                        <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                        <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
-                        <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                <!-- Information section -->
+                <v-card
+                    :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
+                    flat
+                    tile
+                >
+                    <h4 class="mr-auto">by {{ jurnalis }}</h4>
+
+                    <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
+                        <div id="likes" class="d-flex flex-row">
+                            <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                            <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                        </div>
+
+                        <div id="view" class="d-flex flex-row">
+                            <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
+                        </div>
+                        
+                        <div id="save" class="d-flex flex-row">
+                            <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                            <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
+                            <p> </p>
+                        </div>
+                    </div>
+                </v-card>
+
+                <div id="content" class="worksans-font">
+                    <div id="header">
+                        <v-img
+                            v-if="this.urlTemp != null"
+                            :src="urlTemp"
+                            :aspect-ratio="16 / 9"
+                            contain
+                            class="grey darken-4"
+                        />
                     </div>
 
-                    <div id="view" class="d-flex flex-row">
-                        <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
-                        <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
-                    </div>
-                    
-                    <div id="save" class="d-flex flex-row">
-                        <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                        <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
-                        <p> </p>
-                    </div>
+                    <div v-html=artikel></div>
+
+                    <p class="grey--text text--darken-2">Written by</p>
+                    <h4>{{ jurnalis }}</h4>
+                    <p>{{ deskripsi_jurnalis }}</p>
                 </div>
-            </v-card>
+            </v-sheet>
 
-            <div id="content" class="worksans-font">
-                <div id="header">
-                    <v-img
-                        v-if="this.urlTemp != null"
-                        :src="urlTemp"
-                        :aspect-ratio="16 / 9"
-                        contain
-                        class="grey darken-4"
-                    />
+            <div class="px-16 mx-12 my-16">
+                <h3 class="worksans-font red-text">Recommendations</h3>
+                <v-progress-circular
+                    class="small-progressbar"
+                    v-if="relatedBeritaLoading"
+                    color="#E52B38"
+                    indeterminate
+                ></v-progress-circular>
+                <div
+                    v-for="berita in relatedBerita"
+                    :key="berita.id_berita"
+                    class="d-flex flex-col"
+                    @click="onBeritaSelected(berita.id_berita)"
+                >
+                    <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
                 </div>
-
-                <div v-html=artikel></div>
-
-                <p class="grey--text text--darken-2">Written by</p>
-                <h4>{{ jurnalis }}</h4>
-                <p>{{ deskripsi_jurnalis }}</p>
             </div>
-        </v-sheet>
-
-        <div class="px-16 mx-12 my-16">
-            <h3 class="worksans-font red-text">Recommendations</h3>
-            <v-progress-circular
-                class="progressbar"
-                v-if="relatedBeritaLoading"
-                color="#E52B38"
-                height="10"
-                indeterminate
-            ></v-progress-circular>
-            <div
-                v-for="berita in relatedBerita"
-                :key="berita.id_berita"
-                class="d-flex flex-col"
-                @click="onBeritaSelected(berita.id_berita)"
-            >
-                <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
-            </div>
-        </div>
-    </v-container>
+        </v-container>
+        <div :v-else="beritaNotExist()" />
+    </div>
 </template>
 
 <script>
@@ -111,6 +120,7 @@ export default {
         urlTemp: null,
         urlGambar: null,
         isLoading: false,
+        isExist: false,
         isLiked: false,
         isSaved: false,
         isLoggedIn: false,
@@ -168,6 +178,7 @@ export default {
                     this.urlGambar = await this.getImageObj(this.urlTemp);
                 }
 
+                this.isExist = true;
                 this.id = result.data.id_berita;
                 this.judul = result.data.judul;
                 this.artikel = result.data.artikel;
@@ -308,6 +319,16 @@ export default {
 
             this.incrementViewer(id);
             this.refreshValue();
+        },
+
+        beritaNotExist() {
+            this.$router
+                .push({
+                    path: `/`
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
     }
 }
@@ -344,5 +365,17 @@ export default {
 
 #header {
     text-align: center;
+}
+
+.progressbar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transition: translate(-50%, -50%);
+}
+
+.small-progressbar {
+    left: 50%;
+    top: 20%;
 }
 </style>
