@@ -11,7 +11,7 @@
           label="Cari berdasarkan judul, kategori.."
           outlined
           class="field-size"
-          v-on:keydown.enter="searchBerita"
+          v-on:keydown.enter="handle_search_enter"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -164,6 +164,7 @@ export default {
       totalPage: 0,
       perPage: 5,
       pageSizes: [5, 10, 15, 20],
+      totalItemInPage: 0,
     };
   },
 
@@ -209,8 +210,18 @@ export default {
         }
         console.log(response.data.rows);
         this.berita = response.data.rows;
+        this.totalItemInPage = response.data.rows.length;
         this.totalPage = Math.ceil(response.data.count / this.perPage);
         this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    handle_search_enter() {
+      try {
+        this.page = 1;
+        this.searchBerita();
       } catch (error) {
         console.log(error);
       }
@@ -221,6 +232,11 @@ export default {
         .deleteBy(this.id, store.getters["admin/getToken"])
         .then((response) => {
           console.log(this.id);
+          this.totalItemInPage -= 1;
+          if (this.totalItemInPage == 0) {
+            this.page -= 1;
+            this.totalPage -= 1;
+          }
           this.searchBerita();
           console.log(response.data);
         })

@@ -11,7 +11,7 @@
           outlined
           append-icon="mdi-magnify"
           v-model="key"
-          v-on:keydown.enter="searchAccount"
+          v-on:keydown.enter="handle_search_enter"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -133,6 +133,7 @@ export default {
       totalPage: 0,
       perPage: 5,
       pageSizes: [5, 10, 15, 20],
+      totalItemInPage: 0,
     };
   },
   methods: {
@@ -182,6 +183,7 @@ export default {
         .searchBy(params)
         .then((response) => {
           this.account = response.data.rows;
+          this.totalItemInPage = response.data.rows.length;
           this.totalPage = Math.ceil(response.data.count / this.perPage);
           console.log(response.data);
           this.isLoading = false;
@@ -192,12 +194,26 @@ export default {
         });
     },
 
+    handle_search_enter() {
+      try {
+        this.page = 1;
+        this.searchAccount();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     deleteAccount() {
       this.isLoading = true;
       daftarPembaca
         .deleteBy(this.id, store.getters["admin/getToken"])
         .then((response) => {
           this.message = response.message;
+          this.totalItemInPage -= 1;
+          if (this.totalItemInPage == 0) {
+            this.page -= 1;
+            this.totalPage -= 1;
+          }
           this.searchAccount();
         })
         .catch((e) => {
