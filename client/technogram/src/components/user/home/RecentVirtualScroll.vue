@@ -14,10 +14,9 @@
 </template>
 
 <script>
-import NotificationItem from "./NotificationItem.vue";
+import RecentHomeItem from "./RecentVirtualScrollItem";
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
-import { store } from "../../../store/index";
 const NEWS_PERCALL = 10;
 export default {
   created() {
@@ -25,7 +24,7 @@ export default {
   },
   data() {
     return {
-      itemComponent: NotificationItem,
+      itemComponent: RecentHomeItem,
       pageNum: 1,
       isLoading: false,
       items: [],
@@ -41,7 +40,7 @@ export default {
     },
     async getNotificatedBerita() {
       this.isLoading = true;
-      const result = await beritaApi.getUserNotificatedNews(store.getters["user/token"], NEWS_PERCALL, "", this.pageNum);
+      const result = await beritaApi.recentBerita(NEWS_PERCALL, "", this.pageNum);
       this.pageNum++;
       this.isLoading = false;
       if (result instanceof Error) {

@@ -1,61 +1,60 @@
 <template>
-  <v-container >
+  <v-container>
     <v-row align="start">
       <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
-            <v-progress-circular
-      class="progressbar"
-      v-if="isLoading"
-      color="#E52B38"
-      height="10"
-      indeterminate
-    ></v-progress-circular>
+        <v-progress-circular class="progressbar" v-if="isLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
       </v-col>
-      <v-col cols="12" class="cols-container">
-        <h2 class="playfair-font news-tittle">{{berita.judul || ''}}</h2>
-      </v-col>
-      <v-col cols="12">
-        <v-row class="align-center"  align-self="end">
-          <v-col cols="6" class="cols-container">
-            <p class="worksans-font news-writer">by {{berita.jurnalis || ''}}</p>
-          </v-col>
-          <v-col cols="6" class="cols-container pt-1">
-            <p class="worksans-font news-time text-end">{{date || ''}}</p>
-          </v-col>
-        </v-row>
-      </v-col>
+      <div v-if="berita !== null">
+        <v-col cols="12" class="cols-container">
+          <h2 class="playfair-font news-tittle">{{ berita.judul || "" }}</h2>
+        </v-col>
+        <v-col cols="12">
+          <v-row class="align-center" align-self="end">
+            <v-col cols="6" class="cols-container">
+              <p class="worksans-font news-writer">by {{ berita.jurnalis || "" }}</p>
+            </v-col>
+            <v-col cols="6" class="cols-container pt-1">
+              <p class="worksans-font news-time text-end">{{ date || "" }}</p>
+            </v-col>
+          </v-row>
+        </v-col>
+      </div>
     </v-row>
   </v-container>
 </template>
 
 <script>
 export default {
-  props : {
-    berita : {
-      type : Object,
-      default(){
-        return {}
-      }
+  props: {
+    berita: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
-    isLoading : {
-      type : Boolean ,
-      default(){
+    isLoading: {
+      type: Boolean,
+      default() {
         return true;
-      }
-    }
+      },
+    },
   },
   computed: {
     backgroundImg() {
-      return `background-image: url('${this.berita.url_gambar}')`;
+      if (this.berita !== null) {
+        return `background-image: url('${this.berita.url_gambar}')`;
+      }
+      return "";
     },
-    date(){
+    date() {
       //Format : 'Friday, 09/10/2020 15:49'
       const fullDate = new Date(this.berita.waktu_publikasi);
-      const day = fullDate.toString().split(' ')[0];
+      const day = fullDate.toString().split(" ")[0];
       const date = fullDate.toLocaleDateString();
-      const time =  `${fullDate.getHours()}:${fullDate.getMinutes()}`
+      const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
       return `${day} ${date} ${time}`;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -70,21 +69,19 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-
-
 .img-container {
   background: #eeeeee;
   background-size: cover;
   background-position: center;
   height: 18rem;
-    position: relative;
+  position: relative;
   width: 100%;
 }
 
-.progressbar{
+.progressbar {
   position: absolute;
   left: 50%;
-  top:50%;
+  top: 50%;
 }
 
 .cols-container {
@@ -104,14 +101,14 @@ export default {
   font-weight: 400;
 }
 
-@media screen and (max-width: 400px){
-  .img-container{
+@media screen and (max-width: 400px) {
+  .img-container {
     height: 12rem;
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1264px){
-  .img-container{
+@media screen and (min-width: 800px) and (max-width: 1264px) {
+  .img-container {
     height: 26rem;
   }
 }

@@ -57,6 +57,11 @@ export default {
         return;
       }
       this.isMoreExist = result.data.nextPage;
+      if (!result.data.notifications || result.data.notifications.length < 1) {
+        this.error.message = "You have no notification yet";
+        this.error.isError = true;
+        return;
+      }
       result.data.notifications.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.beritas.push(element);

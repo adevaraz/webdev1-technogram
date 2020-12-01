@@ -2,7 +2,7 @@ import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
     state: () => ({
-        token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2NzQxNzYzLCJleHAiOjE2MDY3NDg5NjN9.muAlkkzxeik3V9a61yndS-vT41CzQj4D717-nd31vWQ',
+        token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2ODI1MjE2LCJleHAiOjE2MDY4MzI0MTZ9.7zFmzvmxr7Y6KF1erzEhRvRilBCrSAoYnHBhfcDxs98',
         username : '',
         status : {
             type : StatusType.IDLE,
