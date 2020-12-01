@@ -228,6 +228,7 @@ export default {
     },
 
     deleteBerita() {
+      this.isLoading = true;
       daftarBerita
         .deleteBy(this.id, store.getters["admin/getToken"])
         .then((response) => {
@@ -239,8 +240,10 @@ export default {
           }
           this.searchBerita();
           console.log(response.data);
+          this.isLoading = false;
         })
         .catch((e) => {
+          this.isLoading = false;
           console.log(e);
         });
     },
@@ -250,15 +253,17 @@ export default {
     },
 
     publishBerita(id) {
+      this.isLoading = true;
       daftarBerita
         .publish(id, store.getters["admin/getToken"])
         .then((response) => {
           console.log(id);
-          this.berita = response.data;
-          this.searchBerita();
           console.log(response.data);
+          this.searchBerita();
+          this.isLoading = false;
         })
         .catch((e) => {
+          this.isLoading = false;
           console.log(e);
         });
     },
