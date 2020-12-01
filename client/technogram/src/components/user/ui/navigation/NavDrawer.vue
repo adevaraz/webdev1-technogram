@@ -24,7 +24,8 @@
             </div>
           </v-col>
           <v-col cols="12">
-            <v-btn text small class="worksans-font text-none">Saved news</v-btn>
+            <v-btn text small class="worksans-font text-none" @click="$router.push({ name: 'profile' })">Saved news</v-btn>
+            <v-btn text small class="worksans-font text-none">Sign Out</v-btn>
           </v-col>
         </v-row>
       </v-col>
