@@ -25,7 +25,7 @@
           </v-col>
           <v-col cols="12">
             <v-btn text small class="worksans-font text-none" @click="$router.push({ name: 'profile' })">Saved news</v-btn>
-            <v-btn text small class="worksans-font text-none">Sign Out</v-btn>
+            <v-btn text small class="worksans-font text-none" @click="signOut()">Sign Out</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions} from 'vuex';
+import { store } from "../../../../store/index";
 export default {
   props: {
     menus: {
@@ -69,6 +70,25 @@ export default {
         ? basicClass + " text-decoration-underline"
         : basicClass;
     },
+
+    async signOut() {
+      const before = await store.getters["user/isTokenExist"];
+      console.log("before: ");
+      console.log(before);
+
+      const signOutRes = await store.dispatch("user/signOut");
+
+      if(signOutRes instanceof Error) {
+        this.error.message = signOutRes.cause;
+        this.error.isError = true;
+      } else {
+        const after = await store.getters["user/isTokenExist"];
+        console.log("after: ");
+        console.log(after);
+
+        this.$router.push("/");
+      }
+    }
   },
 };
 </script>
