@@ -183,7 +183,7 @@ const recentBerita = async ( perPage , key , page ) => {
         const result = await axios.get(recentURL , {
             timeout : TIMEOUT,
             params : {
-                perpage : perPage ||  6,
+                perpage : perPage ||  3,
                 key : key || '',
                 page : page || 1
             }
@@ -228,6 +228,26 @@ const getByCat = async (perPage, category, page) => {
     }
 }
 
+const savedBeritaList = async ( perPage , key , page, token ) => {
+    try{
+        const savedURL = USER_URL + '/get-save'
+        const result = await axios.get(savedURL , {
+            timeout : TIMEOUT,
+            params : {
+                perpage : perPage ||  6,
+                key : key || '',
+                page : page || 1
+            },
+            headers: {
+                'Authorization' : `${token}`
+            }
+        });
+        return result.data;
+    }catch(err){
+        return ErrorHandler.errorHandler(err);
+    }
+}
+
 export default{
     getAllKategori,
     uploadImg,
@@ -242,5 +262,6 @@ export default{
     incrementViewer,
     recentBerita,
     popularBerita,
-    getByCat
+    getByCat,
+    savedBeritaList
 };

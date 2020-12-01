@@ -4,8 +4,8 @@
 
         <v-list-item >
           <v-list-item-content>
-            <v-list-item-title>Jane Smith</v-list-item-title>
-            <v-list-item-subtitle>Email</v-list-item-subtitle>
+            <v-list-item-title>{{ username }}</v-list-item-title>
+            <v-list-item-subtitle>{{ userEmail }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -29,15 +29,30 @@
 </template>
 
 <script>
+import { store } from '../../../store/index'
   export default {
 
     data: () => ({
+      username: '',
+      userEmail: '',
       items: [
         { title: 'Saved News', route: 'profile' },
         { title: 'Sign Out', route: 'log-out' },
 
       ],
+      
     }),
+
+    methods: {
+      getUserData(){
+        console.log("user token" + store.getters['user/isTokenExist'])
+        this.username= store.getters['user/getUsername'];
+        console.log("uname"+this.username)
+        this.userEmail=store.getters['user/getUserEmail']
+      }
+    }, mounted(){
+      this.getUserData();
+    }
   }
 </script>
 

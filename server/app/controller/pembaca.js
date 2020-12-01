@@ -463,10 +463,8 @@ exports.getSave = async (req, res, next) => {
   const id = req.decodedToken.id;
   console.log(id);
   try {
-    const saved = await Pembaca.findAll({
-      where: {
-        id_pembaca: id,
-      },
+    const saved = await Pembaca.findByPk(id, {
+    
       include: [
         {
           model: Berita,
@@ -474,10 +472,13 @@ exports.getSave = async (req, res, next) => {
         },
       ],
     });
-    if (saved.length > 0) {
+    
+    const ss = saved.saved
+    console.log(ss)
+    if (ss.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
-        data: saved,
+        data: ss
       });
     } else {
       res.status(204).json({
