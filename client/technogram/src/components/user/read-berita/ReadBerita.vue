@@ -94,23 +94,13 @@ import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
 
 export default {
-    created() {
-        this.incrementViewer(this.$route.params.id);
-        this.getBeritabyId(this.$route.params.id);
-        this.getLikeState(this.$route.params.id);
-        this.getSaveState(this.$route.params.id);
+  name: "read-berita",
 
-        console.log("logged: ")
-        console.log(this.isLoggedIn)
-    },
+  components: {
+    SmallBerita,
+  },
 
-    name: "read-berita",
-
-    components: {
-        SmallBerita
-    },
-
-    data: () => ({
+  data: () => ({
         id: 0,
         judul: '',
         artikel: '',
@@ -130,50 +120,81 @@ export default {
         isSaved: false,
         relatedBeritaLoading: false,
         errorMessage: ''
-    }),
+  }),
+  
+  watch: {
+    $route: function () {
+      this.resetData();
+      this.incrementViewer(this.$route.params.id);
+      this.getBeritabyId(this.$route.params.id);
+      this.retrieveRelatedBerita(this.$route.params.id);
+      this.getLikeState(this.$route.params.id);
+      this.getSaveState(this.$route.params.id);
+    },
+  },
+  
+  computed: {
+    date() {
+      // Format : DayName, DD/MM/YYYY HH:MM
+      const fullDate = new Date(this.waktu_publikasi);
+      const day = fullDate.toString().split(" ")[0];
+      const date = fullDate.toLocaleDateString();
+      const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
 
-    computed: {
-        date() {
-            // Format : DayName, DD/MM/YYYY HH:MM
-            const fullDate = new Date(this.waktu_publikasi);
-            const day = fullDate.toString().split(' ')[0];
-            const date = fullDate.toLocaleDateString();
-            const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
-
-            return `${day} ${date} ${time}`;
-        },
-
-        isMobile() {
-            if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-
-        ...mapGetters(
-            {
-                isLoggedIn : 'user/isLoggedIn'
-            }
-        )
+      return `${day} ${date} ${time}`;
     },
 
-    mounted() {
-        this.incrementViewer(this.$route.params.id);
-        this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.$route.params.id);
-        this.getLikeState(this.$route.params.id);
-        this.getSaveState(this.$route.params.id);
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    
+    ...mapGetters(
+        {
+             isLoggedIn : 'user/isLoggedIn'
+        }
+    )
+  },
+
+  mounted() {
+    this.incrementViewer(this.$route.params.id);
+    this.getBeritabyId(this.$route.params.id);
+    this.retrieveRelatedBerita(this.$route.params.id);
+    this.getLikeState(this.$route.params.id);
+    this.getSaveState(this.$route.params.id);
+  },
+
+  methods: {
+    resetData() {
+      this.id = 0;
+      this.judul = "";
+      this.artikel = "";
+      this.waktu_publikasi = "";
+      (this.url_gambar = ""), (this.kategori_berita = "");
+      this.jumlah_reader = 0;
+      this.jumlah_likes = 0;
+      this.jurnalis = "";
+      this.deskripsi_jurnalis = "";
+      this.relatedBerita = [];
+      this.urlTemp = null;
+      this.urlGambar = null;
+      this.isLoading = false;
+      this.isLiked = false;
+      this.isSaved = false;
+      this.isLoggedIn = false;
+      this.relatedBeritaLoading = false;
+    },
+    
+    async refreshValue() {
+      this.getBeritabyId(this.$route.params.id);
+      this.getLikeState(this.$route.params.id);
+      this.getSaveState(this.$route.params.id);
     },
 
-    methods: {
-        async refreshValue() {
-            this.getBeritabyId(this.$route.params.id);
-            this.getLikeState(this.$route.params.id);
-            this.getSaveState(this.$route.params.id);
-        },
-        
-        async getBeritabyId(id) {
+    async getBeritabyId(id) {
             try {
                 this.isLoading = true;
                 const result = await berita.get(id);
@@ -203,39 +224,26 @@ export default {
             } catch (error) {
                 console.log(error);
             }
-        },
+    },
 
-        async getImageObj(ImageUrl) {
-            try {
-                const path = require("path");
-                const result = await fetch(ImageUrl);
+    async getImageObj(ImageUrl) {
+      try {
+        const path = require("path");
+        const result = await fetch(ImageUrl);
 
-                if (result instanceof Error) throw result;
-                const blobObj = await result.blob();
+        if (result instanceof Error) throw result;
+        const blobObj = await result.blob();
 
-                if (blobObj instanceof Error) throw blobObj;
-                return new File([blobObj], path.basename(ImageUrl), {
-                    type: blobObj.type,
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        },
+        if (blobObj instanceof Error) throw blobObj;
+        return new File([blobObj], path.basename(ImageUrl), {
+          type: blobObj.type,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-        async incrementViewer(id) {
-            try {
-                const result = await berita.incrementViewer(id);
-
-                if(result instanceof Error) {
-                    this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
-                    return;
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
-        async retrieveRelatedBerita(id) {
+    async retrieveRelatedBerita(id) {
             try {
                 this.relatedBeritaLoading = true;
                 const result = await berita.get(id);
@@ -255,8 +263,7 @@ export default {
             } catch (error) {
                 console.log(error);
             }
-        },
-
+   },
         async likeBerita() {
             try {
                 if(this.isLoggedIn) {
@@ -345,8 +352,12 @@ export default {
                     console.error(err);
                 });
         }
-    }
-}
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -366,8 +377,8 @@ export default {
 }
 
 .img-btn {
-    height: 16px;
-    max-height: 16px;
+  height: 16px;
+  max-height: 16px;
 }
 
 .img-btn:hover {
@@ -375,11 +386,11 @@ export default {
 }
 
 .red-text {
-    color: #e52b38;
+  color: #e52b38;
 }
 
 #header {
-    text-align: center;
+  text-align: center;
 }
 
 .progressbar {

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
 import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
@@ -136,6 +137,31 @@ const getByCat = async (perPage, category, page) => {
     }
 }
 
+const getUserNotificatedNews = async (token , perPage , key , page )  => {
+    try {
+        const notificationURL = USER_URL + `/notifikasi`;
+        const result = await axios.get(notificationURL, 
+            {
+            timeout: TIMEOUT, 
+            headers: {
+                "Authorization": token,
+            },
+            params : {
+                perpage : perPage ||  6,
+                key : key || '',
+                page : page || 1
+            }
+        });
+        return result.data;
+    } catch (err) {
+        const errorResult = await ErrorHandler.errorHandler(err , USER_ROLE , async (newToken) => {
+            return await getUserNotificatedNews(newToken ,  perPage , key , page);
+        })
+        return errorResult;
+    }
+}
+
+
 export default{
     getAllKategori,
     uploadImg,
@@ -146,5 +172,6 @@ export default{
     incrementViewer,
     recentBerita,
     popularBerita,
-    getByCat
+    getByCat,
+    getUserNotificatedNews
 };

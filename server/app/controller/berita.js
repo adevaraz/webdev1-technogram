@@ -488,6 +488,8 @@ exports.getNewsById = async (req, res, next) => {
     }
 };
 
+
+
 const notifyDeleteBerita = async (berita) => {
     const kategori = await Kategori.findOne({
         where : {

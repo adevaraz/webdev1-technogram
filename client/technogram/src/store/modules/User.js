@@ -3,13 +3,14 @@ import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
     state: () => ({
-        token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsInJvbGVzIjoiXCJwZW1iYWNhXCI7IiwiaWF0IjoxNjA2ODIwNzk3LCJleHAiOjE2MDY4Mjc5OTd9.5Jaj7ROyEiVg6Ujce9ygInnz8wMf0ZqoZpNkvEY_Hw0',
+        token : '',
         username : '',
         status : {
             type : StatusType.IDLE,
             message : ''
         },
-        isLoggedIn : true
+        isLoggedIn : false,
+        mostLikedKategori : 'app',
     }),
     mutations :{
         SET_LOGGEDIN(state, isLoggedin){
@@ -44,6 +45,9 @@ const UserModule = {
                 type : StatusType.IDLE,
                 message : ''
             }
+        },
+        SET_MOSTLIKED_KATEGORI(state , mostLikedKategori){
+            state.mostLikedKategori = mostLikedKategori
         }
     },
     getters : {
@@ -58,6 +62,9 @@ const UserModule = {
         },
         isLoggedIn(state){
             return state.isLoggedIn;
+        },
+        getMostLikedKategori(state){
+            return state.mostLikedKategori;
         }
     },
     actions : {
