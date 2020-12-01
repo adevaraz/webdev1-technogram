@@ -1,11 +1,9 @@
 <template>
     <v-container d-block>
         <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-            <v-row align-center :class="isMobile? 'd-flex justify-left  ml-8' : 'd-flex justify-center  mx-auto'">
+            <v-row align-center :class="!isMobile? 'd-flex justify-center  mx-auto': 'd-flex justify-left  ml-8' ">
                 <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Recent</a>
                 <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link">Most likes</a>
-                <!--a @click="$router.push({ name: 'recent-result' })" class="mx-4 link">Recent</a>
-                <a @click="$router.push({ name: 'mostlikes-result' })" class="mx-4 link">Most likes</a-->
             </v-row>
             <v-row>
                 <component :is="currentView" keep-alive></component>

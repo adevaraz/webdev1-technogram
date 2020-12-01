@@ -1,13 +1,13 @@
 <template>
     <v-container>
         <div class="search-result">
-            <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'">
+            <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
                 <v-col>
                     <v-progress-circular
                         v-if = popularLoading
                         indeterminate
                         color="red"
-                        ></v-progress-circular>
+                     ></v-progress-circular>
                 </v-col>
                     <v-row 
                         class="mt-5 mr-16" 
@@ -45,8 +45,7 @@ export default {
             mostLikedBerita: [],
             isError: false,
             errorMessage: "",
-            recentLoading: false,
-            mostLikedLoading: false,
+            popularLoading: false,
             page: 1,
             count: 0,
             pageSize: 5,

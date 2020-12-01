@@ -1,15 +1,23 @@
 <template>
     <v-container>
         <div class="search-result">
-            <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'">
+            <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
+                <v-col>
+                    <v-progress-circular
+                        v-if = recentLoading
+                        indeterminate
+                        color="red"
+                     ></v-progress-circular>
+                </v-col>
             <v-row 
                 class="mt-5 mr-16" 
                 v-for="index in 4"
-                :key="index">
+                :key="index"
+                @click="onBeritaSelected(recentBerita[((page * 5) - 5) + (index - 1)].id_berita)">
                 <search-result-recent v-if="!isMobile" :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></search-result-recent>
                 <mobile-preview-berita v-else :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></mobile-preview-berita>
             </v-row>
-            <v-row class="d-flex justify-center mt-16" align-center>
+            <v-row :class="isMobile? 'justify-center ml-0' : 'd-flex justify-center mt-16'" v-if="!recentLoading">
                 <v-pagination 
                     v-model="page"
                     :length="count" 
@@ -40,7 +48,6 @@ export default {
             isError: false,
             errorMessage: "",
             recentLoading: false,
-            mostLikedLoading: false,
             page: 1,
             count: 0,
             pageSize: 5,
@@ -85,7 +92,17 @@ export default {
             this.flush();
             this.retrieveRecentBerita();
 
-        }
+        },
+        onBeritaSelected(id) {
+      this.$router
+        .push({
+          name: 'read-berita',
+          params: { id: `${id}` }
+        })
+        .catch((err) => {
+          err;
+        });
+    },
     },
     computed: {
         isMobile() {
