@@ -2,7 +2,7 @@
   <v-container>
     <v-progress-circular v-if="recentLoading" indeterminate color="red" class="progressbar"></v-progress-circular>
     <div class="search-result" v-else>
-      <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
+      <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block style="background:red;">
         <v-row
           class="mt-5 mr-16"
           v-for="index in 4"
@@ -69,6 +69,7 @@ export default {
         this.$route.query.q,
         this.page
       );
+      console.log(result);
       this.recentLoading = false;
       if (result instanceof Error) {
         this.isError = true;
