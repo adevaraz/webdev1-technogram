@@ -80,6 +80,7 @@
     <transition :name="transitionName">
       <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
+          :onSearch="onSearch"
           :menus="menus"
           :onClicked="onDrawerMenuSelected"
           :currentSelected="selectedMenuIndex"
@@ -233,10 +234,18 @@ export default {
         : "button  text-none";
     },
     onDrawerMenuSelected(index) {
+      this.closeDrawer();
+      this.onMenuSelected(index);
+    },
+    closeDrawer(){
       this.isDrawerShown = !this.isDrawerShown;
       //burger animation
       this.$refs.burger.classList.toggle("toogle");
-      this.onMenuSelected(index);
+    },
+    onSearch(key){
+      this.closeDrawer();
+      this.$router.push({ name: 'recent-result', query: {q: key} });
+      this.toogleDrawer(this.isDrawerShown);
     },
     onMenuSelected(index) {
       this.$router
