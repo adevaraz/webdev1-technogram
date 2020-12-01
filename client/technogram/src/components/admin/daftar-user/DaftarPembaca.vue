@@ -11,7 +11,7 @@
           outlined
           append-icon="mdi-magnify"
           v-model="key"
-          v-on:keydown.enter="searchAccount"
+          v-on:keydown.enter="handle_search_enter"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -50,11 +50,16 @@
                 <td>{{ item.username }}</td>
                 <td>{{ item.email }}</td>
                 <td class="text-center">
-                  <v-dialog v-model="dialog" persistent max-width="290">
+                  <v-dialog
+                    v-model="dialog"
+                    persistent
+                    max-width="290"
+                    :retain-focus="false"
+                  >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         color="error"
-                        dark
+                        width="100px"
                         v-bind="attrs"
                         v-on="on"
                         @click="selectedAccount(item.id_pembaca)"
@@ -80,7 +85,7 @@
                           color="blue darken-1"
                           text
                           @click="dialog = false"
-                          v-on:click="deleteAccount()"
+                          @click.prevent="deleteAccount"
                         >
                           Setuju
                         </v-btn>
@@ -105,14 +110,13 @@
         ></v-pagination>
       </v-col>
     </v-row>
-    <v-progress-circular
-      class="progressbar"
-      v-if="isLoading"
-      color="#E52B38"
-      height="10"
-      indeterminate
-    ></v-progress-circular>
-    <v-overlay :value="isLoading" absolute></v-overlay>
+    <v-overlay :value="isLoading">
+      <v-progress-circular
+        indeterminate
+        size="64"
+        color="#E52B38"
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -133,6 +137,7 @@ export default {
       totalPage: 0,
       perPage: 5,
       pageSizes: [5, 10, 15, 20],
+      totalItemInPage: 0,
     };
   },
   methods: {
@@ -182,6 +187,7 @@ export default {
         .searchBy(params)
         .then((response) => {
           this.account = response.data.rows;
+          this.totalItemInPage = response.data.rows.length;
           this.totalPage = Math.ceil(response.data.count / this.perPage);
           console.log(response.data);
           this.isLoading = false;
@@ -192,12 +198,26 @@ export default {
         });
     },
 
+    handle_search_enter() {
+      try {
+        this.page = 1;
+        this.searchAccount();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     deleteAccount() {
       this.isLoading = true;
       daftarPembaca
         .deleteBy(this.id, store.getters["admin/getToken"])
         .then((response) => {
           this.message = response.message;
+          this.totalItemInPage -= 1;
+          if (this.totalItemInPage == 0) {
+            this.page -= 1;
+            this.totalPage -= 1;
+          }
           this.searchAccount();
         })
         .catch((e) => {
