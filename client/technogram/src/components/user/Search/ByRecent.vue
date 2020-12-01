@@ -1,19 +1,23 @@
 <template>
     <v-container>
         <div class="search-result">
+            <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'">
             <v-row 
                 class="mt-5 mr-16" 
                 v-for="index in 4"
                 :key="index">
-                <search-result-recent :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></search-result-recent>
+                <search-result-recent v-if="!isMobile" :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></search-result-recent>
+                <mobile-preview-berita v-else :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></mobile-preview-berita>
             </v-row>
             <v-row class="d-flex justify-center mt-16" align-center>
                 <v-pagination 
                     v-model="page"
                     :length="count" 
                     :per-page="pageSize"
+                    color="error"
                     @input="handlePageChange" 
                 ></v-pagination>
+            </v-row>
             </v-row>
         </div>
     </v-container>
@@ -23,9 +27,10 @@
 //const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
+import MobilePreviewBerita from '../berita/MobilePreviewBerita.vue';
 import SearchResultRecent from './SearchResultPreview';
 export default {
-  components: { SearchResultRecent },
+  components: { SearchResultRecent, MobilePreviewBerita },
     created() {
         this.retrieveRecentBerita();
     },
@@ -45,10 +50,7 @@ export default {
     methods: {
         async retrieveRecentBerita() {
             this.recentLoading = true;
-            //benerin perpage sama page nya, parameternya teh (perpage, key, page)
             const result = await beritaApi.recentBerita(this.pageSize,this.$route.query.q,this.page);
-            // const { result, totalItems } = await beritaApi.recentBerita();
-            //const result = await beritaApi.recentBerita();
             this.recentLoading = false;
 
             if (result instanceof Error) {
@@ -62,7 +64,8 @@ export default {
                 this.recentBerita.push(element);
                 this.count = this.count + 1;
             });
-            this.count = (this.count/this.pageSize) + 1;
+            console.log('Search by Recent')
+            this.count = Math.ceil(this.count/this.pageSize);
             console.log(this.recentBerita);
             console.log(this.count)
         },
@@ -78,6 +81,14 @@ export default {
             this.retrieveRecentBerita();
 
         }
-    }
+    },
+    computed: {
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      }
+      return false;
+    },
+  },
 };
 </script>

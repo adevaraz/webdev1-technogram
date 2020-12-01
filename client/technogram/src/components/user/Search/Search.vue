@@ -21,11 +21,6 @@ export default {
         return {
              key: '',
         }
-    },
-    methods: {
-        test() {
-            console.log('enter');
-        }
     }
 }
 </script>

@@ -31,7 +31,7 @@
             </v-row>
           </v-col>
           <v-col class="pa-0 mt-5" cols="8">
-            <v-row class="justify-center">
+            <v-row class="right-container justify-center">
               <v-col cols="11" class="pa-0 ma-0">
                 <h2 class="playfair-font news-title">
                   {{berita.judul || ''}}

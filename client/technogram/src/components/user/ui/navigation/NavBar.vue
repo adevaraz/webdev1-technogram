@@ -66,7 +66,7 @@ const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
   if (query) {
-    return `/${name}?category=${query}`;
+    return `/${name}?q=${query}`;
   }
   return `/${name}`;
 };
@@ -105,20 +105,20 @@ export default {
         { name: "Home", routeName: "home", route: "", query: null },
         {
           name: "Software",
-          routeName: "search-result",
-          route: "search",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "software",
         },
         {
           name: "Brainware",
-          routeName: "search-result",
-          route: "search",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "brainware",
         },
         {
           name: "Hardware",
-          routeName: "search-result",
-          route: "search",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "hardware",
         },
         { name: "More", routeName: "more-categories", route: "categories" },

@@ -2,11 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-form @submit.prevent="console.log('submit')">
+        <v-form>
           <v-text-field
+            v-model="key"
             class="text-caption"
             placeholder="Masukan kata kunci pencarian disini ...."
             prepend-inner-icon="mdi-magnify"
+            v-on:keydown.enter="$router.push({ name: 'recent-result', query: {q: key} })"
           ></v-text-field>
         </v-form>
       </v-col>
@@ -56,6 +58,11 @@ export default {
       },
     },
   },
+  data () {
+    return {
+      key:''
+    }
+  },
   methods: {
     menuClass(index) {
       const basicClass =
@@ -64,6 +71,9 @@ export default {
         ? basicClass + " text-decoration-underline"
         : basicClass;
     },
+    // test() {
+    //   console.log(this.key)
+    // }
   },
 };
 </script>
