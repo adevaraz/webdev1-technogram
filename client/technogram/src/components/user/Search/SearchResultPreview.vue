@@ -51,7 +51,7 @@
                     </v-col>
                     <v-col cols="6" class="pa-0 ma-0 mr-2">
                       <h4 class="work-sans news-category">
-                        | {{berita.kategori_berita || ''}}
+                        {{berita.kategori_berita || ''}}
                       </h4>
                     </v-col>
                   </v-row>

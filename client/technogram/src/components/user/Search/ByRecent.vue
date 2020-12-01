@@ -46,13 +46,18 @@ export default {
             pageSize: 5,
         };
     },
+    watch: {
+        '$route' : function(){
+            this.recentBerita = [];
+            this.retrieveRecentBerita();
+        }
+    },
 
     methods: {
         async retrieveRecentBerita() {
             this.recentLoading = true;
             const result = await beritaApi.recentBerita(this.pageSize,this.$route.query.q,this.page);
             this.recentLoading = false;
-
             if (result instanceof Error) {
                 this.isError = true;
                 this.errorMessage =
@@ -83,12 +88,12 @@ export default {
         }
     },
     computed: {
-    isMobile() {
-      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-        return true;
-      }
-      return false;
+        isMobile() {
+        if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+            return true;
+        }
+        return false;
+        },
     },
-  },
 };
 </script>

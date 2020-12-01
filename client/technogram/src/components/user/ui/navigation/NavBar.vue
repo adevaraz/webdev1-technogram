@@ -219,7 +219,7 @@ export default {
           name: this.menus[index].routeName,
           query: this.menus[index].query
             ? {
-                category: this.menus[index].query,
+                q: this.menus[index].query,
               }
             : null,
         })

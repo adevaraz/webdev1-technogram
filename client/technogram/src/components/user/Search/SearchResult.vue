@@ -33,13 +33,13 @@ export default {
         }
     },
     computed: {
-    isMobile() {
-      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-        return true;
-      }
-      return false;
+        isMobile() {
+        if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+            return true;
+        }
+        return false;
+        },
     },
-  },
 }
 </script>
 

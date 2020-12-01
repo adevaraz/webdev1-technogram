@@ -52,6 +52,12 @@ export default {
             pageSize: 5,
         };
     },
+    watch: {
+        '$route' : function(){
+            this.mostLikedBerita = [];
+            this.retrieveMostLikedBerita();
+        }
+    },
 
     methods: {
         async retrieveMostLikedBerita() {
@@ -78,14 +84,14 @@ export default {
         },
 
         flush() {
-            this.recentBerita.splice(0)
+            this.mostLikedBerita.splice(0)
         },
 
         handlePageChange(page) {
             console.log("handlepagechange")
             this.page = page;
             this.flush();
-            this.retrieveRecentBerita();
+            this.retrieveMostLikedBerita();
 
         }
     },
@@ -96,6 +102,6 @@ export default {
         }
         return false;
        }
-     },
+    },
 };
 </script>
