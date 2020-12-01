@@ -3,14 +3,14 @@
     <v-progress-circular v-if="popularLoading" indeterminate color="red" class="progressbar"></v-progress-circular>
     <div class="search-result" v-else>
       <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
-        <v-row class="mt-5 mr-16" v-for="index in 4" :key="index">
+        <v-col cols="12" class="mt-5 mr-16" v-for="index in 4" :key="index">
           <search-result-recent
             v-if="!isMobile"
             :berita="mostLikedBerita[((page * 5) - 5) + (index - 1)]"
           ></search-result-recent>
           <mobile-preview-berita v-else :berita="mostLikedBerita[((page * 5) - 5) + (index - 1)]"></mobile-preview-berita>
-        </v-row>
-        <v-row
+        </v-col>
+        <v-col cols="12"
           :class="isMobile? 'justify-center ml-0' : 'd-flex justify-center mt-16'"
           v-if="!popularLoading"
         >
@@ -21,7 +21,7 @@
             color="error"
             @input="handlePageChange"
           ></v-pagination>
-        </v-row>
+        </v-col>
       </v-row>
     </div>
   </v-container>
