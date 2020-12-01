@@ -19,19 +19,24 @@
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
-        <div class="right">
+        <div class="right" >
           <div class="navigation" v-if="!isMobile">
             <img @click="$router.push({name: search})" class="item img-btn" src="../../../../assets/icons/search-icon.png" />
             <div class="loggedin" v-if="isLoggedIn">
-              <img class="item img-btn" src="../../../../assets/icons/bell.png" />
-              <img class="item img-btn" src="../../../../assets/icons/profile.png" />
+              <div class="">
+                <img class="item img-btn" @click="showNotification = !showNotification" src="../../../../assets/icons/bell.png" /> 
+                <div class="notification"  v-if="showNotification">
+                  <notification-dropdown></notification-dropdown>
+                </div>
+              </div>
+              <img class="item img-btn"  src="../../../../assets/icons/profile.png"/>
             </div>
             <div class="public" v-else>
-              <v-btn class="item btn text-none" color="#E52B38" small>Sign in</v-btn>
+              <v-btn class="item btn text-none" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
             </div>
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
-            <img class="item img-btn" src="../../../../assets/icons/bell.png" />
+            <img class="item img-btn" src="../../../../assets/icons/bell.png" @click="$router.push({name : 'notification'})"/>
           </div>
         </div>
       </div>
@@ -39,6 +44,7 @@
         <v-btn
           text
           small
+          class="text-capitalize"
           :class="menuClass(index)"
           v-for="(menu,index) in menus"
           :key="menu.routerName"
@@ -61,7 +67,10 @@
 </template>
 
 <script>
+import NotificationDropdown from '../../notifications/NotificationDropdown.vue';
 import NavDrawer from "./NavDrawer.vue";
+import categoriesData from "../../../../api/kategori/daftarKategori";
+import { mapActions } from 'vuex'
 const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
@@ -73,6 +82,9 @@ const getFullRoute = (name, query) => {
 
 export default {
   created() {
+    this.retrieveKategori();
+
+    console.log(this.menus[1].query);
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -82,17 +94,21 @@ export default {
         this.selectedMenu = this.$router.currentRoute.fullPath;
       }
     });
+
     this.currentTime = new Date().getHours();
     setInterval(() => {
       this.currentTime = new Date().getHours();
     }, TEN_MINUTES);
+
     window.addEventListener("scroll", this.handleScroll);
   },
-  components: { NavDrawer },
+  components: { 
+    NavDrawer,
+    NotificationDropdown   
+  },
   props: {
     isLoggedIn: {
-      type: Boolean,
-      default: false,
+      default: true,
     },
     toogleDrawer: Function,
   },
@@ -101,6 +117,7 @@ export default {
       navbarClass: "navbar",
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
+      showNotification : false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
@@ -123,6 +140,7 @@ export default {
         },
         { name: "More", routeName: "more-categories", route: "categories" },
       ],
+      kategori: [],
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
       currentTime: null,
@@ -161,6 +179,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      loggedInToggle : 'user/loginToogle'
+    }),
     handleScroll() {
       if (!this.isMobile) {
         if (window.top.scrollY > 100) {
@@ -208,6 +229,30 @@ export default {
       this.selectedMenuIndex = index;
       this.selectedMenu = this.$router.currentRoute.fullPath;
       this.toogleDrawer(this.isDrawerShown);
+    },
+
+    async retrieveKategori() {
+      try {
+        const kategoriResult = await categoriesData.retrieveAll();
+        if (kategoriResult instanceof Error) {
+          throw kategoriResult;
+        } else {
+          if (kategoriResult.data.length > 0) {
+            kategoriResult.data.forEach((element) => {
+              this.kategori.push(element);
+            });
+          }
+
+          var i;
+          for(i = 1; i <= 3; i++) {
+            const nameTmp = this.kategori[i - 1].nama_kategori;
+            this.menus[i].name = nameTmp.charAt(0).toUpperCase() + nameTmp.slice(1);
+            this.menus[i].query = this.kategori[i - 1].nama_kategori;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   watch: {
@@ -324,6 +369,38 @@ nav .header .right .navigation .item {
   margin-right: 1rem;
   cursor: pointer;
 }
+
+.notification{
+  background: white;
+  position: absolute;
+  height:500px;
+  width: 250px;
+  padding:1rem;
+  right: 2%;
+  overflow-y: scroll;
+  overflow-x : hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 
 .img-btn:hover {
   background: rgba(80, 80, 80, 0.164);

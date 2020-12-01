@@ -7,7 +7,7 @@
           :class="!isMobile? 'playfair-font text-start' : 'playfair-font text-center'"
         >Popular News</h1>
       </v-col>
-      <v-col cols="12" lg="5" md="12" xl="5" sm="12" xs="12">
+      <v-col @click="onBeritaSelected(recentBerita[0].id_berita)" cols="12" lg="5" md="12" xl="5" sm="12" xs="12">
         <headline-berita class="item" :berita="recentBerita[0]" :isLoading="recentLoading"></headline-berita>
       </v-col>
       <v-col cols="12" v-if="isMobile" class="mt-n6">
@@ -30,6 +30,7 @@
             xl="6"
             v-for="berita in popularBerita"
             :key="berita.id_berita"
+            @click="onBeritaSelected(berita.id_berita)"
             class="pt-0"
           >
             <small-berita class="item" :showTime="isMobile" :berita="berita"></small-berita>
@@ -52,9 +53,10 @@
             class="mt-n2"
             v-for="berita in recentBerita"
             :key="berita.id_berita"
+            @click="onBeritaSelected(berita.id_berita)"
           >
-            <preview-berita v-if="!isMobile" :berita="berita"></preview-berita>
-            <mobile-preview-berita v-else :berita="berita"></mobile-preview-berita>
+            <preview-berita class="item" v-if="!isMobile" :berita="berita"></preview-berita>
+            <mobile-preview-berita class="item" v-else :berita="berita"></mobile-preview-berita>
           </v-col>
         </v-row>
       </v-col>
@@ -123,7 +125,19 @@ export default {
       });
       console.log(this.popularBerita);
     },
+
+    onBeritaSelected(id) {
+      this.$router
+        .push({
+          name: 'read-berita',
+          params: { id: `${id}` }
+        })
+        .catch((err) => {
+          err;
+        });
+    },
   },
+
   computed: {
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {

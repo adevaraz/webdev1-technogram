@@ -10,6 +10,7 @@ module.exports = {
         io.on('connection' , socket => {
             console.log('user connected');
             socket.on('room' , (roomid) => {
+                console.log(roomid);
                 socket.join(roomid);
             })
         })

@@ -12,10 +12,11 @@ const getAll = async() => {
     }
 }
 
-const searchBy = async(key) => {
+const searchBy = async(params) => {
     try {
-        const searchByURL = BERITA_URL + `/search?key=${key}`
-        const result = await axios.get(searchByURL);
+        // const searchByURL = BERITA_URL + `/search?key=${key}`
+        const searchByURL = BERITA_URL + `/search`
+        const result = await axios.get(searchByURL, {params});
         return result.data;
     } catch(err) {
         return ErrorHandler.errorHandler(err);

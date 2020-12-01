@@ -61,6 +61,13 @@ Route untuk update berita
 */
 router.put("/update/:id",authenticate.validateAdmin, uploadPhoto.imageUpload, newsValidationRules(), newsValidate,beritaController.update);
 
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk update reader berita
+ */
+router.put("/update-reader/:id", beritaController.updateReader);
+
 /*
  @author 28 RA
 
