@@ -13,31 +13,51 @@
         dense
         nav
       >
-        <v-list-item
-          v-for="menu in items"
-          :key="menu.title"
-          link
-        >
-         
-          <v-list-item-content>
-            <v-list-item-title @click="$router.push({ name: menu.route })">{{ menu.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="item" @click="$router.push({ name: 'profile' })">Saved News</v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-content>
+          <v-list-item-title class="item" @click="signOut()">Sign Out</v-list-item-title>
+        </v-list-item-content>
       </v-list>
      
     </v-container>
 </template>
 
 <script>
+import { store } from "../../../store/index";
+
   export default {
-
     data: () => ({
-      items: [
-        { title: 'Saved News', route: 'profile' },
-        { title: 'Sign Out', route: 'log-out' },
-
-      ],
+      error: [
+        { 
+          message: '',
+          isError: false
+        }
+      ]
     }),
+
+    methods: {
+      async signOut() {
+        const before = await store.getters["user/isTokenExist"];
+        console.log("before: ");
+        console.log(before);
+
+        const signOutRes = await store.dispatch("user/signOut");
+
+        if(signOutRes instanceof Error) {
+          this.error.message = signOutRes.cause;
+          this.error.isError = true;
+        } else {
+          const after = await store.getters["user/isTokenExist"];
+          console.log("after: ");
+          console.log(after);
+
+          this.$router.push("/");
+        }
+      }
+    }
   }
 </script>
 
