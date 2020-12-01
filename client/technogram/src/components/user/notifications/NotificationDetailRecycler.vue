@@ -47,14 +47,14 @@ export default {
       if (result instanceof Error) {
         return;
       }
-      if (result.data.length <= 0) {
+      if (result.data.notifications.length <= 0 || !result.data.nextPage) {
         if (this.isEndOfList) {
           return;
         }
         this.isEndOfList = true;
         console.log(this.isEndOfList);
       }
-      result.data.forEach((element) => {
+      result.data.notifications.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         element.id = new Date().toString();
         this.items.push(element);
