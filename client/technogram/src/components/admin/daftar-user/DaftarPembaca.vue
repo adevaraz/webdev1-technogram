@@ -50,11 +50,16 @@
                 <td>{{ item.username }}</td>
                 <td>{{ item.email }}</td>
                 <td class="text-center">
-                  <v-dialog v-model="dialog" persistent max-width="290">
+                  <v-dialog
+                    v-model="dialog"
+                    persistent
+                    max-width="290"
+                    :retain-focus="false"
+                  >
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         color="error"
-                        dark
+                        width="100px"
                         v-bind="attrs"
                         v-on="on"
                         @click="selectedAccount(item.id_pembaca)"
@@ -80,7 +85,7 @@
                           color="blue darken-1"
                           text
                           @click="dialog = false"
-                          v-on:click="deleteAccount()"
+                          @click.prevent="deleteAccount"
                         >
                           Setuju
                         </v-btn>
@@ -105,14 +110,13 @@
         ></v-pagination>
       </v-col>
     </v-row>
-    <v-progress-circular
-      class="progressbar"
-      v-if="isLoading"
-      color="#E52B38"
-      height="10"
-      indeterminate
-    ></v-progress-circular>
-    <v-overlay :value="isLoading" absolute></v-overlay>
+    <v-overlay :value="isLoading">
+      <v-progress-circular
+        indeterminate
+        size="64"
+        color="#E52B38"
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
