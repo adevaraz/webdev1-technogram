@@ -29,7 +29,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" v-if="!isLoggedIn">
-        <v-btn text small class="text-caption worksans-font text-none" @click="loggedInToggle">Sign in</v-btn>
+        <LoginUser></LoginUser>
       </v-col>
       <v-col cols="12">
         <div class="border-btm mt-1"></div>
@@ -43,6 +43,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import LoginUser from "./../../auth/LoginUser.vue";
 export default {
   props: {
     menus: {
@@ -69,6 +70,9 @@ export default {
         : basicClass;
     },
   },
+components: {
+  LoginUser
+}
 };
 </script>
 
@@ -83,15 +87,7 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.img-container {
-  display: flex;
-  justify-content: flex-start;
-}
 
-.img-container img {
-  width: 2rem;
-  height: 2rem;
-}
 
 .username-text {
   font-family: "Work Sans", sans-serif;

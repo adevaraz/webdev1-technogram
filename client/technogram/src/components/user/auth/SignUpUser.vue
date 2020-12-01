@@ -2,21 +2,20 @@
 
  <v-dialog max-width="600px" v-model="dialog">
   <template v-slot:activator="{ on, attrs }">
-        <p class="text-caption font-weight-bold" text small v-bind="attrs"
-          v-on="on">? Create one</p>
-      </template>
+      <p class="text-caption font-weight-bold" text small v-bind="attrs"
+      v-on="on">? Create one</p>
+    </template>
   
-                    <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-                  <v-btn text small @click="dialog = false" >X</v-btn>
-                        <div class="content">
-                            <v-card-title>
-                                <h1> Sign up with email </h1> 
-                            </v-card-title>
-                        
-                            <form class="mt-10">
-                            <v-row class="jutify-center">
-                                <v-col cols="12">
-                                    <p class="text-caption font-weight-bold text-center">Your Email</p>
+      <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+          <div :class="isMobile? 'content-mobile' : 'content'">
+            <v-card-title>
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
+                </v-card-title>
+                    <form class="mt-10">
+                        <v-row class="jutify-center">
+                              <v-col cols="12">
+                                <p class="text-caption font-weight-bold text-center">Your Email</p>
                                     <v-text-field 
                                     v-model="email" 
                                     :rules="[rules.email]"
@@ -55,9 +54,7 @@
                                     color="#E52B38"
                                 ></v-text-field>
                                 </v-col>
-                               
                                 </v-row>
-                                
                     
                             <v-col class="d-flex justify-center">
                       <v-btn
@@ -65,6 +62,15 @@
                         @click="signup"
                         class="signup_btn"
                       >Sign up</v-btn>
+                    </v-col>
+                    <v-col>
+                      <v-alert
+                      dense
+                      outlined
+                      type="error"
+                      v-if="error.isError">
+                      {{errorMessage}}
+                      </v-alert>
                     </v-col>
                             </form>
                         </div>
@@ -75,6 +81,8 @@
 
 <script>
 import Auth from "../../../api/pembaca/auth";
+
+import {mapActions} from "vuex";
 
 export default {
   data() {
@@ -116,8 +124,12 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      loggedIn : 'user/getNewToken',
+      setToken : 'user/setToken'
+      
+    }),
     async signup() {
-      console.log("HELLOOOO NYAMPE GA\n\n")
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
@@ -128,8 +140,8 @@ export default {
         this.error.message = signupResult.cause;
         this.error.isError = true;
       } else {
-        await this.setToken(signupResult.token);
-        this.$router.push({path : 'user/loginToogle'})
+        await this.setToken(signupResult.token, true);
+        this.$router.push({path : '/'});
       } 
     },
   },
@@ -138,6 +150,9 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
 col-12 {
     padding-top: 0;
     padding-bottom: 0;
@@ -148,9 +163,13 @@ col-12 {
   justify-content: center;
   box-sizing: border-box;
 }
-
+.item{
+  height: 20px;
+  margin: 10px;
+}
 .content {
-  padding: 5rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
   display: flex;
   height: 100%;
   width: 100%;
@@ -158,7 +177,24 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+.content-mobile {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.playfair-font-mobile {
+  font-family: "Playfair Display", serif;
+  font-size: 25px;
+}
 
+.playfair-font{
+  font-family: "Playfair Display", serif;
+}
 .signup_btn {
   color: white;
 }

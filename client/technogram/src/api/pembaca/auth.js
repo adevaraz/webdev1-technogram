@@ -15,6 +15,7 @@ const signin = async(email , password) => {
         }
         );
         return result.data;
+        
     }catch(err){
         return ErrorHandler.errorHandler(err);
     }
@@ -39,6 +40,7 @@ const signup = async(email , username, password) => {
             withCredentials : true
         }
         );
+        
         return result.data;
     }catch(err){
         return ErrorHandler.errorHandler(err);

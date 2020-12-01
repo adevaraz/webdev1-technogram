@@ -6,10 +6,11 @@
           v-on="on">Sign in</v-btn>
       </template>
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-        <v-btn text small @click="dialog = false" >X</v-btn>
-          <div class="content">
+         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+          <div :class="isMobile? 'content-mobile' : 'content'">
+          
               <v-card-title>
-                <h1> Sign in with email </h1> 
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
               </v-card-title>
                <form class="mt-10">
                   <v-row class="jutify-center">
@@ -45,7 +46,7 @@
                         <signup></signup>
                      </v-row>
                     <v-col class="d-flex justify-center">
-                      <v-btn class="login_btn" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
+                      <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
 
                     </v-col>
                   </form>
@@ -63,6 +64,7 @@
 </template>
 
 <script>
+
 import Auth from "../../../api/pembaca/auth";
 import SignUpPembaca from "./SignUpUser.vue";
 import NavDrawer from "../ui/navigation/NavDrawer.vue";
@@ -107,11 +109,16 @@ export default {
     },
     isMobile(){
       return this.$vuetify.breakpoint.xs ? true : false
+    },
+    closeDialog(){
+      return this.dialog
     }
   },
   methods: {
     ...mapActions({
-      loggedInToggle : 'user/loginToogle'
+      loggedIn : 'user/getNewToken',
+      setToken : 'user/setToken'
+      
     }),
     async signin() {
     
@@ -121,13 +128,15 @@ export default {
       console.log(this.email);
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-        
+      
+      
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-        await this.setToken(loginResult.token);
-        this.$router.push({path : 'user/loginToogle'})
+         await this.setToken(loginResult.token, true);
+         this.$router.push({path : '/'});
+        
       } 
     },
   },
@@ -135,19 +144,36 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
 col-12 {
     padding-top: 0;
     padding-bottom: 0;
   }
-
+.item{
+  height: 20px;
+  margin: 10px;
+}
 .container {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
 }
-
+.worksans-font {
+  font-family: "Work Sans", sans-serif;
+}
 .content {
-  padding: 1rem;
+  padding: 5rem;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.content-mobile {
+  padding: 2rem;
   display: flex;
   height: 100%;
   width: 100%;
@@ -158,5 +184,12 @@ col-12 {
 .login_btn {
   color: white;
 }
+.playfair-font-mobile {
+  font-family: "Playfair Display", serif;
+  font-size: 25px;
+}
 
+.playfair-font{
+  font-family: "Playfair Display", serif;
+}
 </style>

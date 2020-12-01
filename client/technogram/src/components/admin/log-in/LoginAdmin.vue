@@ -115,6 +115,8 @@ export default {
       } else {
         await this.setToken(loginResult.token);
         this.$router.push({path : '/admin'})
+
+        
       }
     },
   },
