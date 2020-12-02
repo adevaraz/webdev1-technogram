@@ -29,6 +29,10 @@
 import { store } from "../../../store/index";
 
   export default {
+    created() {
+      this.getUserData();
+    },
+
     data: () => ({
       username: '',
       userEmail: '',
@@ -47,10 +51,9 @@ import { store } from "../../../store/index";
 
     methods: {
       getUserData(){
-        console.log("user token" + store.getters['user/isTokenExist'])
-        this.username= store.getters['user/getUsername'];
-        console.log("uname"+this.username)
-        this.userEmail=store.getters['user/getUserEmail']
+        this.username = store.getters['user/getUsername'];
+        this.userEmail = store.getters['user/getUserEmail'];
+        console.log(this.username + ' -- ' + this.userEmail);
       },
       
       async signOut() {

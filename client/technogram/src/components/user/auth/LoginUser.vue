@@ -64,6 +64,7 @@ import Auth from "../../../api/pembaca/auth";
 import SignUpPembaca from "./SignUpUser.vue";
 import NavDrawer from "../ui/navigation/NavDrawer.vue";
 import { mapGetters, mapActions } from 'vuex';
+// import { store } from "../../../store/index";
 
 export default {
   data() {
@@ -112,27 +113,22 @@ export default {
   methods: {
     ...mapActions({
       // loggedIn : 'user/getNewToken',
-      setToken : 'user/setToken'
-      
+      setToken : 'user/setToken',
     }),
 
     async signin() {
-    
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
-      console.log(this.email);
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      
       
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-         await this.setToken(loginResult.token);
-         console.log("LOGIN USER VUE");
-         console.log(this.isLoggedIn);
+        this.setToken(loginResult.token, loginResult.username, this.email, loginResult.mostLikedCategory);
+
          this.$router.push({path : '/'});
       } 
     },
