@@ -57,7 +57,7 @@ export default {
                 .push({
                     name: "search-result",
                     query: {
-                        category: cat.nama_kategori,
+                        q: cat.nama_kategori,
                     }
                 })
                 .catch((err) => {
