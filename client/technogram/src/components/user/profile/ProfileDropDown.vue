@@ -76,6 +76,7 @@ import { store } from "../../../store/index";
       this.getUserData();
     }
   }
+}
 </script>
 
 <style scoped>

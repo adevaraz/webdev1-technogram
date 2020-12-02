@@ -68,11 +68,7 @@ export default {
   },
   data () {
     return {
-      key:''
-    }
-  },
-  data(){
-    return{
+      key:'',
       username: '',
       email: ''
     }
