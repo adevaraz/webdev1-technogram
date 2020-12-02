@@ -75,7 +75,7 @@ const UserModule = {
         }
     },
     actions : {
-        setToken({commit, state}, token, username, email, kategori){
+        setToken({commit, state}, {token, username, email, kategori}){
             console.log("di USER " + username);
             commit('SET_TOKEN',token);
             commit('SET_LOGGEDIN', !state.isLoggedin);

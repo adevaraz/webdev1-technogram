@@ -48,11 +48,11 @@
                 </div>
           </v-card>
       <transition :name="transitionName">
-      <div class="drawer" v-if="shouldShowDrawer">
+      <!-- <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
-      </div>
+      </div> -->
     </transition>
             
 </v-dialog>
@@ -62,7 +62,7 @@
 
 import Auth from "../../../api/pembaca/auth";
 import SignUpPembaca from "./SignUpUser.vue";
-import NavDrawer from "../ui/navigation/NavDrawer.vue";
+// import NavDrawer from "../ui/navigation/NavDrawer.vue";
 import { mapGetters, mapActions } from 'vuex';
 // import { store } from "../../../store/index";
 
@@ -87,7 +87,7 @@ export default {
   components :
   {
     'signup' : SignUpPembaca,
-    'nav-drawer' : NavDrawer
+    // 'nav-drawer' : NavDrawer
   },
   computed: {
     errorMessage() {
@@ -122,12 +122,19 @@ export default {
       this.isLoading = true;
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      
+      console.log('ini login resulttt');
+      console.log(loginResult);
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-        this.setToken(loginResult.token, loginResult.username, this.email, loginResult.mostLikedCategory);
+        this.setToken({
+          token : loginResult.token,
+          username : loginResult.username,
+          email : this.email,
+          kategori :loginResult.mostLikedCategory
+
+        });
 
          this.$router.push({path : '/'});
       } 
