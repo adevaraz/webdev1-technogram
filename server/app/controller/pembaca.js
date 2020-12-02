@@ -529,7 +529,8 @@ exports.signin = async (req, res, next) => {
       res.status(200).json({
         message: "sign in Success",
         token: accessToken,
-        mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null
+        mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
+        username: pembaca.username
       });
     } else {
       const error = new Error("Invalid credential");

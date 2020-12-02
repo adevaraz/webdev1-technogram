@@ -11,7 +11,7 @@ const UserModule = {
             message : ''
         },
         isLoggedIn : false,
-        mostLikedKategori : 'app',
+        mostLikedKategori : '',
     }),
     mutations :{
         SET_LOGGEDIN(state, isLoggedin){
@@ -22,6 +22,9 @@ const UserModule = {
         },
         SET_USERNAME(state , username){
             state.username = username;
+        },
+        SET_EMAIL(state , email){
+            state.email = email;
         },
         SET_LOADING(state){
             state.status = {
@@ -72,15 +75,19 @@ const UserModule = {
         }
     },
     actions : {
-        async setToken({commit} , token, isLoggedin){
+        setToken({commit, state}, {token, username, email, kategori}){
+            console.log("di USER " + username);
             commit('SET_TOKEN',token);
-            commit('SET_LOGGEDIN',isLoggedin)
+            commit('SET_LOGGEDIN', !state.isLoggedin);
+            commit('SET_USERNAME', username);
+            commit('SET_EMAIL', email);
+            commit('SET_MOSTLIKED_KATEGORI', kategori)
         },
       
-        async loginToogle({commit , state}){
+        async loginToogle({commit}){
             commit('SET_LOADING');
             console.log('loading');            
-            commit('SET_LOGGEDIN' , !state.isLoggedIn)
+            // commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit('SET_SUCCESS' , 'Success get new Access token');
         },
 
@@ -90,6 +97,8 @@ const UserModule = {
                 await User.signOut(state.token);
                 commit('SET_TOKEN' , '');
                 commit('SET_LOGGEDIN', !state.isLoggedIn);
+                commit('SET_USERNAME', '');
+                commit('SET_EMAIL', '');
             }
             commit('SET_SUCCESS' , 'Success get new Access token');
         }

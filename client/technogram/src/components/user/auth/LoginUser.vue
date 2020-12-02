@@ -36,11 +36,6 @@
                         ></v-text-field>
                     </v-col>
                   </v-row>
-                    <v-row >
-                      <v-col cols="6">
-                        <p class="text-caption font-weight-bold ">Forgot your password?</p>
-                     </v-col>
-                    </v-row>
                     <v-row align="center" justify="center">
                       <p class="text-caption font-weight-bold ">Have no account</p>
                         <signup></signup>
@@ -53,11 +48,11 @@
                 </div>
           </v-card>
       <transition :name="transitionName">
-      <div class="drawer" v-if="shouldShowDrawer">
+      <!-- <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
-      </div>
+      </div> -->
     </transition>
             
 </v-dialog>
@@ -67,9 +62,10 @@
 
 import Auth from "../../../api/pembaca/auth";
 import SignUpPembaca from "./SignUpUser.vue";
-import NavDrawer from "../ui/navigation/NavDrawer.vue";
+// import NavDrawer from "../ui/navigation/NavDrawer.vue";
+import { mapGetters, mapActions } from 'vuex';
+// import { store } from "../../../store/index";
 
-import {mapActions} from "vuex";
 export default {
   data() {
     return {
@@ -89,15 +85,9 @@ export default {
     };
   },
   components :
-      {
-        'signup' : SignUpPembaca,
-        'nav-drawer' : NavDrawer
-      },
-  props: {
-    isLoggedIn: {
-      default: true,
-    },
-    toogleDrawer: Function,
+  {
+    'signup' : SignUpPembaca,
+    // 'nav-drawer' : NavDrawer
   },
   computed: {
     errorMessage() {
@@ -112,31 +102,41 @@ export default {
     },
     closeDialog(){
       return this.dialog
-    }
+    },
+
+    ...mapGetters(
+        {
+          isLoggedIn: 'user/isLoggedIn'
+        }
+    )
   },
   methods: {
     ...mapActions({
-      loggedIn : 'user/getNewToken',
-      setToken : 'user/setToken'
-      
+      // loggedIn : 'user/getNewToken',
+      setToken : 'user/setToken',
     }),
+
     async signin() {
-    
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
-      console.log(this.email);
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      
-      
+      console.log('ini login resulttt');
+      console.log(loginResult);
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-         await this.setToken(loginResult.token, true);
+        this.setToken({
+          token : loginResult.token,
+          username : loginResult.username,
+          email : this.email,
+          kategori :loginResult.mostLikedCategory
+
+        });
+
          this.$router.push({path : '/'});
-        
       } 
     },
   },

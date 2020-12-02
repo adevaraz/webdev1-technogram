@@ -191,6 +191,6 @@ export default{
     recentBerita,
     popularBerita,
     getByCat,
-    savedBeritaList
+    savedBeritaList,
     getUserNotificatedNews
 };
