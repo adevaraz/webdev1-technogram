@@ -100,7 +100,6 @@ export default {
     },
 
     created() {
-        console.log("CREATED");
         this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
@@ -168,8 +167,6 @@ export default {
     },
 
     mounted() {
-        console.log("MOUNTED");
-        this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
         this.getLikeState(this.$route.params.id);

@@ -157,12 +157,12 @@ export default {
   border-radius: 16px;
 }
 
-
-
 .button-content{
   display: flex;
   justify-content: flex-start;
 }
 
-
+.item {
+  max-height: 2em;
+}
 </style>

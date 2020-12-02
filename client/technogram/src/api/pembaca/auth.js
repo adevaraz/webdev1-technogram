@@ -62,9 +62,6 @@ const getRefreshToken = async() => {
     }
 }
 
-import { USER_URL } from '../const'
-import ErrorHandler from '../errorHandler'
-
 const signOut = async(token) => {
     try{
         const url = USER_URL + '/sign-out'
