@@ -80,7 +80,6 @@
                 </div>
             </div>
         </v-container>
-        <div :v-else="beritaNotExist()" />
     </div>
 </template>
 
@@ -94,13 +93,22 @@ import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
 
 export default {
-  name: "read-berita",
+    name: "read-berita",
 
-  components: {
-    SmallBerita,
-  },
+    components: {
+        SmallBerita,
+    },
 
-  data: () => ({
+    created() {
+        console.log("CREATED");
+        this.incrementViewer(this.$route.params.id);
+        this.getBeritabyId(this.$route.params.id);
+        this.retrieveRelatedBerita(this.$route.params.id);
+        this.getLikeState(this.$route.params.id);
+        this.getSaveState(this.$route.params.id);
+    },
+
+    data: () => ({
         id: 0,
         judul: '',
         artikel: '',
@@ -120,107 +128,109 @@ export default {
         isSaved: false,
         relatedBeritaLoading: false,
         errorMessage: ''
-  }),
+    }),
   
-  watch: {
-    $route: function () {
-      this.resetData();
-      this.incrementViewer(this.$route.params.id);
-      this.getBeritabyId(this.$route.params.id);
-      this.retrieveRelatedBerita(this.$route.params.id);
-      this.getLikeState(this.$route.params.id);
-      this.getSaveState(this.$route.params.id);
+    watch: {
+        $route: function () {
+            this.resetData();
+            this.incrementViewer(this.$route.params.id);
+            this.getBeritabyId(this.$route.params.id);
+            this.retrieveRelatedBerita(this.$route.params.id);
+            this.getLikeState(this.$route.params.id);
+            this.getSaveState(this.$route.params.id);
+        },
     },
-  },
   
-  computed: {
-    date() {
-      // Format : DayName, DD/MM/YYYY HH:MM
-      const fullDate = new Date(this.waktu_publikasi);
-      const day = fullDate.toString().split(" ")[0];
-      const date = fullDate.toLocaleDateString();
-      const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
+    computed: {
+        date() {
+            // Format : DayName, DD/MM/YYYY HH:MM
+            const fullDate = new Date(this.waktu_publikasi);
+            const day = fullDate.toString().split(" ")[0];
+            const date = fullDate.toLocaleDateString();
+            const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
 
-      return `${day} ${date} ${time}`;
+            return `${day} ${date} ${time}`;
+        },
+
+        isMobile() {
+            if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        
+        ...mapGetters(
+            {
+                isLoggedIn : 'user/isLoggedIn'
+            }
+        )
     },
 
-    isMobile() {
-      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-        return true;
-      } else {
-        return false;
-      }
+    mounted() {
+        console.log("MOUNTED");
+        this.incrementViewer(this.$route.params.id);
+        this.getBeritabyId(this.$route.params.id);
+        this.retrieveRelatedBerita(this.$route.params.id);
+        this.getLikeState(this.$route.params.id);
+        this.getSaveState(this.$route.params.id);
     },
-    
-    ...mapGetters(
-        {
-             isLoggedIn : 'user/isLoggedIn'
-        }
-    )
-  },
 
-  mounted() {
-    this.incrementViewer(this.$route.params.id);
-    this.getBeritabyId(this.$route.params.id);
-    this.retrieveRelatedBerita(this.$route.params.id);
-    this.getLikeState(this.$route.params.id);
-    this.getSaveState(this.$route.params.id);
-  },
-
-  methods: {
-    resetData() {
-      this.id = 0;
-      this.judul = "";
-      this.artikel = "";
-      this.waktu_publikasi = "";
-      (this.url_gambar = ""), (this.kategori_berita = "");
-      this.jumlah_reader = 0;
-      this.jumlah_likes = 0;
-      this.jurnalis = "";
-      this.deskripsi_jurnalis = "";
-      this.relatedBerita = [];
-      this.urlTemp = null;
-      this.urlGambar = null;
-      this.isLoading = false;
-      this.isLiked = false;
-      this.isSaved = false;
-      this.isLoggedIn = false;
-      this.relatedBeritaLoading = false;
-    },
+    methods: {
+        resetData() {
+            this.id = 0;
+            this.judul = "";
+            this.artikel = "";
+            this.waktu_publikasi = "";
+            (this.url_gambar = ""), (this.kategori_berita = "");
+            this.jumlah_reader = 0;
+            this.jumlah_likes = 0;
+            this.jurnalis = "";
+            this.deskripsi_jurnalis = "";
+            this.relatedBerita = [];
+            this.urlTemp = null;
+            this.urlGambar = null;
+            this.isLoading = false;
+            this.isLiked = false;
+            this.isSaved = false;
+            this.relatedBeritaLoading = false;
+        },
     
     async refreshValue() {
-      this.getBeritabyId(this.$route.params.id);
-      this.getLikeState(this.$route.params.id);
-      this.getSaveState(this.$route.params.id);
+        this.getBeritabyId(this.$route.params.id);
+        this.getLikeState(this.$route.params.id);
+        this.getSaveState(this.$route.params.id);
     },
 
     async getBeritabyId(id) {
-            try {
-                this.isLoading = true;
-                const result = await berita.get(id);
+        try {
+            this.isLoading = true;
+            
+            const result = await berita.get(id);
 
-                if (result instanceof Error) {
-                    throw result;
-                }
+            if (result instanceof Error) {
+                this.beritaNotExist();
+                throw result;
+            }
 
-                this.isLoading = false;
+            this.isLoading = false;
 
-                if (result.data.url_gambar) {
-                    this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
-                    this.urlGambar = await this.getImageObj(this.urlTemp);
-                }
+            if (result.data.url_gambar) {
+                this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
+                this.urlGambar = await this.getImageObj(this.urlTemp);
+            }
 
-                this.isExist = true;
-                this.id = result.data.id_berita;
-                this.judul = result.data.judul;
-                this.artikel = result.data.artikel;
-                this.waktu_publikasi = result.data.waktu_publikasi;
-                this.url_gambar = result.data.url_gambar;
-                this.kategori_berita = result.data.kategori_berita;
-                this.jumlah_reader = result.data.jumlah_reader;
-                this.jumlah_likes = result.data.jumlah_likes;
-                this.jurnalis = result.data.jurnalis;
-                this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+            this.isExist = true;
+            this.id = result.data.id_berita;
+            this.judul = result.data.judul;
+            this.artikel = result.data.artikel;
+            this.waktu_publikasi = result.data.waktu_publikasi;
+            this.url_gambar = result.data.url_gambar;
+            this.kategori_berita = result.data.kategori_berita;
+            this.jumlah_reader = result.data.jumlah_reader;
+            this.jumlah_likes = result.data.jumlah_likes;
+            this.jurnalis = result.data.jurnalis;
+            this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
             } catch (error) {
                 console.log(error);
             }
@@ -243,54 +253,68 @@ export default {
       }
     },
 
+    async incrementViewer(id) {
+        try {
+            const result = await berita.incrementViewer(id);
+
+            if(result instanceof Error) {
+                this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     async retrieveRelatedBerita(id) {
-            try {
-                this.relatedBeritaLoading = true;
-                const result = await berita.get(id);
-                this.kategori_berita = result.data.kategori_berita;
-                const recommendResult = await berita.getByCat(4, this.kategori_berita, 1);
-                this.relatedBeritaLoading = false;
+        try {
+            this.relatedBeritaLoading = true;
+            const result = await berita.get(id);
+            this.kategori_berita = result.data.kategori_berita;
+            const recommendResult = await berita.getByCat(4, this.kategori_berita, 1);
+            this.relatedBeritaLoading = false;
 
-                if(recommendResult instanceof Error) {
-                    this.errorMessage = "Gagal mendapatkan berita dengan topik sama karena " + recommendResult.cause;
-                    return;
-                }
-
-                recommendResult.data.forEach(element => {
-                    element.url_gambar = BASE_URL + "/" + element.url_gambar;
-                    this.relatedBerita.push(element);
-                });
-            } catch (error) {
-                console.log(error);
+            if(recommendResult instanceof Error) {
+                this.errorMessage = "Gagal mendapatkan berita dengan topik sama karena " + recommendResult.cause;
+                return;
             }
+
+            recommendResult.data.forEach(element => {
+                element.url_gambar = BASE_URL + "/" + element.url_gambar;
+                this.relatedBerita.push(element);
+            });
+        } catch (error) {
+            console.log(error);
+        }
    },
-        async likeBerita() {
-            try {
-                if(this.isLoggedIn) {
-                    this.old_likes = this.jumlah_likes;
-                    const kategoriBerita = await kategori.getByName(this.kategori_berita);
-                    const likeResult = await pembacaAct.like(this.$route.params.id, kategoriBerita.data.id_kategori, store.getters['user/getToken']);
 
-                    if(likeResult instanceof Error) {
-                        this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
-                        return;
-                    }
+    async likeBerita() {
+        try {
+            if(this.isLoggedIn) {
+                this.old_likes = this.jumlah_likes;
+                const kategoriBerita = await kategori.getByName(this.kategori_berita);
+                const likeResult = await pembacaAct.like(this.$route.params.id, kategoriBerita.data.id_kategori, store.getters['user/getToken']);
 
-                    this.refreshValue();
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
-        async getLikeState(id) {
-            try {
-                const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
-
-                if(result instanceof Error) {
-                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                if(likeResult instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + likeResult.cause;
                     return;
                 }
+
+                this.refreshValue();
+            }
+        } catch (error) {
+                console.log(error);
+        }
+    },
+
+    async getLikeState(id) {
+        try {
+            const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+
+            if(result instanceof Error) {
+                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                return;
+            }
 
                 this.isLiked = result.data;
             } catch (error) {
@@ -298,65 +322,61 @@ export default {
             }
         },
 
-        async saveBerita() {
-            try {
-                if(this.isLoggedIn) {
-                    const saveResult = await pembacaAct.saveBerita(this.$route.params.id, store.getters['user/getToken']);
+    async saveBerita() {
+        try {
+            if(this.isLoggedIn) {
+                const saveResult = await pembacaAct.saveBerita(this.$route.params.id, store.getters['user/getToken']);
 
-                    if(saveResult instanceof Error) {
-                        this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
-                        return;
-                    }
-
-                    this.refreshValue();
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
-        async getSaveState(id) {
-            try {
-                const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
-                
-                if(result instanceof Error) {
-                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                if(saveResult instanceof Error) {
+                    this.errorMessage = "Gagal menyimpan berita karena " + saveResult.cause;
                     return;
                 }
 
-                this.isSaved = result.data;
-            } catch (error) {
-                console.log(error);
+                this.refreshValue();
             }
-        },
-
-        onBeritaSelected(id) {
-            this.$router
-                .push({
-                    path: `/berita/${id}`
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-
-            this.incrementViewer(id);
-            this.refreshValue();
-        },
-
-        beritaNotExist() {
-            this.$router
-                .push({
-                    path: `/`
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+        } catch (error) {
+            console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
     },
-  },
+
+    async getSaveState(id) {
+        try {
+            const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
+            
+            if(result instanceof Error) {
+                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                return;
+            }
+
+            this.isSaved = result.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    onBeritaSelected(id) {
+        this.$router
+            .push({
+                path: `/berita/${id}`
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+
+        this.incrementViewer(id);
+        this.refreshValue();
+    },
+
+    beritaNotExist() {
+        this.$router
+            .push({
+                path: `/`
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+  }
 };
 </script>
 
