@@ -31,7 +31,7 @@
             </v-row>
           </v-col>
           <v-col class="pa-0 mt-5" cols="8">
-            <v-row class="justify-center">
+            <v-row class="right-container justify-center">
               <v-col cols="11" class="pa-0 ma-0">
                 <h2 class="playfair-font news-title">
                   {{berita.judul || ''}}
@@ -51,7 +51,7 @@
                     </v-col>
                     <v-col cols="6" class="pa-0 ma-0 mr-2">
                       <h4 class="work-sans news-category">
-                        | {{berita.kategori_berita || ''}}
+                        {{berita.kategori_berita || ''}}
                       </h4>
                     </v-col>
                   </v-row>

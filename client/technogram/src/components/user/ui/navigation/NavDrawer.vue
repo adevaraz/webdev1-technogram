@@ -2,13 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-form @submit.prevent="console.log('submit')">
-          <v-text-field
-            class="text-caption"
-            placeholder="Masukan kata kunci pencarian disini ...."
-            prepend-inner-icon="mdi-magnify"
-          ></v-text-field>
-        </v-form>
+        <v-text-field
+          v-model="key"
+          class="text-caption"
+          placeholder="Masukan kata kunci pencarian disini ...."
+          prepend-inner-icon="mdi-magnify"
+          v-on:keydown.enter="onSearch(key)"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" v-if="isLoggedIn">
         <v-row>
@@ -58,6 +58,12 @@ export default {
         return false;
       },
     },
+    onSearch: Function,
+  },
+  data () {
+    return {
+      key:''
+    }
   },
   methods: {
     ...mapActions({

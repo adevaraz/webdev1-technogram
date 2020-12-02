@@ -367,7 +367,8 @@ exports.recent = async (req , res , next) => {
             where : {
                 [Op.or] : [
                     {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
-                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {kategori_berita : sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')),'LIKE' , '%' + key.toLowerCase()  + '%')}
                 ],
                 [Op.not] : [
                     {waktu_publikasi : null}
@@ -405,7 +406,8 @@ exports.mostLiked = async (req, res, next) => {
             where : {
                 [Op.or] : [
                     {judul : sequelize.where(sequelize.fn('LOWER', sequelize.col('judul')),'LIKE' , '%' + key.toLowerCase()  + '%')},
-                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')}
+                    {artikel : sequelize.where(sequelize.fn('LOWER', sequelize.col('artikel')),'LIKE' , '%' + key.toLowerCase()  + '%')},
+                    {kategori_berita : sequelize.where(sequelize.fn('LOWER', sequelize.col('kategori_berita')),'LIKE' , '%' + key.toLowerCase()  + '%')}
                 ],
                 [Op.not] : [
                     {waktu_publikasi : null}

@@ -6,7 +6,6 @@ import LoginAdmin from './components/admin/log-in/LoginAdmin.vue';
 import UserMain from './components/user/UserMain.vue';
 import Home from './components/user/home/Home.vue';
 import Category from './components/user/category/Category.vue';
-import Search from './components/user/Search/Search.vue';
 import UserProfile from './components/user/profile/UserProfile.vue';
 import SearchResult from './components/user/Search/SearchResult.vue';
 import ReadBerita from './components/user/read-berita/ReadBerita'
@@ -33,11 +32,6 @@ export default [
             path : '/categories',
             component : Category,
             name : 'more-categories'
-        },
-        { 
-            path : '/search',
-            component : Search,
-            name : 'search'
         },
         { 
             path : '/search-result',

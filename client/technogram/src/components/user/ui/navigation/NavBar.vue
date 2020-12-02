@@ -21,7 +21,31 @@
         </div>
         <div class="right" >
           <div class="navigation" v-if="!isMobile">
-            <img @click="$router.push({name: search})" class="item img-btn" src="../../../../assets/icons/search-icon.png" />
+            <v-dialog v-model="dialog" persistent>
+              <template v-slot:activator="{ on, attrs }">
+                <img class="item img-btn" v-bind="attrs" v-on="on" src="../../../../assets/icons/search-icon.png" />        
+              </template>
+              <v-card max-height="1080px">
+                <v-card-title></v-card-title>
+                <v-card-text>
+                  <v-container d-block>
+                    <div class="d-flex flex-row-reverse cross-icon">
+                        <img class="cross-icon" @click="dialog = false" src='../../../../assets/icons/cross.png'>
+                    </div>
+                    <div class="d-flex flex-row search" align-center>
+                        <v-text-field 
+                            v-model="key"
+                            placeholder="Enter keyword here..."
+                            prepend-inner-icon="mdi-magnify"
+                            v-on:keydown.enter="$router.push({ name: 'recent-result', query: {q: key} }); dialog = false"
+                        >
+                        </v-text-field>
+                    </div>
+                </v-container>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+            
             <div class="loggedin" v-if="isLoggedIn">
               <div class="">
                 <img class="item img-btn" @click="showNotification = !showNotification" src="../../../../assets/icons/bell.png" /> 
@@ -59,6 +83,7 @@
     <transition :name="transitionName">
       <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
+          :onSearch="onSearch"
           :menus="menus"
           :onClicked="onDrawerMenuSelected"
           :currentSelected="selectedMenuIndex"
@@ -79,7 +104,7 @@ const TEN_MINUTES = 1000 * 60 * 10;
 
 const getFullRoute = (name, query) => {
   if (query) {
-    return `/${name}?category=${query}`;
+    return `/${name}?q=${query}`;
   }
   return `/${name}`;
 };
@@ -109,7 +134,8 @@ export default {
   components: { 
     NavDrawer, 
     ProfileDropDown,
-    NotificationDropdown },
+    NotificationDropdown
+  },
   props: {
     isLoggedIn: {
       type: Boolean,
@@ -123,25 +149,26 @@ export default {
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
       showNotification : false,
+      dialog: false,
       showProfile: false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
-          name: "Cat-1",
-          routeName: "search-result",
-          route: "search",
+          name: "Software",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "software",
         },
         {
-          name: "Cat-2",
-          routeName: "search-result",
-          route: "search",
+          name: "Brainware",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "brainware",
         },
         {
-          name: "Cat-3",
-          routeName: "search-result",
-          route: "search",
+          name: "Hardware",
+          routeName: "recent-result",
+          route: "search-result/recent",
           query: "hardware",
         },
         { name: "More", routeName: "more-categories", route: "categories" },
@@ -214,10 +241,18 @@ export default {
         : "button  text-none";
     },
     onDrawerMenuSelected(index) {
+      this.closeDrawer();
+      this.onMenuSelected(index);
+    },
+    closeDrawer(){
       this.isDrawerShown = !this.isDrawerShown;
       //burger animation
       this.$refs.burger.classList.toggle("toogle");
-      this.onMenuSelected(index);
+    },
+    onSearch(key){
+      this.closeDrawer();
+      this.$router.push({ name: 'recent-result', query: {q: key} });
+      this.toogleDrawer(this.isDrawerShown);
     },
     onMenuSelected(index) {
       this.$router
@@ -225,7 +260,7 @@ export default {
           name: this.menus[index].routeName,
           query: this.menus[index].query
             ? {
-                category: this.menus[index].query,
+                q: this.menus[index].query,
               }
             : null,
         })
@@ -283,6 +318,29 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Work Sans", sans-serif;
+}
+
+.cross-icon {
+  margin-top: 0px;
+  height: 24px;
+  max-height: 24px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+.search {
+  margin-right: 200px;
+  margin-left: 200px;
+  height: 36px;
+  max-height: 36px;
+}
+
+.v-card {
+  padding-top: 200px;
+  padding-bottom: 200px;
+}
+
+.v-text-field {
+  width: 200px;
 }
 
 .navbar {
