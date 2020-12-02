@@ -321,6 +321,9 @@ export default {
 
     async saveBerita() {
         try {
+            console.log("DI SAVE BERITA")
+            console.log(this.isLoggedIn);
+            console.log(store.getters['user/getToken']);
             if(this.isLoggedIn) {
                 const saveResult = await pembacaAct.saveBerita(this.$route.params.id, store.getters['user/getToken']);
 

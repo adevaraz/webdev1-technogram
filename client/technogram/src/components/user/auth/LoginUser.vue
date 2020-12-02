@@ -36,11 +36,6 @@
                         ></v-text-field>
                     </v-col>
                   </v-row>
-                    <v-row >
-                      <v-col cols="6">
-                        <p class="text-caption font-weight-bold ">Forgot your password?</p>
-                     </v-col>
-                    </v-row>
                     <v-row align="center" justify="center">
                       <p class="text-caption font-weight-bold ">Have no account</p>
                         <signup></signup>
@@ -68,8 +63,8 @@
 import Auth from "../../../api/pembaca/auth";
 import SignUpPembaca from "./SignUpUser.vue";
 import NavDrawer from "../ui/navigation/NavDrawer.vue";
+import { mapGetters, mapActions } from 'vuex';
 
-import {mapActions} from "vuex";
 export default {
   data() {
     return {
@@ -89,15 +84,9 @@ export default {
     };
   },
   components :
-      {
-        'signup' : SignUpPembaca,
-        'nav-drawer' : NavDrawer
-      },
-  props: {
-    isLoggedIn: {
-      default: true,
-    },
-    toogleDrawer: Function,
+  {
+    'signup' : SignUpPembaca,
+    'nav-drawer' : NavDrawer
   },
   computed: {
     errorMessage() {
@@ -112,14 +101,21 @@ export default {
     },
     closeDialog(){
       return this.dialog
-    }
+    },
+
+    ...mapGetters(
+        {
+          isLoggedIn: 'user/isLoggedIn'
+        }
+    )
   },
   methods: {
     ...mapActions({
-      loggedIn : 'user/getNewToken',
+      // loggedIn : 'user/getNewToken',
       setToken : 'user/setToken'
       
     }),
+
     async signin() {
     
       this.error.isError = false;
@@ -134,9 +130,10 @@ export default {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-         await this.setToken(loginResult.token, true);
+         await this.setToken(loginResult.token);
+         console.log("LOGIN USER VUE");
+         console.log(this.isLoggedIn);
          this.$router.push({path : '/'});
-        
       } 
     },
   },

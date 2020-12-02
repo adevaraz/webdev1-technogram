@@ -72,15 +72,15 @@ const UserModule = {
         }
     },
     actions : {
-        async setToken({commit} , token, isLoggedin){
+        async setToken({commit, state} , token){
             commit('SET_TOKEN',token);
-            commit('SET_LOGGEDIN',isLoggedin)
+            commit('SET_LOGGEDIN', !state.isLoggedin)
         },
       
-        async loginToogle({commit , state}){
+        async loginToogle({commit}){
             commit('SET_LOADING');
             console.log('loading');            
-            commit('SET_LOGGEDIN' , !state.isLoggedIn)
+            // commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit('SET_SUCCESS' , 'Success get new Access token');
         },
 
