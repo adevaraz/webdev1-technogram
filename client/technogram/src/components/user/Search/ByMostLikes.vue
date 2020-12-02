@@ -32,9 +32,10 @@
 //const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
+import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 import SearchResultRecent from "./SearchResultPreview";
 export default {
-  components: { SearchResultRecent },
+  components: { SearchResultRecent, MobilePreviewBerita },
   created() {
     this.retrieveMostLikedBerita();
   },
