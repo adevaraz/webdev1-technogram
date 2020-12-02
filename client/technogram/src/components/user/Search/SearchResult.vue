@@ -2,7 +2,7 @@
     <v-container d-block>
         <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
             <v-row align-center :class="!isMobile? 'd-flex justify-center  mx-auto': 'd-flex justify-left  ml-8' ">
-                <v-col cols="12" style="background:red;">
+                <v-col cols="12">
                 <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Recent</a>
                 <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link">Most likes</a>
                 </v-col>

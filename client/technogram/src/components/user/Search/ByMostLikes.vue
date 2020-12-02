@@ -50,7 +50,7 @@ export default {
     };
   },
   watch: {
-    $route: function () {
+    '$route' : function () {
       this.mostLikedBerita = [];
       this.retrieveMostLikedBerita();
     },

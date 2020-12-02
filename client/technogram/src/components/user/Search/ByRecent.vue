@@ -83,6 +83,7 @@ export default {
         this.count = this.count + 1;
       });
       console.log("Search by Recent");
+      console.log(this.recentBerita);
       this.count = Math.ceil(this.count / this.pageSize);
       console.log(this.recentBerita);
       console.log(this.count);
