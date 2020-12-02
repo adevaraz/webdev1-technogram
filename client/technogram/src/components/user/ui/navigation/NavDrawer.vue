@@ -18,8 +18,8 @@
                 <img class="item img-btn" src="../../../../assets/icons/profile.png" />
               </v-col>
               <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
-                <div class="username-text">Adevaraz</div>
-                <div class="email-text">zaraveda@polban.ac.id</div>
+                <div class="username-text">{{ username }}</div>
+                <div class="email-text">{{ email }}</div>
               </v-col>
             </div>
           </v-col>
@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
-import { store } from "../../../../store/index";
+import { store } from '../../../../store/index'
+import { mapActions } from 'vuex'
 export default {
   props: {
     menus: {
@@ -65,6 +65,12 @@ export default {
       key:''
     }
   },
+  data(){
+    return{
+      username: '',
+      email: ''
+    }
+  },
   methods: {
     ...mapActions({
       loggedInToggle : 'user/loginToogle'
@@ -76,7 +82,14 @@ export default {
         ? basicClass + " text-decoration-underline"
         : basicClass;
     },
-
+    
+    getUserData(){
+        console.log("user token" + store.getters['user/isTokenExist'])
+        this.username= store.getters['user/getUsername'];
+        console.log("uname"+this.username)
+        this.userEmail=store.getters['user/getUserEmail']
+   },
+   
     async signOut() {
       const before = await store.getters["user/isTokenExist"];
       console.log("before: ");
@@ -96,6 +109,10 @@ export default {
       }
     }
   },
+  
+  mounted(){
+    this.getUserData();
+  }
 };
 </script>
 

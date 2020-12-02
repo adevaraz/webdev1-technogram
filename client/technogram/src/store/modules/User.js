@@ -5,6 +5,7 @@ const UserModule = {
     state: () => ({
         token : '',
         username : '',
+        email : '',
         status : {
             type : StatusType.IDLE,
             message : ''
@@ -57,6 +58,9 @@ const UserModule = {
         getUsername(state){
             return state.username;
         },
+        getUserEmail(state){
+            return state.email;
+        },
         isTokenExist(state){
             return (state.token !== undefined && state.token !== '');
         },
@@ -83,7 +87,7 @@ const UserModule = {
                 commit('SET_LOGGEDIN', !state.isLoggedIn);
             }
             commit('SET_SUCCESS' , 'Success get new Access token');
-        },
+        }
     }
 
     

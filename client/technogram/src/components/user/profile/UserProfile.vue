@@ -21,15 +21,17 @@
             class="mt-n2"
             v-for="berita in savedBerita"
             :key="berita.id_berita"
+            @click="onBeritaSelected(berita.id_berita)"
           >
-            <preview-berita v-if="!isMobile" :berita="berita"></preview-berita>
-            <mobile-preview-berita v-else :berita="berita"></mobile-preview-berita>
+            <preview-berita class="item" v-if="!isMobile" :berita="berita"></preview-berita>
+            <mobile-preview-berita class="item" v-else :berita="berita"></mobile-preview-berita>
+
           </v-col>
         </v-row>
       </v-col>
-    </v-row>
-    
+     </v-row>
   </v-container>
+  
 </template>
 
 <script>
@@ -37,6 +39,7 @@ import PreviewBerita from "../berita/BeritaPreview.vue";
 import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
+import { store } from '../../../store/index';
 
 export default {
   created() {
@@ -45,21 +48,25 @@ export default {
   components: {
     PreviewBerita,
     MobilePreviewBerita,
+
   },
   data() {
     return {
       savedBerita: [],
+      listBerita:[],
       isError: false,
       errorMessage: "",
       beritaLoading: false,
+
     };
   },
+
   methods: {
     async retrieveSavedBerita() {
       this.beritaLoading = true;
-      const result = await beritaApi.recentBerita();
+      const result = await beritaApi.savedBeritaList('', '', '', store.getters['user/getToken']);
       this.beritaLoading = false;
-      this.overlay=false;
+      console.log("loooggg "+ store.getters['user/isLoggedIn'])
       if (result instanceof Error) {
         this.isError = true;
         this.errorMessage =
@@ -69,7 +76,22 @@ export default {
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.savedBerita.push(element);
+        console.log("ini id "+element.id_pembaca)
       });
+
+    
+ 
+    },
+  
+     onBeritaSelected(id) {
+      this.$router
+        .push({
+          name: 'read-berita',
+          params: { id: `${id}` }
+        })
+        .catch((err) => {
+          err;
+        });
     },
     
   },
@@ -80,6 +102,7 @@ export default {
       }
       return false;
     },
+
   },
 };
 </script>

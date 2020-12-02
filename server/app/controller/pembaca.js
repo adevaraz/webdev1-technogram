@@ -469,10 +469,8 @@ exports.getSave = async (req, res, next) => {
   const id = req.decodedToken.id;
   console.log(id);
   try {
-    const saved = await Pembaca.findAll({
-      where: {
-        id_pembaca: id,
-      },
+    const saved = await Pembaca.findByPk(id, {
+    
       include: [
         {
           model: Berita,
@@ -480,11 +478,12 @@ exports.getSave = async (req, res, next) => {
         },
       ],
     });
-    console.log(saved.saved);
-    if (saved.length > 0) {
+
+    const savedBerita = saved.saved
+    if (savedBerita.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
-        data: saved,
+        data: savedBerita
       });
     } else {
       res.status(204).json({
@@ -725,7 +724,7 @@ const createAccessToken = async (pembaca) => {
 
 /*
 @author 16 MN
- - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+ - menghapus cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
 (digunakan ketika log out)
 */
 const nullifyClientRefreshToken = (res) =>{

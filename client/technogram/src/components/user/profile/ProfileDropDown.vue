@@ -4,8 +4,8 @@
 
         <v-list-item >
           <v-list-item-content>
-            <v-list-item-title>Jane Smith</v-list-item-title>
-            <v-list-item-subtitle>Email</v-list-item-subtitle>
+            <v-list-item-title>{{ username }}</v-list-item-title>
+            <v-list-item-subtitle>{{ userEmail }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -30,6 +30,13 @@ import { store } from "../../../store/index";
 
   export default {
     data: () => ({
+      username: '',
+      userEmail: '',
+      items: [
+        { title: 'Saved News', route: 'profile' },
+        { title: 'Sign Out', route: 'log-out' },
+
+      ],
       error: [
         { 
           message: '',
@@ -39,6 +46,13 @@ import { store } from "../../../store/index";
     }),
 
     methods: {
+      getUserData(){
+        console.log("user token" + store.getters['user/isTokenExist'])
+        this.username= store.getters['user/getUsername'];
+        console.log("uname"+this.username)
+        this.userEmail=store.getters['user/getUserEmail']
+      },
+      
       async signOut() {
         const before = await store.getters["user/isTokenExist"];
         console.log("before: ");
@@ -56,7 +70,10 @@ import { store } from "../../../store/index";
 
           this.$router.push("/");
         }
-      }
+    },
+    
+    mounted(){
+      this.getUserData();
     }
   }
 </script>
