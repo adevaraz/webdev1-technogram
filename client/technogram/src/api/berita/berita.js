@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
-import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
@@ -69,6 +68,7 @@ const get = async (id) => {
     try {
         const getUrl = BERITA_URL + `/${id}`;
         const result = await axios.get(getUrl, {}, {timeout: TIMEOUT});
+        console.log(result);
         return result.data;
     } catch (err) {
         return ErrorHandler.errorHandler(err);
