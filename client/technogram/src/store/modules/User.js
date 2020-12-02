@@ -72,6 +72,11 @@ const UserModule = {
         }
     },
     actions : {
+        async setToken({commit} , token, isLoggedin){
+            commit('SET_TOKEN',token);
+            commit('SET_LOGGEDIN',isLoggedin)
+        },
+      
         async loginToogle({commit , state}){
             commit('SET_LOADING');
             console.log('loading');            

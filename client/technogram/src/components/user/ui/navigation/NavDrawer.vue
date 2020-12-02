@@ -30,7 +30,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" v-if="!isLoggedIn">
-        <v-btn text small class="text-caption worksans-font text-none" @click="loggedInToggle">Sign in</v-btn>
+        <LoginUser></LoginUser>
       </v-col>
       <v-col cols="12">
         <div class="border-btm mt-1"></div>
@@ -43,9 +43,15 @@
 </template>
 
 <script>
-import { store } from '../../../../store/index'
 import { mapActions } from 'vuex'
+import { store } from '../../../../store/index'
+import LoginUser from "./../../auth/LoginUser.vue";
+
 export default {
+  components: {
+    LoginUser
+  },
+  
   props: {
     menus: {
       type: Array,
@@ -71,6 +77,7 @@ export default {
       email: ''
     }
   },
+  
   methods: {
     ...mapActions({
       loggedInToggle : 'user/loginToogle'
@@ -117,6 +124,7 @@ export default {
 </script>
 
 <style scoped>
+
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 .border-btm {
   border-bottom: 1px solid #bab4b8;
@@ -126,15 +134,7 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.img-container {
-  display: flex;
-  justify-content: flex-start;
-}
 
-.img-container img {
-  width: 2rem;
-  height: 2rem;
-}
 
 .username-text {
   font-family: "Work Sans", sans-serif;
@@ -149,6 +149,11 @@ export default {
 
 .button{
   cursor: pointer;
+
+}
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+.border-btm{
+    border-bottom: 1px solid #BAB4B8;
 }
 
 .button:hover{

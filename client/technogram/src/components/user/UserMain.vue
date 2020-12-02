@@ -16,13 +16,14 @@
 
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
-import { mapGetters } from "vuex";
-import openSocket from "socket.io-client";
-import { BASE_URL } from "../../api/const.js";
 import NotificationToast from "./ui/modals/NotificationToast.vue";
+import {mapGetters} from 'vuex'
+import openSocket from "socket.io-client";
+import { BASE_URL } from '../../api/const.js';
+//import LoginUser from "./LoginUser.vue";
 
-//2 SECOND
 const NOTIFICATION_TIME = 4000;
+
 export default {
   created() {
     if (this.isLoggedIn && this.mostLikedCategory !== "") {
@@ -33,6 +34,7 @@ export default {
     NavBar,
     NotificationToast,
   },
+  
   data() {
     return {
       isContentShown: true,

@@ -18,6 +18,9 @@ import NotificationDetail from './components/user/notifications/NotificationDeta
 import NotFoundAdmin from './components/error/ErrorAdmin.vue';
 import NotFoundUser from './components/error/ErrorUser.vue';
 
+import LoginPembaca from './components/user/auth/LoginUser';
+import SignUpPembaca from './components/user/auth/SignUpUser';
+
 export default [
     {
         path : '/',
@@ -77,11 +80,11 @@ export default [
     
     {
         path : '/signin',
-        component : Admin // kuduna user
+        component : LoginPembaca
     },
     {
         path : '/signup',
-        component : Admin // kuduna user
+        component : SignUpPembaca
     },
 
     { 
