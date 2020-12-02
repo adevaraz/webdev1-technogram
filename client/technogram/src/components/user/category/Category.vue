@@ -15,7 +15,7 @@
                         height="10"
                         indeterminate
                     ></v-progress-circular>
-                    <v-col class="text-center" v-for="category in kategori" :key="category.id_kategori" cols="2">
+                    <v-col class="text-center" v-for="category in kategori" :key="category.id_kategori" lg="2" md="4" sm="6" xs="12" >
                         <!-- <v-card flat outlined tile> -->
                             <v-chip v-on:click="onCategorySelected(category)" color="#101010" text-color="white" style="text-transform: capitalize;">
                                 {{ category.nama_kategori }}

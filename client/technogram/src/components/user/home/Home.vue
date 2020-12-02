@@ -74,6 +74,7 @@ export default {
         this.errorMessage = "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
+      result.data[0].url_gambar = BASE_URL + '/' + result.data[0].url_gambar;
       this.headlineBerita = result.data[0];
     },
     async retrievePopularBerita() {

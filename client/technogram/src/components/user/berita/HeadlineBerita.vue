@@ -42,6 +42,8 @@ export default {
   computed: {
     backgroundImg() {
       if (this.berita !== null) {
+        console.log('ayo UBAH GAMBAR');
+        console.log(this.berita.url_gambar);
         return `background-image: url('${this.berita.url_gambar}')`;
       }
       return "";
