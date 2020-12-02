@@ -259,7 +259,13 @@ exports.likeNews = async(req, res, next) => {
         const account = await Pembaca.findByPk(readerId);
         const category = await Kategori.findByPk(catId);
         const news = await Berita.findByPk(newsId);
-
+        if(!news){
+          const error = new Error("Invalid News id");
+          error.statusCode = 401;
+          error.cause = "News with such id is not exist";
+          throw error;
+        }
+        let newestMostLiked;
         if(account != null && category != null) {
             // Check whether account has liked news or not
             account.hasLike(news).then(function(exist) {
@@ -276,19 +282,6 @@ exports.likeNews = async(req, res, next) => {
                         await PembacaKategori.destroy({
                             where : { jumlah : 0 }
                         });
-                        var id_cat = await PembacaKategori.max('jumlah', {
-                            where : {id_pembaca : readerId, id_kategori : catId}
-                        });
-                        if(await Number.isNaN(id_cat)){
-                            await Pembaca.update({ most_liked_category : null},{
-                                where : {id_pembaca : readerId}
-                            });
-                        }
-                        else{
-                            await Pembaca.update({ most_liked_category : id_cat},{
-                                where : {id_pembaca : readerId}
-                            });
-                        }
                     }
                     unlike();
                     
@@ -316,17 +309,30 @@ exports.likeNews = async(req, res, next) => {
                         await news.update({
                             jumlah_likes : sequelize.literal('jumlah_likes + 1')
                         }, { where : { id_berita : newsId}});
-                        var id_cat = await PembacaKategori.max('jumlah', {
-                            where : {id_pembaca : readerId, id_kategori : catId}
-                        });
-                        await Pembaca.update({ most_liked_category : id_cat},{
+                        const mostLikedID = await PembacaKategori.findOne({
+                          where : { id_pembaca : readerId},
+                          order : [
+                            ['jumlah' , 'DESC']
+                          ]
+                        })
+                        newestMostLiked = account.most_liked_category;
+                        if(account.most_liked_category != mostLikedID.id_kategori){                      
+                          await Pembaca.update({ most_liked_category : catId},{
                             where : {id_pembaca : readerId}
-                        });
+                          });
+                          newestMostLiked = mostLikedID.id_kategori;
+                        }
+                        const newestLikedKategori = await Kategori.findByPk(newestMostLiked)
+                        newestMostLiked =  newestLikedKategori.nama_kategori
+
                     }
-                    like();
-                    
-                    res.status(201).json({
-                        message: `Success like news with id : ${newsId}`
+                    like().then( () => {
+                      res.status(201).json({
+                        message: `Success like news with id : ${newsId}`,
+                        data : {
+                          newestMostLiked
+                        }
+                    });
                     });
                 }
             });
@@ -472,13 +478,12 @@ exports.getSave = async (req, res, next) => {
         },
       ],
     });
-    
-    const ss = saved.saved
-    console.log(ss)
-    if (ss.length > 0) {
+
+    const savedBerita = saved.saved
+    if (savedBerita.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
-        data: ss
+        data: savedBerita
       });
     } else {
       res.status(204).json({
@@ -512,12 +517,19 @@ exports.signin = async (req, res, next) => {
         error.cause = "Wrong password";
         throw error;
       }
+      let mostLikeCategory;
+      //Get mostliked category name
+      console.log(pembaca);
+      if(pembaca.most_liked_category){
+         mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+      }
       //generate token 
       const accessToken = await createAccessToken(pembaca);
       await createRefreshToken(pembaca,res);
       res.status(200).json({
         message: "sign in Success",
-        token: accessToken
+        token: accessToken,
+        mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null
       });
     } else {
       const error = new Error("Invalid credential");
@@ -566,24 +578,38 @@ exports.signout = async (req, res, err) => {
 exports.getUserNotification = async (req, res, next) => {
   try {
     const id = req.decodedToken.id
+    const currentPage = req.query.page || 1;
+    const perPage = req.query.perpage || 10;
+    const offset = (currentPage-1) * perPage;
     const result = await Pembaca.findByPk(id, {
       include: [
         {
           model: Berita,
           as : 'notification'
-        },
+        }
       ],
     });
 
+
     if (!result) {
-      const error = new Error("User with such id not found");
-      error.statusCode = 404;
-      throw error;
+      res.status(200).json({
+        message: "Success retrieve user notification",
+        data: {},
+      });
     }
+    console.log(result.notification);
+    const notifications = result.notification.slice(offset , offset + perPage);
+    const nextPageOffset = (currentPage) * perPage;
+    const nextPage = result.notification.length > nextPageOffset
+
+
     console.log(result);
     res.status(200).json({
       message: "Success retrieve user notification",
-      data: result,
+      data: {
+        notifications,
+        nextPage
+      },
     });
   } catch (err) {
     next(err);
@@ -639,6 +665,7 @@ exports.getAccessToken = async (req , res , next ) => {
   }
 }
 
+
 /*
 @author 16 MN
 membuat refresh token bagi pembaca
@@ -665,6 +692,9 @@ const createRefreshToken = async (pembaca , res) => {
   })
   return token; 
 }
+
+
+
 
 /*
 @author 16 MN
@@ -694,7 +724,7 @@ const createAccessToken = async (pembaca) => {
 
 /*
 @author 16 MN
- - menghapusk cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
+ - menghapus cookies pada cookies client , sehingga tidak menyimpan refresh token dan disalahgunakan 
 (digunakan ketika log out)
 */
 const nullifyClientRefreshToken = (res) =>{

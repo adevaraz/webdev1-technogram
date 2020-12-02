@@ -1,4 +1,4 @@
-// const BASE_URL = "https://technogram-backend.technogra.co"
+// const BASE_URL = "https://technogram-api.technogram.tech"
 const BASE_URL = "http://localhost:3000"
 
 const BERITA_URL = BASE_URL + "/news"
