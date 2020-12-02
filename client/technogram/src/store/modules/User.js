@@ -1,3 +1,4 @@
+import User from '../../api/pembaca/auth'
 import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
@@ -8,7 +9,8 @@ const UserModule = {
             type : StatusType.IDLE,
             message : ''
         },
-        isLoggedIn : false
+        isLoggedIn : false,
+        mostLikedKategori : 'app',
     }),
     mutations :{
         SET_LOGGEDIN(state, isLoggedin){
@@ -43,6 +45,9 @@ const UserModule = {
                 type : StatusType.IDLE,
                 message : ''
             }
+        },
+        SET_MOSTLIKED_KATEGORI(state , mostLikedKategori){
+            state.mostLikedKategori = mostLikedKategori
         }
     },
     getters : {
@@ -57,6 +62,9 @@ const UserModule = {
         },
         isLoggedIn(state){
             return state.isLoggedIn;
+        },
+        getMostLikedKategori(state){
+            return state.mostLikedKategori;
         }
     },
     actions : {
@@ -65,7 +73,17 @@ const UserModule = {
             console.log('loading');            
             commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit('SET_SUCCESS' , 'Success get new Access token');
-        }
+        },
+
+        async signOut({commit , state}){
+            commit('SET_LOADING');
+            if(state.token !== ''){
+                await User.signOut(state.token);
+                commit('SET_TOKEN' , '');
+                commit('SET_LOGGEDIN', !state.isLoggedIn);
+            }
+            commit('SET_SUCCESS' , 'Success get new Access token');
+        },
     }
 
     

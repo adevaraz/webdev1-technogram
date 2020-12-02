@@ -52,8 +52,11 @@
                 <div class="notification"  v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-              </div>
-              <img class="item img-btn"  src="../../../../assets/icons/profile.png"/>
+                  <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <div class="profile" v-if="showProfile">
+                    <profile-drop-down></profile-drop-down>
+                  </div>
+                </div>
             </div>
             <div class="public" v-else>
               <v-btn class="item btn text-none" color="#E52B38" small @click="loggedInToggle">Sign in</v-btn>
@@ -93,6 +96,7 @@
 
 <script>
 import NotificationDropdown from '../../notifications/NotificationDropdown.vue';
+import ProfileDropDown from '../../profile/ProfileDropDown.vue';
 import NavDrawer from "./NavDrawer.vue";
 import categoriesData from "../../../../api/kategori/daftarKategori";
 import { mapActions } from 'vuex'
@@ -128,11 +132,13 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   components: { 
-    NavDrawer,
+    NavDrawer, 
+    ProfileDropDown,
     NotificationDropdown
   },
   props: {
     isLoggedIn: {
+      type: Boolean,
       default: true,
     },
     toogleDrawer: Function,
@@ -144,6 +150,7 @@ export default {
       isDrawerAnimationNeeded: false,
       showNotification : false,
       dialog: false,
+      showProfile: false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
@@ -571,5 +578,16 @@ nav .header .right .btn {
   .toogle .line3 {
     transform: rotate(45deg) translate(-3px, -4px);
   }
+
+ 
 }
+ .profile{
+    background: white;
+    position: absolute;
+    height:200px;
+    width: 200px;
+    padding:1rem;
+    right: 2%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+  }
 </style>

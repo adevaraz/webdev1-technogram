@@ -4,26 +4,45 @@
       <v-col xs="12" sm="8" md="5" lg="5">
         <v-row class="fill-height">
           <v-col>
-            <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+            <v-card
+              :loading="isLoading && !isMobile"
+              height="100%"
+              :elevation="isMobile ? 0 : 2"
+            >
               <template slot="progress">
-                <v-progress-linear  color="#E52B38" height="10" indeterminate></v-progress-linear>
+                <v-progress-linear
+                  color="#E52B38"
+                  height="10"
+                  indeterminate
+                ></v-progress-linear>
               </template>
               <div class="content">
                 <div class="logo">
-                  <v-img :src="require('../../../assets/technogram-creator-b.png')"></v-img>
+                  <v-img
+                    :src="require('../../../assets/technogram-creator-b.png')"
+                  ></v-img>
                 </div>
-                <form class="mt-10">
+                <form class="mt-10" @submit.prevent="signin">
                   <v-row class="jutify-center">
                     <v-col cols="12">
-                      <p class="text-caption font-weight-bold text-center">Username</p>
-                      <v-text-field :rules="[rules.username]" v-model="username"></v-text-field>
+                      <p class="text-caption font-weight-bold text-center">
+                        Username
+                      </p>
+                      <v-text-field
+                        :rules="[rules.username]"
+                        v-model="username"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <p class="text-caption font-weight-bold text-center">Password</p>
+                      <p class="text-caption font-weight-bold text-center">
+                        Password
+                      </p>
                       <v-text-field
                         v-model="password"
                         :rules="[rules.password]"
-                        :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
+                        :append-icon="
+                          isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'
+                        "
                         :type="isPasswordShown ? 'text' : 'password'"
                         class="input-group--focused"
                         @click:append="isPasswordShown = !isPasswordShown"
@@ -37,15 +56,17 @@
                         :icon="false"
                         v-if="error.isError"
                         class="text-center text-subtitle-2"
-                      >{{errorMessage}}</v-alert>
+                        >{{ errorMessage }}</v-alert
+                      >
                     </v-col>
                     <v-col class="d-flex justify-center">
                       <v-btn
+                        type="submit"
                         color="#E52B38"
-                        @click="signin"
                         class="login_btn"
                         :disabled="!isInputValid"
-                      >Sign in</v-btn>
+                        >Sign in</v-btn
+                      >
                     </v-col>
                   </v-row>
                 </form>
@@ -68,7 +89,7 @@
 
 <script>
 import Auth from "../../../api/admin/auth";
-import {mapActions} from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -94,13 +115,13 @@ export default {
       const isEmpty = (this.username === "") | (this.password === "");
       return !isEmpty;
     },
-    isMobile(){
-      return this.$vuetify.breakpoint.xs ? true : false
-    }
+    isMobile() {
+      return this.$vuetify.breakpoint.xs ? true : false;
+    },
   },
   methods: {
     ...mapActions({
-      setToken : 'admin/setToken'
+      setToken: "admin/setToken",
     }),
     async signin() {
       console.log(this.isMobile);
@@ -114,7 +135,7 @@ export default {
         this.error.isError = true;
       } else {
         await this.setToken(loginResult.token);
-        this.$router.push({path : '/admin'})
+        this.$router.push({ path: "/admin" });
       }
     },
   },
