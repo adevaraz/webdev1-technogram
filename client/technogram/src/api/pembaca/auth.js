@@ -1,6 +1,7 @@
 import axios from 'axios'
-import {USER_URL , TIMEOUT} from '../const'
+import { USER_URL , TIMEOUT } from '../const'
 import ErrorHandler from '../errorHandler'
+
 const signin = async(email , password) => {
     try{
         const signinURL = USER_URL + '/sign-in' 
@@ -61,10 +62,12 @@ const getRefreshToken = async() => {
     }
 }
 
-const logout = async(token) => {
+import { USER_URL } from '../const'
+import ErrorHandler from '../errorHandler'
+
+const signOut = async(token) => {
     try{
-        const url = USER_URL + '/signout'
-        console.log("HELLO")
+        const url = USER_URL + '/sign-out'
         const result = axios.post(url , {} , {
             headers : {
                 'Authorization' : token
@@ -80,5 +83,5 @@ export default{
     signin,
     signup,
     getRefreshToken,
-    logout
+    signOut
 }

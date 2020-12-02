@@ -1,15 +1,17 @@
-//import User from '../../api/pembaca/auth'
+import User from '../../api/pembaca/auth'
 import StatusType from '../StatusTypeConst'
 const UserModule = {
     namespaced: true,
     state: () => ({
         token : '',
         username : '',
+        email : '',
         status : {
             type : StatusType.IDLE,
             message : ''
         },
-        isLoggedIn : false
+        isLoggedIn : false,
+        mostLikedKategori : 'app',
     }),
     mutations :{
         SET_LOGGEDIN(state, isLoggedin){
@@ -44,6 +46,9 @@ const UserModule = {
                 type : StatusType.IDLE,
                 message : ''
             }
+        },
+        SET_MOSTLIKED_KATEGORI(state , mostLikedKategori){
+            state.mostLikedKategori = mostLikedKategori
         }
     },
     getters : {
@@ -53,39 +58,41 @@ const UserModule = {
         getUsername(state){
             return state.username;
         },
+        getUserEmail(state){
+            return state.email;
+        },
         isTokenExist(state){
             return (state.token !== undefined && state.token !== '');
         },
         isLoggedIn(state){
             return state.isLoggedIn;
+        },
+        getMostLikedKategori(state){
+            return state.mostLikedKategori;
         }
     },
     actions : {
-        
         async setToken({commit} , token, isLoggedin){
             commit('SET_TOKEN',token);
             commit('SET_LOGGEDIN',isLoggedin)
-           },
-           // async loginToogle({commit , state}){
-        //     commit('SET_LOADING');
-        //     console.log('loading');            
-        //     commit('SET_LOGGEDIN' , !state.isLoggedIn)
-        //     commit('SET_SUCCESS' , 'Success get new Access token');
-        // }
-        // async getNewToken({commit}){
-        //     commit('SET_LOADING');
-        //     console.log('loading');            
-        //     const result = await User.getRefreshToken();
-        //     console.log(result);   
-            
-        //     if(result instanceof Error){
-        //         commit('SET_TOKEN' , '');
-        //         commit('SET_ERROR' , result.cause)
-        //         return;
-        //     }
-        //     commit('SET_TOKEN', result.token);
-        //     commit('SET_SUCCESS' , 'Success get new Access token');
-        // },
+        },
+      
+        async loginToogle({commit , state}){
+            commit('SET_LOADING');
+            console.log('loading');            
+            commit('SET_LOGGEDIN' , !state.isLoggedIn)
+            commit('SET_SUCCESS' , 'Success get new Access token');
+        },
+
+        async signOut({commit , state}){
+            commit('SET_LOADING');
+            if(state.token !== ''){
+                await User.signOut(state.token);
+                commit('SET_TOKEN' , '');
+                commit('SET_LOGGEDIN', !state.isLoggedIn);
+            }
+            commit('SET_SUCCESS' , 'Success get new Access token');
+        }
     }
 
     

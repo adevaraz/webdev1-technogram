@@ -2,13 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-form @submit.prevent="console.log('submit')">
-          <v-text-field
-            class="text-caption"
-            placeholder="Masukan kata kunci pencarian disini ...."
-            prepend-inner-icon="mdi-magnify"
-          ></v-text-field>
-        </v-form>
+        <v-text-field
+          v-model="key"
+          class="text-caption"
+          placeholder="Masukan kata kunci pencarian disini ...."
+          prepend-inner-icon="mdi-magnify"
+          v-on:keydown.enter="onSearch(key)"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" v-if="isLoggedIn">
         <v-row>
@@ -18,13 +18,14 @@
                 <img class="item img-btn" src="../../../../assets/icons/profile.png" />
               </v-col>
               <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
-                <div class="username-text">Adevaraz</div>
-                <div class="email-text">zaraveda@polban.ac.id</div>
+                <div class="username-text">{{ username }}</div>
+                <div class="email-text">{{ email }}</div>
               </v-col>
             </div>
           </v-col>
           <v-col cols="12">
-            <v-btn text small class="worksans-font text-none">Saved news</v-btn>
+            <v-btn text small class="worksans-font text-none" @click="$router.push({ name: 'profile' })">Saved news</v-btn>
+            <v-btn text small class="worksans-font text-none" @click="signOut()">Sign Out</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -42,9 +43,15 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import { mapActions } from 'vuex'
+import { store } from '../../../../store/index'
 import LoginUser from "./../../auth/LoginUser.vue";
+
 export default {
+  components: {
+    LoginUser
+  },
+  
   props: {
     menus: {
       type: Array,
@@ -57,7 +64,20 @@ export default {
         return false;
       },
     },
+    onSearch: Function,
   },
+  data () {
+    return {
+      key:''
+    }
+  },
+  data(){
+    return{
+      username: '',
+      email: ''
+    }
+  },
+  
   methods: {
     ...mapActions({
       loggedInToggle : 'user/loginToogle'
@@ -69,10 +89,37 @@ export default {
         ? basicClass + " text-decoration-underline"
         : basicClass;
     },
+    
+    getUserData(){
+        console.log("user token" + store.getters['user/isTokenExist'])
+        this.username= store.getters['user/getUsername'];
+        console.log("uname"+this.username)
+        this.userEmail=store.getters['user/getUserEmail']
+   },
+   
+    async signOut() {
+      const before = await store.getters["user/isTokenExist"];
+      console.log("before: ");
+      console.log(before);
+
+      const signOutRes = await store.dispatch("user/signOut");
+
+      if(signOutRes instanceof Error) {
+        this.error.message = signOutRes.cause;
+        this.error.isError = true;
+      } else {
+        const after = await store.getters["user/isTokenExist"];
+        console.log("after: ");
+        console.log(after);
+
+        this.$router.push("/");
+      }
+    }
   },
-components: {
-  LoginUser
-}
+  
+  mounted(){
+    this.getUserData();
+  }
 };
 </script>
 
