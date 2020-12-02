@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
-import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
