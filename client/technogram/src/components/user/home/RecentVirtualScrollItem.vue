@@ -1,6 +1,8 @@
 <template>
-  <preview-berita v-if="!isMobile" :berita="source"></preview-berita>
-  <mobile-preview-berita v-else :berita="source"></mobile-preview-berita>
+  <div @click="onBeritaSelected(source.id_berita)">
+    <preview-berita v-if="!isMobile" :berita="source"></preview-berita>
+    <mobile-preview-berita v-else :berita="source"></mobile-preview-berita>
+  </div>
 </template>
 
 <script>
@@ -30,5 +32,20 @@ export default {
       return false;
     },
   },
+
+  methods: {
+    onBeritaSelected(id) {
+      console.log("VIRTUAL SCROLL ITEM");
+      console.log(id);
+      this.$router
+        .push({
+          name: "read-berita",
+          params: { id: `${id}` },
+        })
+        .catch((err) => {
+          err;
+        });
+    }
+  }
 };
 </script>
