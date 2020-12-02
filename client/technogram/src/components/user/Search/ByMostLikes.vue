@@ -4,7 +4,7 @@
     <div class="search-result" v-else>
       <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
         <v-col cols="12" class="mt-5 mr-16" v-for="index in 4" :key="index"
-        @click="onBeritaSelected(recentBerita[((page * 5) - 5) + (index - 1)].id_berita)">
+        @click="onBeritaSelected(mostLikedBerita[((page * 5) - 5) + (index - 1)].id_berita)">
           <search-result-recent
             v-if="!isMobile"
             :berita="mostLikedBerita[((page * 5) - 5) + (index - 1)]"
