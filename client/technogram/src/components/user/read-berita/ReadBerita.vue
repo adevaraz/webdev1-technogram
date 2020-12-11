@@ -10,7 +10,7 @@
         ></v-progress-circular>
         <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
             <v-sheet
-                class="mx-16 px-2"
+                :class="isMobile? 'mx-3' : 'mx-10 px-12'"
             >
                 <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
                 <p class="worksans-font">{{ date }}</p>
@@ -24,10 +24,19 @@
                     <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
                     <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-                        <div id="likes" class="d-flex flex-row">
+                        <div
+                            id="likes"
+                            class="d-flex flex-row"
+                            v-if="isLoggedIn"
+                        >
                             <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
                             <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                        </div>
+                        <div v-else>
+                            <v-flex>
+                                <login-user />
+                            </v-flex>
                         </div>
 
                         <div id="view" class="d-flex flex-row">
@@ -43,7 +52,7 @@
                     </div>
                 </v-card>
 
-                <div class="worksans-font">
+                <div id="content" class="worksans-font">
                     <div id="header">
                         <v-img
                             v-if="this.urlTemp != null"
@@ -54,7 +63,7 @@
                         />
                     </div>
 
-                    <div class="content" v-html=artikel></div>
+                    <div :class="isMobile? 'article resize-img' : 'article'" v-html=artikel></div>
 
                     <p class="grey--text text--darken-2">Written by</p>
                     <h4>{{ jurnalis }}</h4>
@@ -62,7 +71,7 @@
                 </div>
             </v-sheet>
 
-            <div class="px-16 mx-12 my-16">
+            <div class="px-2 mx-2 my-16">
                 <h3 class="worksans-font red-text">Recommendations</h3>
                 <v-progress-circular
                     class="small-progressbar"
@@ -91,12 +100,14 @@ import berita from "../../../api/berita/berita";
 import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
+import LoginUser from "../auth/LoginUser";
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
+        LoginUser
     },
 
     created() {
@@ -422,7 +433,14 @@ export default {
     top: 20%;
 }
 
-.content[data-v-html] >>> img {
+.resize-img ::v-deep img {
     max-height: 10px;
+}
+
+.article ::v-deep br {
+    content: " ";
+    display: block;
+    margin: 10px 10;
+    line-height: 20px;
 }
 </style>
