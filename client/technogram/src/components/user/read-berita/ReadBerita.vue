@@ -43,7 +43,7 @@
                     </div>
                 </v-card>
 
-                <div id="content" class="worksans-font">
+                <div class="worksans-font">
                     <div id="header">
                         <v-img
                             v-if="this.urlTemp != null"
@@ -54,7 +54,7 @@
                         />
                     </div>
 
-                    <div v-html=artikel></div>
+                    <div class="content" v-html=artikel></div>
 
                     <p class="grey--text text--darken-2">Written by</p>
                     <h4>{{ jurnalis }}</h4>
@@ -420,5 +420,9 @@ export default {
 .small-progressbar {
     left: 50%;
     top: 20%;
+}
+
+.content[data-v-html] >>> img {
+    max-height: 10px;
 }
 </style>
