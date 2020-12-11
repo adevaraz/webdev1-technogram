@@ -1,7 +1,12 @@
 <template>
   <div>
     <transition name="slide" mode="out-in">
-      <notification-toast class="notification-toast" :message="notification.message" v-if="notification.shouldShowNotification" :onClick="onBeritaSelected"></notification-toast>
+      <notification-toast
+        class="notification-toast"
+        :message="notification.message"
+        v-if="notification.shouldShowNotification"
+        :onClick="onBeritaSelected"
+      ></notification-toast>
     </transition>
     <nav-bar :toogleDrawer="toogleDrawer" :isLoggedIn="isLoggedIn"></nav-bar>
     <transition name="fade">
@@ -17,9 +22,10 @@
 <script>
 import NavBar from "./ui/navigation/NavBar.vue";
 import NotificationToast from "./ui/modals/NotificationToast.vue";
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
 import openSocket from "socket.io-client";
-import { BASE_URL } from '../../api/const.js';
+import { BASE_URL } from "../../api/const.js";
+import { store } from "../../store/index";
 //import LoginUser from "./LoginUser.vue";
 
 const NOTIFICATION_TIME = 4000;
@@ -34,7 +40,19 @@ export default {
     NavBar,
     NotificationToast,
   },
-  
+  async beforeRouteEnter(to, from, next) {
+    //Check if access token ready in vuex
+    if (!store.getters["user/isTokenExist"]) {
+      //Try to get access token
+      await store.dispatch("user/getNewToken");
+      const isTokenExist = store.getters["user/isTokenExist"];
+      if (!isTokenExist) {
+        console.log("not authorized");
+      }
+    }
+    next();
+  },
+
   data() {
     return {
       isContentShown: true,
@@ -58,7 +76,9 @@ export default {
       this.notification.message = `${message}...`;
       this.notification.shouldShowNotification = true;
       this.notification.beritaId = beritaId;
-      console.log(this.notification.shouldShowNotification && this.isFirstToast);
+      console.log(
+        this.notification.shouldShowNotification && this.isFirstToast
+      );
       setTimeout(() => {
         this.resetNotificatoin();
       }, NOTIFICATION_TIME);
@@ -127,12 +147,19 @@ export default {
       this.initSocket();
     },
     observableShouldShowNotification(value) {
-      if (!value && this.notificationQueue.length > 0 && !this.isAnimationWork) {
+      if (
+        !value &&
+        this.notificationQueue.length > 0 &&
+        !this.isAnimationWork
+      ) {
         this.isAnimationWork = true;
         setTimeout(() => {
           this.isAnimationWork = false;
           const newNotification = this.notificationQueue.shift();
-          this.newNotification(newNotification.message, newNotification.beritaId);
+          this.newNotification(
+            newNotification.message,
+            newNotification.beritaId
+          );
         }, 1200);
       }
     },

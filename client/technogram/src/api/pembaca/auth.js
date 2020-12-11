@@ -68,7 +68,8 @@ const signOut = async(token) => {
         const result = axios.post(url , {} , {
             headers : {
                 'Authorization' : token
-            }
+            },
+            withCredentials : true
         })
         return result.data
     }catch(err){
