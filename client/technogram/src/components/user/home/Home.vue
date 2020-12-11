@@ -2,28 +2,28 @@
   <v-container>
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
       <v-col cols="12" v-if="isError"></v-col>
-      <v-col cols="12">
-        <h1 :class="!isMobile ? 'playfair-font text-start' : 'playfair-font text-center'">Popular News</h1>
-      </v-col>
-      <v-col @click="onBeritaSelected(headlineBerita.id_berita)" cols="12" lg="5" md="12" xl="5" sm="12" xs="12">
-        <headline-berita class="item" :berita="headlineBerita" :isLoading="recentLoading"></headline-berita>
-      </v-col>
-      <v-col cols="12" v-if="isMobile" class="mt-n6">
-        <div class="middle-border"></div>
-      </v-col>
-      <v-col cols="12" lg="6" offset-lg="1" md="12" xl="6" offset-xl="1" sm="12">
-        <v-row class="top-right-container">
-          <v-progress-circular class="progressbar" v-if="popularLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
-          <v-col cols="12" sm="6" md="6" lg="6" xl="6" v-for="berita in popularBerita" :key="berita.id_berita" @click="onBeritaSelected(berita.id_berita)" class="pt-0">
-            <small-berita class="item" :showTime="isMobile" :berita="berita"></small-berita>
-          </v-col>
-        </v-row>
+      <v-col cols="12" class="pa-0">
+        <mobile-home-header
+          :beritas="popularBerita"
+          :headlineBerita="headlineBerita"
+          :onBeritaSelected="onBeritaSelected"
+          :popularLoading="popularLoading"
+          :recentLoading="recentLoading"
+          v-if="isMobile"
+        ></mobile-home-header>
+        <dekstop-home-header v-else></dekstop-home-header>
       </v-col>
       <v-col cols="12" v-if="!isMobile">
         <div class="middle-border"></div>
       </v-col>
       <v-col cols="12" :class="isMobile ? 'mt-n3 mb-n5' : ''">
-        <h1 :class="isMobile ? 'playfair-font text-start' : 'playfair-font text-center'">Recent News</h1>
+        <h1
+          :class="
+            isMobile ? 'playfair-font text-start' : 'playfair-font text-center'
+          "
+        >
+          Recent News
+        </h1>
       </v-col>
       <v-col cols="12" v-if="isMobile">
         <div class="middle-border"></div>
@@ -38,21 +38,20 @@
 </template>
 
 <script>
-import HeadlineBerita from "../berita/HeadlineBerita.vue";
-import SmallBerita from "../berita/SmallBerita.vue";
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 import RecentVirtualScroll from "./RecentVirtualScroll.vue";
-
+import MobileHomeHeader from "./MobileHomeHeader.vue";
+import DekstopHomeHeader from "./DekstopHomeHeader";
 export default {
   created() {
     this.retrievePopularBerita();
     this.retrieveRecentBerita();
   },
   components: {
-    HeadlineBerita,
-    SmallBerita,
     RecentVirtualScroll,
+    MobileHomeHeader,
+    DekstopHomeHeader,
   },
   data() {
     return {
@@ -71,10 +70,11 @@ export default {
       this.recentLoading = false;
       if (result instanceof Error) {
         this.isError = true;
-        this.errorMessage = "Gagal mendapatkan berita terkini karena " + result.cause;
+        this.errorMessage =
+          "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
-      result.data[0].url_gambar = BASE_URL + '/' + result.data[0].url_gambar;
+      result.data[0].url_gambar = BASE_URL + "/" + result.data[0].url_gambar;
       this.headlineBerita = result.data[0];
     },
     async retrievePopularBerita() {
@@ -83,14 +83,14 @@ export default {
       this.popularLoading = false;
       if (result instanceof Error) {
         this.isError = true;
-        this.errorMessage = "Gagal mendapatkan berita populer karena " + result.cause;
+        this.errorMessage =
+          "Gagal mendapatkan berita populer karena " + result.cause;
         return;
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.popularBerita.push(element);
       });
-      console.log(this.popularBerita);
     },
 
     onBeritaSelected(id) {

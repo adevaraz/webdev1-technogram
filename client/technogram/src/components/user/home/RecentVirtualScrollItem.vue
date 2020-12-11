@@ -1,5 +1,5 @@
 <template>
-  <div @click="onBeritaSelected(source.id_berita)">
+  <div @click="onBeritaSelected(source.id_berita)" class="pa-1">
     <preview-berita v-if="!isMobile" :berita="source"></preview-berita>
     <mobile-preview-berita v-else :berita="source"></mobile-preview-berita>
   </div>

@@ -54,7 +54,6 @@
 </template>
 
 <script>
-const PRIVIEW_MAX_WORDS = 70
 export default {
   props : {
     berita : {
@@ -62,6 +61,10 @@ export default {
       default(){
         return {}
       }
+    },
+    previewMaxWord : {
+      type : Number,
+      default : 70
     }
   },
   computed: {
@@ -76,13 +79,11 @@ export default {
       return `${month} ${date}`;
     },
     preview(){
-      console.log('woy ini nih');
-      const firstSentences = this.berita.artikel.toString().split('>')[2];
-      let preview = firstSentences;
-      if(firstSentences.length > PRIVIEW_MAX_WORDS){
-        preview = firstSentences.slice(0 , PRIVIEW_MAX_WORDS);
-      }
-      return preview.split('<')[0];
+      let rawHtmlArticle = this.berita.artikel;
+      const splitRegex = /(<(.*?)>)/g;
+      const wordOnlyArticle = rawHtmlArticle.toString().replaceAll(splitRegex , "");
+      return wordOnlyArticle.substring(0 , this.previewMaxWord);
+     
     }
   }
 };
