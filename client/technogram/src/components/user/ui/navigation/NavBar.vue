@@ -189,6 +189,7 @@ export default {
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
       currentTime: null,
+      key : ''
     };
   },
   computed: {
@@ -219,8 +220,7 @@ export default {
       return this.isMobile && this.isDrawerShown;
     },
     transitionName() {
-      console.log(this.isMobile);
-      return this.isMobile ? "slide" : "";
+      return this.isMobile ? "slide" : " ";
     },
   },
   methods: {

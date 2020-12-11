@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col class="pa-0 img-container" cols="4" :style="backgroundImg">
+      <v-col class="pa-0" cols="4">
+        <zoomy-image :src="berita.url_gambar"></zoomy-image>
       </v-col>
       <v-col class="py-0" cols="7" offset="1" >
         <v-row class="fill-height">
@@ -30,7 +31,9 @@
 </template>
 
 <script>
+import ZoomyImage from '../ui/ZoomyImage.vue';
 export default {
+  components: { ZoomyImage },
   props : {
     berita : {
       type : Object,
@@ -68,8 +71,8 @@ export default {
 }
 .img-container {
   width: 100%;
-   cursor: pointer; 
-     background: #eeeeee;
+  cursor: pointer; 
+  background: #eeeeee;
   background-size: cover;
   background-position: center;
 }

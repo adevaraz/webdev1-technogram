@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <v-row align="start">
-      <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
-        <v-progress-circular class="progressbar" v-if="isLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
+      <v-col cols="12" class="pa-0">
+        <zoomy-image :src="berita.url_gambar"  :isLoading="isLoading"></zoomy-image>
       </v-col>
       <div v-if="berita !== null">
         <v-col cols="12" class="cols-container">
@@ -24,7 +24,11 @@
 </template>
 
 <script>
+import ZoomyImage from '../ui/ZoomyImage.vue'
 export default {
+  components : {
+    ZoomyImage
+  },
   props: {
     berita: {
       type: Object,
