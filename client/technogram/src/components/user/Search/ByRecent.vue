@@ -45,6 +45,8 @@ export default {
   watch: {
     $route: function () {
       this.recentBerita = [];
+      this.isEndOfList = false
+      this.pageNum = 1
       this.retrieveRecentBerita();
     },
   },
