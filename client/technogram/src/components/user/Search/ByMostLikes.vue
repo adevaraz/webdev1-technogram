@@ -1,30 +1,23 @@
 <template>
   <v-container>
-    <v-progress-circular v-if="popularLoading" indeterminate color="red" class="progressbar"></v-progress-circular>
-    <div class="search-result" v-else>
-      <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
-        <v-col cols="12" class="mt-5 mr-16" v-for="index in 4" :key="index"
-        @click="onBeritaSelected(mostLikedBerita[((page * 5) - 5) + (index - 1)].id_berita)">
-          <search-result-recent
-            v-if="!isMobile"
-            :berita="mostLikedBerita[((page * 5) - 5) + (index - 1)]"
-          ></search-result-recent>
-          <mobile-preview-berita v-else :berita="mostLikedBerita[((page * 5) - 5) + (index - 1)]"></mobile-preview-berita>
-        </v-col>
-        <v-col cols="12"
-          :class="isMobile? 'justify-center ml-0' : 'd-flex justify-center mt-16'"
-          v-if="!popularLoading"
-        >
-          <v-pagination
-            v-model="page"
-            :length="count"
-            :per-page="pageSize"
-            color="error"
-            @input="handlePageChange"
-          ></v-pagination>
-        </v-col>
-      </v-row>
-    </div>
+    <virtual-list 
+      ref="virtual-scroller" 
+      class="list-infinite scroll-touch" 
+      :page-mode="true" 
+      :data-key="'id_berita'" 
+      :data-sources="mostLikedBerita" 
+      :data-component="itemComponent" 
+      v-on:tobottom="onScrollToBottom" 
+      :keeps="20">
+      <div slot="footer">
+        <div class="loader itemStillExist" v-if="popularLoading">
+          <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
+        </div>
+        <div class="no-item text-center" v-if="isEndOfList">
+          <h3>No more item</h3>
+         </div>
+      </div>
+    </virtual-list>
   </v-container>
 </template>
 
@@ -32,22 +25,21 @@
 //const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
-import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
-import SearchResultRecent from "./SearchResultPreview";
+import MostLikesItem from "./SearchResultItem"
+const NEWS_PERCALL = 5;
 export default {
-  components: { SearchResultRecent, MobilePreviewBerita },
   created() {
     this.retrieveMostLikedBerita();
   },
   data() {
     return {
+      itemComponent : MostLikesItem,
       mostLikedBerita: [],
       isError: false,
       errorMessage: "",
       popularLoading: false,
-      page: 1,
-      count: 0,
-      pageSize: 5,
+      pageNum: 1,
+      isEndOfList: false,
     };
   },
   watch: {
@@ -58,69 +50,64 @@ export default {
   },
 
   methods: {
+    onScrollToBottom() {
+      if(!this.popularLoading && !this.isEndOfList) {
+        this.retrieveMostLikedBerita();
+      }
+    },
     async retrieveMostLikedBerita() {
       this.popularLoading = true;
       //benerin perpage sama page nya, parameternya teh (perpage, key, page)
-      const result = await beritaApi.popularBerita(
-        this.pageSize,
-        this.$route.query.q,
-        this.page
-      );
-      //const result = await beritaApi.popularBerita();
+      const result = await beritaApi.popularBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
+      this.pageNum++;
       this.popularLoading = false;
       if (result instanceof Error) {
         this.isError = true;
         this.errorMessage = "Gagal mendapatkan berita karena " + result.cause;
         return;
       }
+      if(result.data.length <= 0) {
+        if(this.isEndOfList) {
+          return;
+        }
+        this.isEndOfList = true;
+      }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.mostLikedBerita.push(element);
-        this.count = this.count + 1;
       });
       console.log("Search by Most Likes");
-      this.count = Math.ceil(this.count / this.pageSize);
-      console.log("MOST LIKED BERITA");
       console.log(this.mostLikedBerita);
     },
-
-    flush() {
-      this.mostLikedBerita.splice(0);
-    },
-
-    handlePageChange(page) {
-      console.log("handlepagechange");
-      this.page = page;
-      this.flush();
-      this.retrieveMostLikedBerita();
-    },
-
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          name: "read-berita",
-          params: { id: `${id}` },
-        })
-        .catch((err) => {
-          err;
-        });
-    },
-  },
-  computed: {
-    isMobile() {
-      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-        return true;
-      }
-      return false;
-    },
-  },
+  }
 };
 </script>
 
 <style scoped>
-.progressbar{
-    position: absolute;
-    left: 50%;
-    top: 50%;
+.loader {
+  position: relative;
+  left: 45%;
+}
+
+.no-item {
+  border-top: 1px solid black;
+}
+
+.list-infinite::-webkit-scrollbar {
+  display: none;
+}
+
+.list-infinite {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 10rem;
+  position: relative;
+}
+
+@media screen and (max-width: 960px) {
+  .list-infinite {
+    padding: 0 0;
+  }
 }
 </style>
