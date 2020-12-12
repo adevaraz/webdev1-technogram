@@ -51,7 +51,11 @@ import { store } from "../../../store/index";
 
 export default {
   created() {
-    this.retrieveSavedBerita();
+    if (!store.getters["user/isTokenExist"]) {
+      this.$router.push("/");
+    } else {
+      this.retrieveSavedBerita();
+    }
   },
   components: {
     PreviewBerita,

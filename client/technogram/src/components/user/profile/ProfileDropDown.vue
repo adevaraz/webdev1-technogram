@@ -70,8 +70,7 @@ export default {
         const after = await store.getters["user/isTokenExist"];
         console.log("after: ");
         console.log(after);
-        await store.commit("user/SET_LOGGEDIN", false);
-        await this.$router.push("/");
+        this.$router.push("/");
       }
     },
     computed: {

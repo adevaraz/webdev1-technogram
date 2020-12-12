@@ -41,6 +41,7 @@ export default {
     NotificationToast,
   },
   async beforeRouteEnter(to, from, next) {
+    console.log("MASUK BEFORE ROUTE");
     //Check if access token ready in vuex
     if (!store.getters["user/isTokenExist"]) {
       //Try to get access token
@@ -133,6 +134,7 @@ export default {
   },
   watch: {
     isLoggedIn(value) {
+      console.log("LOGIN GA  : " + value);
       if (value) {
         console.log("login");
         this.initSocket();

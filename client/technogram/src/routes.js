@@ -64,19 +64,13 @@ export default [
             path : '/notifcation',
             component : NotificationDetail ,
             name : 'notification'
-        }
+        },
+        {       
+            path : '/account/get-save',
+            component : UserProfile,
+            name : 'profile'
+        },
     ]},
-    {
-        path: '/account',
-        component: UserMain,
-        children : [
-            { 
-                path : '/account/get-save',
-                component : UserProfile,
-                name : 'profile'
-            }
-        ]
-    },
     
     {
         path : '/signin',

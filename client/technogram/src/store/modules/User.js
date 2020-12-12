@@ -95,6 +95,7 @@ const UserModule = {
             commit("SET_LOADING");
             if (state.token !== "") {
                 await User.signOut(state.token);
+                console.log("SET TOKEN NULL COY");
                 commit("SET_TOKEN", "");
                 commit("SET_LOGGEDIN", !state.isLoggedIn);
                 commit("SET_USERNAME", "");
