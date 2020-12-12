@@ -1,6 +1,14 @@
 <template>
   <v-container fluid  class="pa-0"> 
-    <virtual-list   ref="virtual-scroller" class="list-infinite scroll-touch" :page-mode="true" :data-key="'id'" :data-sources="items" :data-component="itemComponent" v-on:tobottom="onScrollToBottom" :keeps="20">
+    <virtual-list   
+        ref="list" 
+        class="list-infinite scroll-touch" 
+        :page-mode="true" :data-key="'id'" 
+        :data-sources="items" 
+        :data-component="itemComponent" 
+        :estimate-size="70"
+      v-on:tobottom="onScrollToBottom" :keeps="20"
+      >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
@@ -31,6 +39,14 @@ export default {
       isEndOfList: false,
     };
   },
+  computed : {
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      }
+      return false;
+    }
+  },
   methods: {
     onScrollToBottom() {
       console.log(this.isEndOfList);
@@ -57,6 +73,7 @@ export default {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         element.id = new Date().toString();
         this.items.push(element);
+        this.$refs.list.updatePageModeFront();
       });
     },
   },
@@ -81,6 +98,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x:hidden;
   padding: 0 10rem;
   position: relative;
 }

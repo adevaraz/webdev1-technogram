@@ -2,13 +2,13 @@
   <v-container fluid>
     <v-row>
       <v-col class="pa-0" cols="4">
-        <zoomy-image :src="berita.url_gambar"></zoomy-image>
+        <lazy-image :src="berita.url_gambar" :zoomEffect="true" :isLoading="true"></lazy-image>
       </v-col>
       <v-col class="py-0" cols="7" offset="1" >
         <v-row class="fill-height">
           <v-col cols="12" class="pa-0 ma-0">
             <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-category">{{berita.kategori_berita || ''}}</h2>
+              <h2 class="playfair-font news-category text-capitalize">{{berita.kategori_berita || ''}}</h2>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
               <h2 class="playfair-font news-title">
@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import ZoomyImage from '../ui/ZoomyImage.vue';
+import LazyImage from '../ui/LazyImage.vue';
 export default {
-  components: { ZoomyImage },
+  components: { LazyImage },
   props : {
     berita : {
       type : Object,
