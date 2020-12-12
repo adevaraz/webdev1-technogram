@@ -10,7 +10,7 @@
             :zoomEffect="true"
           ></lazy-image>
         </v-col>
-        <v-col cols="12" class="cols-container">
+        <v-col cols="12" class="cols-container mt-5">
           <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass">{{ berita.judul || "" }}</h2>
         </v-col>
         <v-col cols="12">
@@ -123,6 +123,7 @@ export default {
 }
 
 .news-tittle {
+  font-size: 1.2rem;
   font-weight: 900;
 }
 

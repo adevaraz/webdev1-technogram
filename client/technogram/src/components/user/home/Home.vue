@@ -11,7 +11,7 @@
           :recentLoading="recentLoading"
           v-if="isMobile"
         ></mobile-home-header>
-        <dekstop-home-header v-else></dekstop-home-header>
+        <dekstop-home-header :popularBeritas="popularBerita" v-else></dekstop-home-header>
       </v-col>
       <v-col cols="12" v-if="!isMobile">
         <div class="middle-border"></div>
