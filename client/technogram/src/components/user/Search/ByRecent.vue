@@ -2,7 +2,7 @@
   <v-container>
     <virtual-list 
       ref="virtual-scroller" 
-      class="list-infinite scroll-touch" 
+      class="list-infinite scroll-touch item" 
       :page-mode="true" 
       :data-key="'id_berita'" 
       :data-sources="recentBerita" 
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-//const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 import RecentItem from "./SearchResultItem";
@@ -61,18 +60,20 @@ export default {
       this.recentLoading = true;
       const result = await beritaApi.recentBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
       this.pageNum++;
-      this.recentLoading = false;
       if (result instanceof Error) {
         this.isError = true;
         this.errorMessage =
           "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
+      this.recentLoading = false;
       if(result.data.length <= 0) {
         if(this.isEndOfList) {
           return;
         }
+        console.log(result.data.length)
         this.isEndOfList = true;
+        console.log(this.isEndOfList)
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
@@ -106,6 +107,10 @@ export default {
   overflow-y: auto;
   padding: 0 10rem;
   position: relative;
+}
+
+.item {
+  cursor:pointer;
 }
 
 @media screen and (max-width: 960px) {

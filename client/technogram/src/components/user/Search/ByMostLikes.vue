@@ -2,7 +2,7 @@
   <v-container>
     <virtual-list 
       ref="virtual-scroller" 
-      class="list-infinite scroll-touch" 
+      class="list-infinite scroll-touch item" 
       :page-mode="true" 
       :data-key="'id_berita'" 
       :data-sources="mostLikedBerita" 
@@ -45,6 +45,8 @@ export default {
   watch: {
     '$route' : function () {
       this.mostLikedBerita = [];
+      this.pageNum = 1
+      this.isEndOfList = false
       this.retrieveMostLikedBerita();
     },
   },
@@ -103,6 +105,10 @@ export default {
   overflow-y: auto;
   padding: 0 10rem;
   position: relative;
+}
+
+.item {
+  cursor:pointer;
 }
 
 @media screen and (max-width: 960px) {
