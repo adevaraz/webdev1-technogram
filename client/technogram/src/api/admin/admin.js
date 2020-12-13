@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADMIN_URL, TIMEOUT } from "../const";
+import { ADMIN_URL, TIMEOUT, ADMIN_ROLE } from "../const";
 import ErrorHandler from "../errorHandler";
 const addAdmin = async (username, password, token) => {
     try {
@@ -20,7 +20,10 @@ const addAdmin = async (username, password, token) => {
         );
         return result.data;
     } catch (err) {
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
+            return await addAdmin(username, password, newToken);
+        })
+        return errorResult;
     }
 };
 

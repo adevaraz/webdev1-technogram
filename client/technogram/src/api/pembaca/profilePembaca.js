@@ -18,7 +18,10 @@ const savedBerita = async ( perPage , key , page, token ) => {
         });
         return result.data;
     }catch(err){
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err, USER_ROLE, async(newToken) => {
+            return await savedBerita(perPage, key, page, newToken);
+        })
+        return errorResult;
     }
 }
 
