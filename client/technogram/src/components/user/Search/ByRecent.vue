@@ -13,7 +13,7 @@
         <div class="loader itemStillExist" v-if="recentLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center" v-if="isEndOfList">
+        <div class="text-center" v-if="isEndOfList">
           <h3>No more item</h3>
          </div>
       </div>
@@ -38,7 +38,8 @@ export default {
       errorMessage: "",
       recentLoading: false,
       pageNum: 1,
-      isEndOfList: false
+      isEndOfList: false,
+      countLoading : 0,
     };
   },
   watch: {
@@ -52,8 +53,15 @@ export default {
 
   methods: {
     onScrollToBottom() {
+      this.countLoading++;
       if(!this.popularLoading && !this.isEndOfList) {
-        this.retrieveRecentBerita();
+        console.log('scrolling..')
+        console.log(this.countLoading)
+        if(this.countLoading < 2) {
+          this.retrieveRecentBerita();
+        } else {
+          this.countLoading = 0;
+        }
       }
     },
     async retrieveRecentBerita() {
@@ -91,10 +99,6 @@ export default {
 .loader {
   position: relative;
   left: 45%;
-}
-
-.no-item {
-  border-top: 1px solid black;
 }
 
 .list-infinite::-webkit-scrollbar {

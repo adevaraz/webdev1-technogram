@@ -13,7 +13,7 @@
         <div class="loader itemStillExist" v-if="popularLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center" v-if="isEndOfList">
+        <div class="text-center" v-if="isEndOfList">
           <h3>No more item</h3>
          </div>
       </div>
@@ -89,10 +89,6 @@ export default {
 .loader {
   position: relative;
   left: 45%;
-}
-
-.no-item {
-  border-top: 1px solid black;
 }
 
 .list-infinite::-webkit-scrollbar {
