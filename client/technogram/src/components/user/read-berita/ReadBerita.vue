@@ -17,7 +17,7 @@
 
                 <!-- Information section -->
                 <v-card
-                    :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
+                    :class="isMobile? 'd-flex flex-wrap mb-3 max-width-50' : 'd-flex flex-row mb-3'"
                     flat
                     tile
                 >
@@ -27,16 +27,10 @@
                         <div
                             id="likes"
                             class="d-flex flex-row"
-                            v-if="isLoggedIn"
                         >
                             <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
                             <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
-                        </div>
-                        <div v-else>
-                            <v-flex>
-                                <login-user />
-                            </v-flex>
                         </div>
 
                         <div id="view" class="d-flex flex-row">
@@ -63,7 +57,7 @@
                         />
                     </div>
 
-                    <div :class="isMobile? 'article resize-img' : 'article'" v-html=artikel></div>
+                    <div :class="isMobile? 'article responsive-img break-words' : 'article responsive-img'" v-html=artikel></div>
 
                     <p class="grey--text text--darken-2">Written by</p>
                     <h4>{{ jurnalis }}</h4>
@@ -100,14 +94,14 @@ import berita from "../../../api/berita/berita";
 import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
-import LoginUser from "../auth/LoginUser";
+// import LoginUser from "../auth/LoginUser";
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
-        LoginUser
+        // LoginUser
     },
 
     created() {
@@ -428,13 +422,22 @@ export default {
     transition: translate(-50%, -50%);
 }
 
+.max-width-50 {
+    max-width: 50px;
+}
+
+.break-words {
+    word-wrap: break-word;
+    width: 320px;
+}
+
 .small-progressbar {
     left: 50%;
     top: 20%;
 }
 
-.resize-img ::v-deep img {
-    max-height: 10px;
+.responsive-img ::v-deep img {
+    width: 100%;
 }
 
 .article ::v-deep br {
