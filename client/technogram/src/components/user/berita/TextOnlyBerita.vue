@@ -1,17 +1,7 @@
 <template>
-  <v-container @mouseover="onHover" @mouseleave="onLeave">
+  <div class="pl-3" @mouseover="onHover" @mouseleave="onLeave">
     <v-row>
-      <v-col class="pa-0" cols="4">
-        <div class="img-container">
-          <lazy-image
-            class="img-content"
-            :src="berita.url_gambar"
-            :zoomEffect="true"
-            :shouldZoom="isOnHover"
-          ></lazy-image>
-        </div>
-      </v-col>
-      <v-col class="pa-0" cols="7" offset="1" align-self="start">
+      <v-col class="pl-3 pt-0" cols="12" align-self="start">
         <v-row class="justify-start">
           <v-col cols="11" class="pa-0 ma-0">
             <h2 class="playfair-font news-title clickable-text" :class="onHoverClass">
@@ -29,11 +19,10 @@
         </v-row>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
-import LazyImage from "../ui/LazyImage.vue";
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
 
@@ -96,7 +85,6 @@ const getDateDetail = (fullDate) => {
 };
 
 export default {
-  components: { LazyImage },
   props: {
     showTime: {
       type: Boolean,
@@ -151,29 +139,16 @@ export default {
   font-family: "Work Sans", sans-serif;
 } */
 
-.img-container {
-  width: 100%;
-  position: relative;
-}
-
-.img-container:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
-}
-
-.img-content {
-  position: absolute;
-}
 
 .news-title {
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .news-writer {
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  color:#e52b38 ;
 }
 
 .news-time {

@@ -11,7 +11,7 @@
           ></lazy-image>
         </v-col>
         <v-col cols="12" class="cols-container mt-5">
-          <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass">{{ berita.judul || "" }}</h2>
+          <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass + ' ' + titleOrientation">{{ berita.judul || "" }}</h2>
         </v-col>
         <v-col cols="12">
           <v-row class="align-center" align-self="end">
@@ -51,6 +51,10 @@ export default {
     }
   },
   props: {
+    isLeftOrientation : {
+      type : Boolean,
+      default : true
+    },
     berita: {
       type: Object,
       default() {
@@ -82,6 +86,12 @@ export default {
         return 'hover-image';
       }
       return '';
+    },
+    titleOrientation(){
+      if(this.isLeftOrientation){
+        return 'text-left';
+      }
+      return 'text-right';
     },
     date() {
       //Format : 'Friday, 09/10/2020 15:49'

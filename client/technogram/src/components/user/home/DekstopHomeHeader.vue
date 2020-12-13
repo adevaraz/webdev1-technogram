@@ -1,25 +1,41 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12">
-        <h3>Most popular news</h3>
-      </v-col>
-      <v-col cols="4" v-for="(berita , index) in popularBeritas" :key="berita.id_berita">
-         <v-row>
-           <v-col cols="2">
-                <h3 class="text-center number-text">0{{index + 1}}</h3>
-           </v-col>
-           <v-col cols="10">
-                <h5>{{ berita.judul || "" }}</h5>
-                <h6 class="mt-5">Dec 13</h6>
-           </v-col>
-         </v-row>
+      <v-col cols="12" style="height: 25vh" class="pa-0">
+        <lazy-image></lazy-image>
       </v-col>
       <v-col cols="12">
-         <div class="outer-top-line"></div>
+        <h3 class="text-capitalize">Most popular news</h3>
       </v-col>
-      <v-col cols="12" class="px-8 pt-10" v-for="category in categories" :key="category.id_kategori">
-        <berita-category-section :category="category.nama_kategori" class="mt-5"></berita-category-section>
+      <v-col
+        cols="4"
+        v-for="(berita, index) in popularBeritas"
+        :key="berita.id_berita"
+      >
+        <v-row>
+          <v-col cols="2">
+            <h3 class="text-center number-text">0{{ index + 1 }}</h3>
+          </v-col>
+          <v-col cols="10" class="pt-4">
+            <descriptive-berita :berita="berita"></descriptive-berita>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col
+        cols="12"
+        class="px-16"
+        v-for="(category, index) in categories"
+        :key="category.id_kategori"
+      >
+        <v-row>
+          <v-col cols="12" class="pa-0">
+            <div class="outer-top-line"></div>
+          </v-col>
+          <berita-category-section
+            :isHeadlineLeft="index % 2 == 0"
+            :category="category.nama_kategori"
+          ></berita-category-section>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -28,8 +44,10 @@
 <script>
 import BeritaCategorySection from "./BeritaCategorySection.vue";
 import categoryApi from "../../../api/kategori/daftarKategori";
+import DescriptiveBerita from "../berita/DescriptiveBerita.vue";
+import LazyImage from "../ui/LazyImage.vue";
 export default {
-  components: { BeritaCategorySection },
+  components: { BeritaCategorySection, DescriptiveBerita, LazyImage },
   async created() {
     await this.retrieveBeritaByCategories();
   },
@@ -39,13 +57,13 @@ export default {
       categories: [],
     };
   },
-  props :{
-    popularBeritas : {
-      type : Array ,
-      default : () => {
+  props: {
+    popularBeritas: {
+      type: Array,
+      default: () => {
         return [];
-      }
-    }
+      },
+    },
   },
   methods: {
     async retrieveBeritaByCategories() {
@@ -69,14 +87,15 @@ export default {
 </script>
 
 <style scoped>
-.outer-top-line{
+.outer-top-line {
   width: 100%;
   height: 1px;
-  background : black;
+  background: rgb(204, 204, 204);
+}
+
+.number-text {
+  color: rgb(229, 43, 56, 0.9);
 }
 
 
-.number-text{
-  color :  rgb(229, 43, 56 , 0.9);
-}
 </style>
