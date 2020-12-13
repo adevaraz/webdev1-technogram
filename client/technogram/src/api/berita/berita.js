@@ -166,7 +166,7 @@ const savedBeritaList = async ( perPage , key , page, token ) => {
         const result = await axios.get(savedURL , {
             timeout : TIMEOUT,
             params : {
-                perpage : perPage ||  6,
+                perpage : perPage || 3,
                 key : key || '',
                 page : page || 1
             },
@@ -174,6 +174,8 @@ const savedBeritaList = async ( perPage , key , page, token ) => {
                 'Authorization' : `${token}`
             }
         });
+        
+        console.log("PERPAGE "+perPage);
         return result.data;
     }catch(err){
         return ErrorHandler.errorHandler(err);
