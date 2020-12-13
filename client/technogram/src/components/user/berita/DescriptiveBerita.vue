@@ -1,5 +1,10 @@
 <template>
-  <div @mouseover="onHover" @mouseleave="onLeave" class="clickable-text">
+  <div
+    @mouseover="onHover"
+    @mouseleave="onLeave"
+    @click="onBeritaSelected(berita.id_berita)"
+    class="clickable-text"
+  >
     <v-row>
       <v-col cols="1" class="pa-0">
         <div class="img-container">
@@ -22,7 +27,9 @@
         </h5>
       </v-col>
       <v-col cols="12" class="pa-0 mt-3">
-        <h6 class="date-text" :class="onHoverClass">{{ date }}  |  by {{berita.jurnalis}}</h6>
+        <h6 class="date-text" :class="onHoverClass">
+          {{ date }} | by {{ berita.jurnalis }}
+        </h6>
       </v-col>
     </v-row>
   </div>
@@ -72,6 +79,18 @@ export default {
     onLeave() {
       this.isOnHover = false;
     },
+    onBeritaSelected(id) {
+      this.$router
+        .push({
+          path: `/berita/${id}`,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      this.incrementViewer(id);
+      this.refreshValue();
+    },
   },
 };
 </script>
@@ -89,7 +108,7 @@ export default {
   font-size: 0.65rem;
 }
 
-.title-text{
+.title-text {
   font-weight: 700;
   font-size: 0.8rem;
 }

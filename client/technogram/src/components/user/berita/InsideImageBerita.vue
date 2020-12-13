@@ -1,41 +1,42 @@
 <template>
-  <v-container @mouseover="onHover" @mouseleave="onLeave" class="parent">
-    <v-row align="start">
-      <div v-if="berita !== null" style="width: 100%">
-        <v-col
-          cols="12"
-          class="pa-0 img-container"
-          :style="'height:' + imageHeight"
-        >
-          <lazy-image
-            :shouldZoom="isOnHover"
-            :src="berita.url_gambar"
-            :isLoading="isLoading"
-            :zoomEffect="true"
-          ></lazy-image>
+  <v-container
+    @mouseover="onHover"
+    @mouseleave="onLeave"
+    @click="onBeritaSelected(berita.id_berita)"
+    class="parent"
+  >
+    <v-row align="start" class="fill-height">
+      <v-col
+        cols="12"
+        class="pa-0 img-container grow"
+        :style="'height:' + imageHeight"
+      >
+        <lazy-image
+          :shouldZoom="isOnHover"
+          :src="berita.url_gambar"
+          :isLoading="isLoading"
+          :zoomEffect="true"
+        ></lazy-image>
 
-          <div class="content-inside-image">
-            <slot name="content">
-              <v-row class="pa-1 pl-5 pt-0 pb-3">
-                <v-col cols="8" class="cols-container"> 
-                  <h2
-                    class="playfair-font news-tittle clickable-text text-uppercase"
-                  >
-                    {{ berita.judul || "" }}
-                  </h2>
-                </v-col>
-                <v-col cols="8"  class="pb-0 pt-0">
-                      <h3
-                        class="news-writer clickable-text"
-                      >
-                        by {{ berita.jurnalis || "" }}
-                      </h3>
-                </v-col>
-              </v-row>
-            </slot>
-          </div>
-        </v-col>
-      </div>
+        <div class="content-inside-image">
+          <slot name="content">
+            <v-row class="pa-1 pl-5 pt-0 pb-3">
+              <v-col cols="8" class="cols-container">
+                <h2
+                  class="playfair-font news-tittle clickable-text text-uppercase"
+                >
+                  {{ berita.judul || "" }}
+                </h2>
+              </v-col>
+              <v-col cols="8" class="pb-0 pt-0">
+                <h3 class="news-writer clickable-text">
+                  by {{ berita.jurnalis || "" }}
+                </h3>
+              </v-col>
+            </v-row>
+          </slot>
+        </div>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -57,6 +58,18 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
+    },
+    onBeritaSelected(id) {
+      this.$router
+        .push({
+          path: `/berita/${id}`,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      this.incrementViewer(id);
+      this.refreshValue();
     },
   },
   props: {
@@ -121,9 +134,10 @@ export default {
   font-family: "Playfair Display", serif;
 } */
 
-.parent{
-    width: 100%;
-    overflow : hidden;
+.parent {
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
 }
 
 .worksans-font {
@@ -132,6 +146,7 @@ export default {
 
 .img-container {
   width: 100%;
+  min-height: 100%;
   position: relative;
 }
 
@@ -141,7 +156,6 @@ export default {
   transform: translate(-50%, -50%);
   top: 50%;
 }
-
 
 .news-tittle {
   font-size: 1.1rem;
@@ -155,25 +169,19 @@ export default {
   color: white;
 }
 
-.content-inside-image{
-    position: absolute;
-    left: 0%;
-    bottom:0%;
-    width: 100%;
-    z-index: 200;
-    min-height: 20%;
-    background: rgba(0, 0, 0, 0.644)
+.content-inside-image {
+  position: absolute;
+  left: 0%;
+  bottom: 0%;
+  width: 100%;
+  z-index: 30;
+  min-height: 20%;
+  background: rgba(0, 0, 0, 0.644);
 }
 
 .news-time {
   font-size: 0.8rem;
   font-weight: 400;
-}
-
-@media screen and (max-width: 400px) {
-  .img-container {
-    height: 12rem;
-  }
 }
 
 @media screen and (min-width: 800px) and (max-width: 1264px) {
@@ -189,7 +197,4 @@ export default {
 .hover {
   color: rgb(229, 43, 56, 0.9);
 }
-
-
-
 </style>

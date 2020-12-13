@@ -7,19 +7,17 @@
         </h2>
       </v-col>
       <v-col cols="6" class="pa-0 pb-3" align-self="end">
-        <h2 class="text-end"><a class="more-text " href="">More From This Category</a></h2>
+        <h2 class="text-end"><a class="more-text " @click="onMoreSelected(categoryTitle)" href="">More From This Category</a></h2>
       </v-col>
-      <!-- <v-col cols="12" class="py-0" >
-        <div class="underline"></div>
-      </v-col> -->
       <v-col cols="12" class="floating">
         <v-row>
           <v-col cols="7" class="pt-0">
-            <image-inside-berita
+            <inside-image-berita
               :berita="headlineBerita"
               :isLoading="isLoading"
               imageHeight="22rem"
-            ></image-inside-berita>
+              @click="onBeritaSelected(headlineBerita.id_berita)"
+            ></inside-image-berita>
           </v-col>
           <!-- <v-col cols="1" class="grow pt-5" align="center">
         <div class="vertical-line"></div>
@@ -35,6 +33,7 @@
                 <text-only-berita
                   :berita="berita"
                   :showTime="true"
+                  @click="onBeritaSelected(berita.id_berita)"
                   class="underline"
                 ></text-only-berita>
               </v-col>
@@ -49,15 +48,16 @@
 <script>
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
-import ImageInsideBerita from "../berita/ImageInsideBerita.vue";
+import InsideImageBerita from "../berita/InsideImageBerita.vue";
 import TextOnlyBerita from "../berita/TextOnlyBerita.vue";
 export default {
-  components: { TextOnlyBerita, ImageInsideBerita },
+  components: { TextOnlyBerita, InsideImageBerita },
   created() {
     this.getBeritaByCategory();
   },
   props: {
     category: String,
+    onBeritaSelected : Function
   },
   data() {
     return {
@@ -73,6 +73,18 @@ export default {
     },
   },
   methods: {
+    onMoreSelected(categoryTitle){
+      this.$router
+        .push({
+          name: 'search-result',
+          query: {
+            q : categoryTitle
+          }
+        })
+        .catch((err) => {
+          err;
+        });
+    },
     async getBeritaByCategory() {
       this.isLoading = true;
       const result = await beritaApi.getByCat(4, this.category);

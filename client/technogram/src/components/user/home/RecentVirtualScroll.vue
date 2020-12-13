@@ -71,7 +71,7 @@ export default {
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
-        element.id = new Date().toString();
+        element.id = element.id_berita;
         this.items.push(element);
         this.$refs.list.updatePageModeFront();
       });
@@ -99,7 +99,6 @@ export default {
   height: 100%;
   overflow-y: auto;
   overflow-x:hidden;
-  padding: 0 10rem;
   position: relative;
 }
 

@@ -11,7 +11,7 @@
           :recentLoading="recentLoading"
           v-if="isMobile"
         ></mobile-home-header>
-        <dekstop-home-header :popularBeritas="popularBerita" v-else></dekstop-home-header>
+        <dekstop-home-header :popularBeritas="popularBerita" :onBeritaSelected="onBeritaSelected" v-else></dekstop-home-header>
       </v-col>
       <v-col cols="12" v-if="!isMobile">
         <div class="middle-border"></div>
@@ -30,7 +30,9 @@
       </v-col>
       <v-col cols="12">
         <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
-          <recent-virtual-scroll></recent-virtual-scroll>
+          <v-col :cols="isMobile? '12' : '10'">
+             <recent-virtual-scroll></recent-virtual-scroll>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -102,6 +104,7 @@ export default {
         .catch((err) => {
           err;
         });
+        console.log("pushhhhh!!")
     },
   },
 

@@ -1,9 +1,6 @@
 <template>
   <div :class="imageParentClass">
-    <div
-      :class="imageClass"
-      :style="background"
-    >
+    <div :class="imageClass" :style="background">
       <v-progress-circular
         class="progressbar"
         v-if="isImageLoading"
@@ -34,18 +31,18 @@ export default {
       type: String,
       default: "#eeeeee",
     },
-    zoomEffect : {
-      type : Boolean ,
-      default : false
+    zoomEffect: {
+      type: Boolean,
+      default: false,
     },
-    square : {
-      type : Boolean ,
-      default : false,
+    square: {
+      type: Boolean,
+      default: false,
     },
-    shouldZoom : {
-      type : Boolean ,
-      default : false
-    }
+    shouldZoom: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -56,38 +53,38 @@ export default {
   },
   computed: {
     background() {
-      if (this.backgroundImage == null) {
-        return `background:${this.placeHolderColor}`;
-      }
       if (this.isError) {
+        return `background-image: url('https://developers.google.com/maps/documentation/streetview/images/error-image-generic.png')`;
+      }
+      if (this.backgroundImage == null) {
         return `background:${this.placeHolderColor}`;
       }
       return `background-image: url('${this.backgroundImage}')`;
     },
-    imageClass(){
+    imageClass() {
       let basicClass = "img-container";
-      if(this.zoomEffect){
-         basicClass = basicClass +  " zoom-image";
+      if (this.zoomEffect) {
+        basicClass = basicClass + " zoom-image";
       }
-      if(this.shouldZoom){
-        basicClass = basicClass + " zoom-in-manual"
-      }else{
-        basicClass = basicClass + " zoom-out-manual"
+      if (this.shouldZoom) {
+        basicClass = basicClass + " zoom-in-manual";
+      } else {
+        basicClass = basicClass + " zoom-out-manual";
       }
       return basicClass;
     },
-    imageParentClass(){
-      if(this.zoomEffect){
+    imageParentClass() {
+      if (this.zoomEffect) {
         return "img-container-parent zoom-container";
       }
       return "img-container-parent";
-    }
+    },
   },
-  watch : {
-    src(_){
-      _
+  watch: {
+    src(_) {
+      _;
       this.loadImagelazliy();
-    }
+    },
   },
   methods: {
     loadImagelazliy() {
@@ -116,11 +113,10 @@ export default {
 .img-container-parent {
   width: 100%;
   height: 100%;
-
 }
 
 .zoom-container {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .img-container {
@@ -130,17 +126,15 @@ export default {
   background-size: cover;
   background-position: center;
   position: relative;
-   -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-   -moz-animation: fadein 2s; /* Firefox < 16 */
-   -ms-animation: fadein 2s; /* Internet Explorer */
-   -o-animation: fadein 2s; /* Opera < 12.1 */
-    animation: fadein 2s;
-
+  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 2s; /* Firefox < 16 */
+  -ms-animation: fadein 2s; /* Internet Explorer */
+  -o-animation: fadein 2s; /* Opera < 12.1 */
+  animation: fadein 2s;
 }
 
-.zoom-image{
-    transition:  transform 0.5s ease-out;
-
+.zoom-image {
+  transition: transform 0.5s ease-out;
 }
 
 .zoom-image:hover,
@@ -148,11 +142,11 @@ export default {
   transform: scale(1.2);
 }
 
-.zoom-in-manual{
-  transform : scale(1.2)
+.zoom-in-manual {
+  transform: scale(1.2);
 }
 
-.zoom-out-manual{
+.zoom-out-manual {
   transform: scale(1);
 }
 
@@ -170,6 +164,5 @@ export default {
   to {
     opacity: 1;
   }
-
 }
 </style>

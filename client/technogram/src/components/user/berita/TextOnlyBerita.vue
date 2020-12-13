@@ -1,10 +1,18 @@
 <template>
-  <div class="pl-3" @mouseover="onHover" @mouseleave="onLeave">
+  <div
+    class="pl-3"
+    @mouseover="onHover"
+    @mouseleave="onLeave"
+    @click="onBeritaSelected(berita.id_berita)"
+  >
     <v-row>
       <v-col class="pl-3 pt-0" cols="12" align-self="start">
         <v-row class="justify-start">
           <v-col cols="11" class="pa-0 ma-0">
-            <h2 class="playfair-font news-title clickable-text" :class="onHoverClass">
+            <h2
+              class="playfair-font news-title clickable-text"
+              :class="onHoverClass"
+            >
               {{ berita.judul || "" }}
             </h2>
           </v-col>
@@ -101,10 +109,10 @@ export default {
       default: "",
     },
   },
-  data(){
+  data() {
     return {
-      isOnHover: false
-    }
+      isOnHover: false,
+    };
   },
   methods: {
     onHover() {
@@ -112,6 +120,18 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
+    },
+    onBeritaSelected(id) {
+      this.$router
+        .push({
+          path: `/berita/${id}`,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      this.incrementViewer(id);
+      this.refreshValue();
     },
   },
   computed: {
@@ -123,7 +143,7 @@ export default {
         return "hover";
       }
       return "";
-    }
+    },
   },
 };
 </script>
@@ -139,7 +159,6 @@ export default {
   font-family: "Work Sans", sans-serif;
 } */
 
-
 .news-title {
   font-size: 0.8rem;
   font-weight: 600;
@@ -148,7 +167,7 @@ export default {
 .news-writer {
   font-weight: 400;
   font-size: 0.7rem;
-  color:#e52b38 ;
+  color: #e52b38;
 }
 
 .news-time {

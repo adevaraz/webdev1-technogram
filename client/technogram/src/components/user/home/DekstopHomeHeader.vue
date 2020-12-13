@@ -1,10 +1,20 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12" style="height: 25vh" class="pa-0">
-        <lazy-image></lazy-image>
+      <v-col cols="12" class="pa-0" style="height: 70vh;width:100%;">
+        <v-carousel
+          hide-delimiters
+          cycle
+          height="100%"
+          hide-delimiter-background
+          show-arrows-on-hover
+        >
+          <v-carousel-item v-for="(berita) in popularBeritas" :key="berita.id_berita">
+              <cutted-berita :berita="berita"></cutted-berita>
+          </v-carousel-item>
+        </v-carousel>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" class="mt-10">
         <h3 class="text-capitalize">Most popular news</h3>
       </v-col>
       <v-col
@@ -24,15 +34,12 @@
       <v-col
         cols="12"
         class="px-16"
-        v-for="(category, index) in categories"
+        v-for="(category) in categories"
         :key="category.id_kategori"
       >
         <v-row>
-          <v-col cols="12" class="pa-0">
-            <div class="outer-top-line"></div>
-          </v-col>
           <berita-category-section
-            :isHeadlineLeft="index % 2 == 0"
+            :onBeritaSelected="onBeritaSelected"
             :category="category.nama_kategori"
           ></berita-category-section>
         </v-row>
@@ -45,9 +52,9 @@
 import BeritaCategorySection from "./BeritaCategorySection.vue";
 import categoryApi from "../../../api/kategori/daftarKategori";
 import DescriptiveBerita from "../berita/DescriptiveBerita.vue";
-import LazyImage from "../ui/LazyImage.vue";
+import CuttedBerita from '../berita/CuttedBerita.vue';
 export default {
-  components: { BeritaCategorySection, DescriptiveBerita, LazyImage },
+  components: { BeritaCategorySection, DescriptiveBerita, CuttedBerita },
   async created() {
     await this.retrieveBeritaByCategories();
   },
@@ -64,6 +71,9 @@ export default {
         return [];
       },
     },
+    onBeritaSelected : {
+      type : Function
+    }
   },
   methods: {
     async retrieveBeritaByCategories() {
@@ -97,5 +107,8 @@ export default {
   color: rgb(229, 43, 56, 0.9);
 }
 
-
+.card-effect{
+  border: 0.1px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.199);
+}
 </style>
