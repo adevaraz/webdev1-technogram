@@ -107,7 +107,6 @@ export default {
     created() {
         this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
     },
@@ -428,7 +427,7 @@ export default {
 
 .break-words {
     word-wrap: break-word;
-    width: 320px;
+    max-width: 300px;
 }
 
 .small-progressbar {
