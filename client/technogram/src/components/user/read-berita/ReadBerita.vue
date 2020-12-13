@@ -24,13 +24,22 @@
                     <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
                     <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-                        <div
-                            id="likes"
-                            class="d-flex flex-row"
-                        >
-                            <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                            <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
-                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                        <div id="like">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                                <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <like-not-logged-in />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                            </div>
                         </div>
 
                         <div id="view" class="d-flex flex-row">
@@ -38,10 +47,20 @@
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
                         </div>
                         
-                        <div id="save" class="d-flex flex-row">
-                            <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                            <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
-                            <p> </p>
+                        <div id="save">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                                <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <save-not-logged-in />
+                            </div>
                         </div>
                     </div>
                 </v-card>
@@ -95,13 +114,16 @@ import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
 // import LoginUser from "../auth/LoginUser";
+import LikeNotLoggedIn from './LikeNotLoggedIn.vue';
+import SaveNotLoggedIn from './SaveNotLoggedIn.vue';
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
-        // LoginUser
+        LikeNotLoggedIn,
+        SaveNotLoggedIn
     },
 
     created() {
