@@ -467,23 +467,37 @@ exports.isSaved = async (req, res, next) => {
 */
 exports.getSave = async (req, res, next) => {
   const id = req.decodedToken.id;
-  console.log(id);
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perpage || 5;
+  const offset = (currentPage-1) * perPage;
+  console.log("perpage server: "+perPage)
+  console.log("MASUK NANYA ID "+id);
   try {
     const saved = await Pembaca.findByPk(id, {
-    
       include: [
         {
           model: Berita,
           as: "saved",
         },
       ],
+    
     });
 
     const savedBerita = saved.saved
+    const sliceOfSaved = savedBerita.slice(offset , +offset + +perPage);
+    const nextPageOffset = (currentPage) * perPage;
+    const nextPage = savedBerita.length > nextPageOffset
+
+    console.log(savedBerita.length+ "ini panjang saved berita")
+    console.log("panjang slice "+sliceOfSaved.length)
     if (savedBerita.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
-        data: savedBerita
+        data: {
+          sliceOfSaved,
+          nextPage
+        }
+         
       });
     } else {
       res.status(204).json({
