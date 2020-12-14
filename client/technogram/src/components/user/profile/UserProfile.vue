@@ -6,13 +6,6 @@
 
       </v-col>
      <div :class="isMobile? 'middle-border-mobile' : 'middle-border' "></div>
-      <!-- <v-col cols="12" class="text-center progressbar">
-        <v-progress-circular
-          v-if="beritaLoading"
-          indeterminate
-          color="red"
-        ></v-progress-circular>
-      </v-col> -->
       <v-col cols="12">
         <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
           <v-col
@@ -39,10 +32,10 @@
         <v-row :class="isMobile? 'pa-0' : 'justify-center'">
         <virtual-list ref="virtual-scroller" class="list-infinite scroll-touch" :page-mode="true" :data-key="'id'" :data-sources="savedBerita" v-on:tobottom="onScrollToBottom" :keeps="20">
           <div slot="footer">
-            <div class="text-center progressbar" v-if="beritaLoading">
+            <div class="text-center progress-bar" v-if="beritaLoading">
               <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
             </div>
-            <div class="no-item text-center" v-if="isEndOfList">
+            <div class="no-item justify-center text-center" v-if="isEndOfList">
               <h3>No more item</h3>
             </div>
           </div>
@@ -87,31 +80,6 @@ export default {
   },
 
   methods: {
-    // handlePageChange(value) {
-    //   console.log("this value "+value)
-    //   this.pageNum = value;
-    //   this.savedBerita=[]
-    //   this.retrieveSavedBerita()
-    // },
-    // async retrieveSavedBerita() {
-    //  this.beritaLoading = true;
-    //   const result = await beritaApi.savedBeritaList(NEWS_PERCALL, '', this.pageNum, store.getters['user/getToken']);
-    //   const resultLength = result.data.savedLength;
-    //   if(resultLength%NEWS_PERCALL!=0){
-    //     this.totalPages = (resultLength/NEWS_PERCALL) + 1
-    //   } else {
-    //     this.totalPages = resultLength/NEWS_PERCALL
-    //   }
-    //   this.beritaLoading=false;
-    //   if (result instanceof Error) {
-    //     return;
-    //   }
-    //   result.data.sliceOfSaved.forEach((element) => {
-    //     element.url_gambar = BASE_URL + "/" + element.url_gambar;
-    //     element.id = new Date().toString();
-    //     this.savedBerita.push(element);
-    //   });
-    // },
     onScrollToBottom() {
       console.log(this.isEndOfList);
       if (!this.beritaLoading && !this.isEndOfList) {
@@ -123,10 +91,6 @@ export default {
       this.beritaLoading = true;
       const result = await beritaApi.savedBeritaList(NEWS_PERCALL, '', this.pageNum, store.getters['user/getToken']);
       this.pageNum++;
-      console.log("MASUK DDAAA")
-      console.log("EOL"+ this.isEndOfList);
-      console.log("jumlah list: "+result.data.savedSlice)
-      console.log("pagenum "+this.pageNum);
       this.beritaLoading = false;
 
       if (result instanceof Error) {
@@ -137,7 +101,6 @@ export default {
           return;
         }
         this.isEndOfList = true;
-        console.log("EOL HEYYY")
         console.log(this.isEndOfList);
       }
       
@@ -198,16 +161,14 @@ export default {
   position: relative;
 }
 
-.progressbar {
+.progress-bar {
   position: relative;
   top: 45%;
-  margin-left: 10%;
 }
 
 .no-item {
   border-top: 1px solid rgb(0, 0, 0, 0.6);
   color:  rgb(0, 0, 0, 0.6);
-  margin-left: 10%;
 }
 
 .list-infinite::-webkit-scrollbar {
@@ -215,7 +176,7 @@ export default {
 }
 
 .list-infinite {
-  width: 50%;
+  width: 100%;
   height: 100%;
   overflow-y: auto;
   position: relative;
