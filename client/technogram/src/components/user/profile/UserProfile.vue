@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-    
       <v-col cols="12" :class="isMobile? 'mt-n3 mb-n5' : ''">
         <h1 :class="isMobile? 'title-font ml-n2': 'title-font save-page-title'">Saved Articles</h1>
 
@@ -9,23 +8,30 @@
      <div :class="isMobile? 'middle-border-mobile' : 'middle-border' "></div>
       <!-- <v-col cols="12" class="text-center progressbar">
         <v-progress-circular
-          v-if = beritaLoading
+          v-if="beritaLoading"
           indeterminate
           color="red"
         ></v-progress-circular>
       </v-col> -->
       <v-col cols="12">
-        <v-row :class="isMobile? 'pa-0' : 'justify-center'">
+        <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
           <v-col
-            :cols="isMobile? '12' : '10' "
+            :cols="isMobile ? '12' : '10'"
             class="mt-n2"
             v-for="berita in savedBerita"
             :key="berita.id_berita"
             @click="onBeritaSelected(berita.id_berita)"
           >
-            <preview-berita class="item" v-if="!isMobile" :berita="berita"></preview-berita>
-            <mobile-preview-berita class="item" v-else :berita="berita"></mobile-preview-berita>
-
+            <preview-berita
+              class="item"
+              v-if="!isMobile"
+              :berita="berita"
+            ></preview-berita>
+            <mobile-preview-berita
+              class="item"
+              v-else
+              :berita="berita"
+            ></mobile-preview-berita>
           </v-col>
         </v-row>
       </v-col>
@@ -44,9 +50,7 @@
         </v-row>
       </v-col>
      </v-row>
-     
   </v-container>
-  
 </template>
 
 <script>
@@ -57,9 +61,14 @@ import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 import { store } from '../../../store/index';
 const NEWS_PERCALL = 5;
+
 export default {
   created() {
-    this.retrieveSavedBerita();
+    if (!store.getters["user/isTokenExist"]) {
+      this.$router.push("/");
+    } else {
+      this.retrieveSavedBerita();
+    }
   },
   components: {
     PreviewBerita,
@@ -74,7 +83,6 @@ export default {
       pageNum: 1,
       isEndOfList: false,
       totalPages: 0
-
     };
   },
 
@@ -138,21 +146,18 @@ export default {
         element.id = new Date().toString();
         this.savedBerita.push(element);
       });
-    
- 
      },
   
      onBeritaSelected(id) {
       this.$router
         .push({
-          name: 'read-berita',
-          params: { id: `${id}` }
+          name: "read-berita",
+          params: { id: `${id}` },
         })
         .catch((err) => {
           err;
         });
     },
-    
   },
   computed: {
     isMobile() {
@@ -161,17 +166,16 @@ export default {
       }
       return false;
     },
-
   },
 };
 </script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
-.title-font{
+.title-font {
   font-family: "Work sans", serif;
 }
-.save-page-title{
+.save-page-title {
   margin-left: 18%;
 }
 .middle-border {

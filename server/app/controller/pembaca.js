@@ -667,12 +667,22 @@ exports.getAccessToken = async (req , res , next ) => {
       error.cause = 'You might re-login to access this route'
       throw error;      
     }
+
+    let mostLikeCategory;
+      //Get mostliked category name
+      console.log(pembaca);
+      if(pembaca.most_liked_category){
+         mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+      }
     
     const newToken = await createAccessToken(pembaca);
 
     res.status(201).json({
       message : 'success create new access token',
-      token : newToken
+      token : newToken,
+      username: pembaca.username,
+      email: pembaca.email,
+      mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
     })
 
   }catch(err){
