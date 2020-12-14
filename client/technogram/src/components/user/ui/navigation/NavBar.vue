@@ -222,6 +222,7 @@ export default {
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
       currentTime: null,
+      key : ''
     };
   },
   computed: {
@@ -252,8 +253,7 @@ export default {
       return this.isMobile && this.isDrawerShown;
     },
     transitionName() {
-      console.log(this.isMobile);
-      return this.isMobile ? "slide" : "";
+      return this.isMobile ? "slide" : " ";
     },
   },
   methods: {
@@ -396,7 +396,7 @@ export default {
   width: 100%;
   position: fixed;
   top: 0;
-  z-index: 5;
+  z-index: 100  ;
 }
 
 .floating {
@@ -451,7 +451,7 @@ nav .header .middle .logo img {
 }
 
 nav .header .middle .toogle img {
-  width: 5rem;
+  width: 2.5rem;
 }
 
 /* Right section */

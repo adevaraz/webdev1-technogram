@@ -1,20 +1,27 @@
 <template>
-  <v-container>
+  <v-container @mouseover="onHover" @mouseleave="onLeave">
     <v-row align="start">
-      <v-col cols="12" class="cols-container img-container" :style="backgroundImg">
-        <v-progress-circular class="progressbar" v-if="isLoading" color="#E52B38" height="10" indeterminate></v-progress-circular>
-      </v-col>
-      <div v-if="berita !== null">
-        <v-col cols="12" class="cols-container">
-          <h2 class="playfair-font news-tittle">{{ berita.judul || "" }}</h2>
+      <div v-if="berita !== null" style="width:100%">
+        <v-col cols="12" class="pa-0 img-container" :style="'height:'+imageHeight"  >
+          <lazy-image
+            :shouldZoom="isOnHover"
+            :src="berita.url_gambar"
+            :isLoading="isLoading"
+            :zoomEffect="true"
+          ></lazy-image>
+        </v-col>
+        <v-col cols="12" class="cols-container mt-5">
+          <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass + ' ' + titleOrientation">{{ berita.judul || "" }}</h2>
         </v-col>
         <v-col cols="12">
           <v-row class="align-center" align-self="end">
             <v-col cols="6" class="cols-container">
-              <p class="worksans-font news-writer">by {{ berita.jurnalis || "" }}</p>
+              <p class="worksans-font news-writer clickable-text" :class="onHoverClass">
+                by {{ berita.jurnalis || "" }}
+              </p>
             </v-col>
             <v-col cols="6" class="cols-container pt-1">
-              <p class="worksans-font news-time text-end">{{ date || "" }}</p>
+              <p class="worksans-font news-time text-end clickable-text" :class="onHoverClass">{{ date || "" }}</p>
             </v-col>
           </v-row>
         </v-col>
@@ -24,8 +31,30 @@
 </template>
 
 <script>
+import LazyImage from "../ui/LazyImage.vue";
 export default {
+  components: {
+    LazyImage,
+  },
+  data(){
+    return {
+      isOnHover : false
+    }
+  },
+  methods : {
+    onHover(){
+       this.isOnHover = true;
+    },
+    onLeave(){
+        this.isOnHover = false;
+
+    }
+  },
   props: {
+    isLeftOrientation : {
+      type : Boolean,
+      default : true
+    },
     berita: {
       type: Object,
       default() {
@@ -38,15 +67,31 @@ export default {
         return true;
       },
     },
+    imageHeight : {
+      type : String,
+      default() {
+        return "18rem"
+      }
+    }
   },
   computed: {
-    backgroundImg() {
-      if (this.berita !== null) {
-        console.log('ayo UBAH GAMBAR');
-        console.log(this.berita.url_gambar);
-        return `background-image: url('${this.berita.url_gambar}')`;
+    onHoverClass(){
+      if(this.isOnHover){
+        return 'hover';
       }
-      return "";
+      return '';
+    },
+    onImageHoverClass(){
+      if(this.isOnHover){
+        return 'hover-image';
+      }
+      return '';
+    },
+    titleOrientation(){
+      if(this.isLeftOrientation){
+        return 'text-left';
+      }
+      return 'text-right';
     },
     date() {
       //Format : 'Friday, 09/10/2020 15:49'
@@ -63,26 +108,23 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-.playfair-font {
+/* .playfair-font {
   font-family: "Playfair Display", serif;
-}
+} */
 
 .worksans-font {
   font-family: "Work Sans", sans-serif;
 }
 
 .img-container {
-  background: #eeeeee;
-  background-size: cover;
-  background-position: center;
-  height: 18rem;
-  position: relative;
   width: 100%;
+  position: relative;
 }
 
 .progressbar {
   position: absolute;
   left: 50%;
+  transform: translate(-50%, -50%);
   top: 50%;
 }
 
@@ -91,7 +133,8 @@ export default {
 }
 
 .news-tittle {
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 900;
 }
 
 .news-writer {
@@ -101,6 +144,7 @@ export default {
 .news-time {
   font-size: 0.8rem;
   font-weight: 400;
+  
 }
 
 @media screen and (max-width: 400px) {
@@ -113,5 +157,23 @@ export default {
   .img-container {
     height: 26rem;
   }
+}
+
+.clickable-text{
+  cursor: pointer;
+}
+
+.hover{
+  color :  rgb(229, 43, 56 , 0.9);
+}
+
+
+.clickable-text:hover ,
+.clickable-text:focus {
+  color : rgb(229, 43, 56 , 0.9);
+}
+
+.clickable-toogle{
+  color :rgb(229, 43, 56 , 0.9);
 }
 </style>

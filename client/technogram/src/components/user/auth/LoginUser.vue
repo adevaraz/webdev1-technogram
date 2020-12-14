@@ -40,7 +40,7 @@
                   </form>
                 </div>
           </v-card>
-      <transition :name="transitionName">
+      <transition >
       <!-- <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
           :isLoggedIn="isLoggedIn"
