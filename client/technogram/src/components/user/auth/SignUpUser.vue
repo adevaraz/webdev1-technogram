@@ -5,7 +5,7 @@
          <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
             <v-card-title>
-                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1> 
                 </v-card-title>
                     <form class="mt-10">
                         <v-row class="jutify-center">
