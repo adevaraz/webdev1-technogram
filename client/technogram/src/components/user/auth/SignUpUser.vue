@@ -196,4 +196,8 @@ col-12 {
 .signup_btn {
   color: white;
 }
+
+.img-btn{
+  cursor: pointer;
+}
 </style>

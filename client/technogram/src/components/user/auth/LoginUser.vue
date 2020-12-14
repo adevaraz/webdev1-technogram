@@ -1,7 +1,7 @@
 <template>
  <v-dialog max-width="600px" v-model="dialog">
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" style="cursor:pointer;" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
               <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
@@ -31,7 +31,7 @@
                     </v-col>
                   </v-row>
                     <v-row align="center" justify="center">
-                      <p class="text-caption font-weight-bold " @click="onHaveNoAccountClicked">Have no account</p>
+                      <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="onHaveNoAccountClicked">Have no account</p>
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
