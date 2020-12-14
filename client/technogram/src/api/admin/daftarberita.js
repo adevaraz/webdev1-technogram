@@ -35,7 +35,7 @@ const publish = async(id, token) => {
         return result.data;
     } catch(err) {
         const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
-            return await deleteBy(id , newToken);
+            return await publish(id , newToken);
         })
         return errorResult;
     }

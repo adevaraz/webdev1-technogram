@@ -1,10 +1,10 @@
 <template>
     <v-container d-block>
         <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-            <v-row align-center :class="!isMobile? 'd-flex justify-center  mx-auto': 'd-flex justify-left  ml-8' ">
-                <v-col cols="12">
-                <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Recent</a>
-                <a :class="isMobile? 'ml-n2 link-mobile' : 'mx-4 link'" @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link">Most likes</a>
+            <v-row align-center :class="!isMobile? 'justify-center mx-auto': 'd-flex justify-left mx-1' ">
+                <v-col :class="isMobile? 'link-mobile' : 'link'">
+                <a class="link-color mt-n2" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Recent</a>
+                <a @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link link-color mt-n2">Most likes</a>
                 </v-col>
                 <v-col cols="12">
                    <component :is="currentView" keep-alive></component>
@@ -52,16 +52,15 @@ export default {
 .link {
     margin-bottom: 0;
     text-align: center;
-    color: black;
 }
 
 .link-mobile {
     margin-bottom: 0;
     color: black;
-    margin: 20px;
+    margin: 0px;
 }
 
-.link:active {
-    text-decoration: underline;
+.link-color {
+    color: black;
 }
 </style>

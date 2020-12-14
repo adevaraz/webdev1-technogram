@@ -58,7 +58,7 @@ const update = async (idBerita, data , token) => {
         return result.data;
     } catch (err) {
         const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
-            return await save(data , newToken);
+            return await update(idBerita, data , newToken);
         })
         return errorResult;
     }
@@ -166,17 +166,22 @@ const savedBeritaList = async ( perPage , key , page, token ) => {
         const result = await axios.get(savedURL , {
             timeout : TIMEOUT,
             params : {
-                perpage : perPage ||  6,
+                perpage : perPage || 3,
                 key : key || '',
                 page : page || 1
             },
             headers: {
-                'Authorization' : `${token}`
+                "Authorization" : token
             }
         });
+        
+        console.log("PERPAGE "+perPage);
         return result.data;
     }catch(err){
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err, USER_ROLE, async (newToken) => {
+            return await savedBeritaList(perPage, key, page, newToken);
+        })
+        return errorResult;
     }
 }
 

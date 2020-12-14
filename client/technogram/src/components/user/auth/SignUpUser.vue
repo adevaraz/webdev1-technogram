@@ -1,5 +1,4 @@
 <template>
-
  <v-dialog max-width="600px" v-model="dialog">
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
          <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
@@ -77,7 +76,7 @@
 <script>
 import Auth from "../../../api/pembaca/auth";
 
-import {mapActions} from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   props : {
@@ -91,7 +90,7 @@ export default {
       email: "",
       username: "",
       password: "",
- 
+
       error: {
         isError: false,
         message: "",
@@ -114,37 +113,50 @@ export default {
       const isEmpty = (this.email === "") | (this.password === "");
       return !isEmpty;
     },
-    isMobile(){
-      return this.$vuetify.breakpoint.xs ? true : false
+    isMobile() {
+      return this.$vuetify.breakpoint.xs ? true : false;
     },
     passwordConfirmationRule() {
-        return () => (this.password === this.confirmPassword) || "Password must match"
+      return () =>
+        this.password === this.confirmPassword || "Password must match";
     },
   },
   methods: {
     ...mapActions({
-      loggedIn : 'user/getNewToken',
-      setToken : 'user/setToken'
-      
+      loggedIn: "user/getNewToken",
+      setToken: "user/setToken",
     }),
     async signup() {
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
-      const signupResult = await Auth.signup(this.email, this.username, this.password);
+      const signupResult = await Auth.signup(
+        this.email,
+        this.username,
+        this.password
+      );
+      console.log(signupResult);
       this.isLoading = false;
-        
+
       if (signupResult instanceof Error) {
         this.error.message = signupResult.cause;
         this.error.isError = true;
       } else {
-        await this.setToken(signupResult.token, true);
-        this.$router.push({path : '/'});
-      } 
+        const loginResult = await Auth.signin(this.email, this.password);
+        // await this.setToken(signupResult.token, true);
+        // this.$router.push({ path: "/" });
+        this.setToken({
+          token: loginResult.token,
+          username: loginResult.username,
+          email: this.email,
+          kategori: loginResult.mostLikedCategory,
+        });
+
+        this.$router.push({ path: "/" });
+      }
     },
   },
 };
-
 </script>
 
 <style scoped>
@@ -152,19 +164,21 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 
 col-12 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .container {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
 }
-.item{
+
+.item {
   height: 20px;
   margin: 10px;
 }
+
 .content {
   padding-left: 5rem;
   padding-right: 5rem;
@@ -175,6 +189,7 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .content-mobile {
   padding-left: 2rem;
   padding-right: 2rem;
@@ -185,12 +200,13 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
   font-size: 25px;
 }
 
-.playfair-font{
+.playfair-font {
   font-family: "Playfair Display", serif;
 }
 .signup_btn {
