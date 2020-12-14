@@ -1,101 +1,76 @@
 <template>
-  <v-dialog max-width="600px" v-model="dialog">
-    <template v-slot:activator="{ on, attrs }">
-      <p
-        class="text-caption font-weight-bold"
-        text
-        small
-        v-bind="attrs"
-        v-on="on"
-      >
-        ? Create one
-      </p>
-    </template>
-
-    <v-card
-      :loading="isLoading && !isMobile"
-      height="100%"
-      :elevation="isMobile ? 0 : 2"
-    >
-      <img
-        class="item img-btn"
-        @click="dialog = false"
-        src="../../../assets/icons/cross.png"
-      />
-      <div :class="isMobile ? 'content-mobile' : 'content'">
-        <v-card-title>
-          <h1 :class="isMobile ? 'playfair-font-mobile' : 'playfair-font'">
-            Sign in with email
-          </h1>
-        </v-card-title>
-        <form class="mt-10">
-          <v-row class="jutify-center">
-            <v-col cols="12">
-              <p class="text-caption font-weight-bold text-center">
-                Your Email
-              </p>
-              <v-text-field
-                v-model="email"
-                :rules="[rules.email]"
-                single-line
-                color="#E52B38"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <p class="text-caption font-weight-bold text-center">
-                Your Username
-              </p>
-              <v-text-field
-                v-model="username"
-                :rules="[rules.username]"
-                single-line
-                color="#E52B38"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <p class="text-caption font-weight-bold text-center">
-                Your Password
-              </p>
-              <v-text-field
-                v-model="password"
-                :rules="passwordRules"
-                single-line
-                type="password"
-                required
-                color="#E52B38"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <p class="text-caption font-weight-bold text-center">
-                Re-enter Password
-              </p>
-              <v-text-field
-                label="Confirm Password"
-                class="text-caption font-weight-bold text-center"
-                single-line
-                v-model="confirmPassword"
-                :rules="[confirmPasswordRules, passwordConfirmationRule]"
-                type="password"
-                required
-                color="#E52B38"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-col class="d-flex justify-center">
-            <v-btn color="#E52B38" @click="signup" class="signup_btn"
-              >Sign up</v-btn
-            >
-          </v-col>
-          <v-col>
-            <v-alert dense outlined type="error" v-if="error.isError">
-              {{ errorMessage }}
-            </v-alert>
-          </v-col>
-        </form>
-      </div>
-    </v-card>
-  </v-dialog>
+ <v-dialog max-width="600px" v-model="dialog">
+      <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
+          <div :class="isMobile? 'content-mobile' : 'content'">
+            <v-card-title>
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1> 
+                </v-card-title>
+                    <form class="mt-10">
+                        <v-row class="jutify-center">
+                              <v-col cols="12">
+                                <p class="text-caption font-weight-bold text-center">Your Email</p>
+                                    <v-text-field 
+                                    v-model="email" 
+                                    :rules="[rules.email]"
+                                    single-line
+                                    color="#E52B38"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <p class="text-caption font-weight-bold text-center">Your Username</p>                                    
+                                  <v-text-field
+                                  v-model="username" :rules="[rules.username]"
+                                  single-line
+                                  color="#E52B38"
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                  <p class="text-caption font-weight-bold text-center">Your Password</p>                                    
+                                  <v-text-field
+                                  v-model="password"
+                                  :rules="passwordRules" 
+                                  single-line
+                                  type="password" 
+                                  required
+                                  color="#E52B38"
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                <p class="text-caption font-weight-bold text-center">Re-enter Password</p>                                    
+                                <v-text-field
+                                    label="Confirm Password" 
+                                    class="text-caption font-weight-bold text-center"
+                                    single-line
+                                    v-model="confirmPassword" 
+                                    :rules="[confirmPasswordRules,passwordConfirmationRule]"
+                                    type="password" 
+                                    required
+                                    color="#E52B38"
+                                ></v-text-field>
+                                </v-col>
+                                </v-row>
+                    
+                            <v-col class="d-flex justify-center">
+                      <v-btn
+                        color="#E52B38"
+                        @click="signup"
+                        class="signup_btn"
+                      >Sign up</v-btn>
+                    </v-col>
+                    <v-col>
+                      <v-alert
+                      dense
+                      outlined
+                      type="error"
+                      v-if="error.isError">
+                      {{errorMessage}}
+                      </v-alert>
+                    </v-col>
+                            </form>
+                        </div>
+                    </v-card>
+            
+</v-dialog>
 </template>
 
 <script>
@@ -104,11 +79,14 @@ import Auth from "../../../api/pembaca/auth";
 import { mapActions } from "vuex";
 
 export default {
+  props : {
+    onDialogClosed : Function
+  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: false,
+      dialog: true,
       email: "",
       username: "",
       password: "",
@@ -195,10 +173,12 @@ col-12 {
   justify-content: center;
   box-sizing: border-box;
 }
+
 .item {
   height: 20px;
   margin: 10px;
 }
+
 .content {
   padding-left: 5rem;
   padding-right: 5rem;
@@ -209,6 +189,7 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .content-mobile {
   padding-left: 2rem;
   padding-right: 2rem;
@@ -219,6 +200,7 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
   font-size: 25px;
@@ -229,5 +211,9 @@ col-12 {
 }
 .signup_btn {
   color: white;
+}
+
+.img-btn{
+  cursor: pointer;
 }
 </style>

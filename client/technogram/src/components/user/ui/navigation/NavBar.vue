@@ -84,9 +84,15 @@
               </div>
             </div>
             <div class="public" v-else>
-              <v-flex>
-                <LoginUser> </LoginUser>
-              </v-flex>
+              <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{isLoginDialogShown = false}"></auth-user>
+              <v-btn
+                class="login-btn"
+                color="#E52B38"
+                small
+                @click="isLoginDialogShown = !isLoginDialogShown"
+              
+                >Sign in</v-btn
+              >
             </div>
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
@@ -134,7 +140,7 @@ import NavDrawer from "./NavDrawer.vue";
 import categoriesData from "../../../../api/kategori/daftarKategori";
 import { mapActions } from "vuex";
 
-import LoginUser from "./../../auth/LoginUser.vue";
+import AuthUser from "./../../auth/AuthUser.vue";
 
 const TEN_MINUTES = 1000 * 60 * 10;
 
@@ -171,7 +177,7 @@ export default {
     NavDrawer,
     ProfileDropDown,
     NotificationDropdown,
-    LoginUser,
+    AuthUser,
   },
 
   props: {
@@ -189,6 +195,7 @@ export default {
       showNotification: false,
       dialog: false,
       showProfile: false,
+      isLoginDialogShown : false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
@@ -625,5 +632,9 @@ nav .header .right .btn {
   padding: 1rem;
   right: 2%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
+
+.login-btn{
+  color:white;
 }
 </style>
