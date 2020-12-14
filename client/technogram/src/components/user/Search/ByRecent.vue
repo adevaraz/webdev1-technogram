@@ -1,130 +1,125 @@
 <template>
   <v-container>
-    <v-progress-circular v-if="recentLoading" indeterminate color="red" class="progressbar"></v-progress-circular>
-    <div class="search-result" v-else>
-      <v-row :class="isMobile? 'pa-0 justify-center ml-10' : 'justify-center'" d-block>
-        <v-col cols="12"
-          class="mt-5 mr-16"
-          v-for="index in 4"
-          :key="index"
-          @click="onBeritaSelected(recentBerita[((page * 5) - 5) + (index - 1)].id_berita)"
-        >
-          <search-result-recent
-            v-if="!isMobile"
-            :berita="recentBerita[((page * 5) - 5) + (index - 1)]"
-          ></search-result-recent>
-          <mobile-preview-berita v-else :berita="recentBerita[((page * 5) - 5) + (index - 1)]"></mobile-preview-berita>
-        </v-col>
-        <v-col cols="12"
-          :class="isMobile? 'justify-center ml-0' : 'd-flex justify-center mt-16'"
-          v-if="!recentLoading"
-        >
-          <v-pagination
-            v-model="page"
-            :length="count"
-            :per-page="pageSize"
-            color="error"
-            @input="handlePageChange"
-          ></v-pagination>
-        </v-col>
-      </v-row>
-    </div>
+    <virtual-list 
+      ref="virtual-scroller" 
+      class="list-infinite scroll-touch item" 
+      :page-mode="true" 
+      :data-key="'id_berita'" 
+      :data-sources="recentBerita" 
+      :data-component="itemComponent" 
+      v-on:tobottom="onScrollToBottom" 
+      :keeps="20">
+      <div slot="footer">
+        <div class="loader itemStillExist" v-if="recentLoading">
+          <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
+        </div>
+        <div class="text-center" v-if="isEndOfList">
+          <h3>No more item</h3>
+         </div>
+      </div>
+    </virtual-list>
   </v-container>
 </template>
 
 <script>
-//const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
-import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
-import SearchResultRecent from "./SearchResultPreview";
+import RecentItem from "./SearchResultItem";
+const NEWS_PERCALL = 5;
 export default {
-  components: { SearchResultRecent, MobilePreviewBerita },
   created() {
     this.retrieveRecentBerita();
   },
   data() {
     return {
+      itemComponent : RecentItem,
       recentBerita: [],
       isError: false,
       errorMessage: "",
       recentLoading: false,
-      page: 1,
-      count: 0,
-      pageSize: 5,
+      pageNum: 1,
+      isEndOfList: false,
+      countLoading : 0,
     };
   },
   watch: {
     $route: function () {
       this.recentBerita = [];
+      this.isEndOfList = false
+      this.pageNum = 1
       this.retrieveRecentBerita();
     },
   },
 
   methods: {
+    onScrollToBottom() {
+      this.countLoading++;
+      if(!this.popularLoading && !this.isEndOfList) {
+        console.log('scrolling..')
+        console.log(this.countLoading)
+        if(this.countLoading < 2) {
+          this.retrieveRecentBerita();
+        } else {
+          this.countLoading = 0;
+        }
+      }
+    },
     async retrieveRecentBerita() {
       this.recentLoading = true;
-      const result = await beritaApi.recentBerita(
-        this.pageSize,
-        this.$route.query.q,
-        this.page
-      );
-      console.log(result);
-      this.recentLoading = false;
+      const result = await beritaApi.recentBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
+      this.pageNum++;
       if (result instanceof Error) {
         this.isError = true;
         this.errorMessage =
           "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
+      this.recentLoading = false;
+      if(result.data.length <= 0) {
+        if(this.isEndOfList) {
+          return;
+        }
+        console.log(result.data.length)
+        this.isEndOfList = true;
+        console.log(this.isEndOfList)
+      }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.recentBerita.push(element);
-        this.count = this.count + 1;
       });
       console.log("Search by Recent");
+      console.log(this.$route.query.q);
       console.log(this.recentBerita);
-      this.count = Math.ceil(this.count / this.pageSize);
-      console.log(this.recentBerita);
-      console.log(this.count);
     },
-
-    flush() {
-      this.recentBerita.splice(0);
-    },
-
-    handlePageChange(page) {
-      console.log("handlepagechange");
-      this.page = page;
-      this.flush();
-      this.retrieveRecentBerita();
-    },
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          name: "read-berita",
-          params: { id: `${id}` },
-        })
-        .catch((err) => {
-          err;
-        });
-    },
-  },
-  computed: {
-    isMobile() {
-      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
-        return true;
-      }
-      return false;
-    },
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
-.progressbar{
-    position: absolute;
-    left: 50%;
-    top: 50%;
+.loader {
+  position: relative;
+  left: 45%;
+}
+
+.list-infinite::-webkit-scrollbar {
+  display: none;
+}
+
+.list-infinite {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 10rem;
+  position: relative;
+}
+
+.item {
+  cursor:pointer;
+}
+
+@media screen and (max-width: 960px) {
+  .list-infinite {
+    padding: 0 0;
+  }
 }
 </style>
