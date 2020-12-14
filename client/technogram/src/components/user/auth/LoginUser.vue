@@ -1,14 +1,8 @@
 <template>
-
  <v-dialog max-width="600px" v-model="dialog">
-  <template v-slot:activator="{ on, attrs }">
-        <v-btn class="login_btn" color="#E52B38" small v-bind="attrs"
-          v-on="on">Sign in</v-btn>
-      </template>
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
-          
               <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
               </v-card-title>
@@ -37,8 +31,7 @@
                     </v-col>
                   </v-row>
                     <v-row align="center" justify="center">
-                      <p class="text-caption font-weight-bold ">Have no account</p>
-                        <signup></signup>
+                      <p class="text-caption font-weight-bold " @click="onHaveNoAccountClicked">Have no account</p>
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
@@ -61,17 +54,20 @@
 <script>
 
 import Auth from "../../../api/pembaca/auth";
-import SignUpPembaca from "./SignUpUser.vue";
 // import NavDrawer from "../ui/navigation/NavDrawer.vue";
 import { mapGetters, mapActions } from 'vuex';
 // import { store } from "../../../store/index";
 
 export default {
+  props: {
+    onHaveNoAccountClicked : Function,
+    onDialogClosed : Function
+  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: false,
+      dialog: true,
       email: "",
       password: "",
       error: {
@@ -83,11 +79,6 @@ export default {
         password: (value) => !!value || "Password cannot be null or empty",
       },
     };
-  },
-  components :
-  {
-    'signup' : SignUpPembaca,
-    // 'nav-drawer' : NavDrawer
   },
   computed: {
     errorMessage() {

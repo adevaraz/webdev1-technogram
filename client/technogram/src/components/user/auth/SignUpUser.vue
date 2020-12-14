@@ -1,13 +1,8 @@
 <template>
 
  <v-dialog max-width="600px" v-model="dialog">
-  <template v-slot:activator="{ on, attrs }">
-      <p class="text-caption font-weight-bold" text small v-bind="attrs"
-      v-on="on">? Create one</p>
-    </template>
-  
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
             <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
@@ -85,11 +80,14 @@ import Auth from "../../../api/pembaca/auth";
 import {mapActions} from "vuex";
 
 export default {
+  props : {
+    onDialogClosed : Function
+  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: false,
+      dialog: true,
       email: "",
       username: "",
       password: "",
