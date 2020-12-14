@@ -5,7 +5,14 @@
         <v-btn class="login_btn" color="#E52B38" small v-bind="attrs"
           v-on="on">Sign in</v-btn>
       </template>
-      <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+      <v-card  height="100%" :elevation="isMobile ? 0 : 2">
+      <v-progress-linear
+      v-if="isLoading"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    >
+    </v-progress-linear>
          <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
           
@@ -122,7 +129,6 @@ export default {
       this.isLoading = true;
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      console.log('ini login resulttt');
       console.log(loginResult);
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
@@ -180,6 +186,7 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 }
 .login_btn {
   color: white;

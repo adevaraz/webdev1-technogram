@@ -6,11 +6,18 @@
       v-on="on">? Create one</p>
     </template>
   
-      <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
+      <v-card height="100%" :elevation="isMobile ? 0 : 2">
+      <v-progress-linear
+      v-if="isLoading"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    >
+    </v-progress-linear>
          <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
             <v-card-title>
-                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign Up with email </h1> 
                 </v-card-title>
                     <form class="mt-10">
                         <v-row class="jutify-center">
@@ -45,7 +52,6 @@
                                 <p class="text-caption font-weight-bold text-center">Re-enter Password</p>                                    
                                 <v-text-field
                                     label="Confirm Password" 
-                                    class="text-caption font-weight-bold text-center"
                                     single-line
                                     v-model="confirmPassword" 
                                     :rules="[confirmPasswordRules,passwordConfirmationRule]"
@@ -71,6 +77,14 @@
                       v-if="error.isError">
                       {{errorMessage}}
                       </v-alert>
+                      <v-alert
+                      dense
+                      outlined
+                      type="success"
+                      v-if="error.isNotError">
+                      {{errorMessage}}
+                      </v-alert>
+                      
                     </v-col>
                             </form>
                         </div>
@@ -95,6 +109,7 @@ export default {
       password: "",
  
       error: {
+        isNotError : false,
         isError: false,
         message: "",
         confirmPassword: "",
@@ -130,7 +145,6 @@ export default {
       
     }),
     async signup() {
-      this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
       const signupResult = await Auth.signup(this.email, this.username, this.password);
@@ -139,9 +153,14 @@ export default {
       if (signupResult instanceof Error) {
         this.error.message = signupResult.cause;
         this.error.isError = true;
+        this.error.isNotError = false;
       } else {
+        this.error.message = "Your Account Successfully Created!"
+        this.error.isNotError = true;
+        this.error.isError = false;
         await this.setToken(signupResult.token, true);
         this.$router.push({path : '/'});
+        
       } 
     },
   },

@@ -1,4 +1,5 @@
 <template v-slot:activator="{ on, attrs }">
+    
   <div :class="navbarClass">
     <nav>
       <div class="header">
@@ -54,7 +55,7 @@
                 </div>
                   <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
                   <div class="profile" v-if="showProfile">
-                    <profile-drop-down></profile-drop-down>
+                    <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
                 </div>
             </div>
@@ -95,8 +96,18 @@
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
       </div>
-    </transition>
+        </transition>
+    <overlay v-if="isLoading">  
+  
+        <v-progress-circular
+        indeterminate
+        class="progress-bar"
+        size="64"
+        color="#E52B38"
+      ></v-progress-circular>
+      </overlay>
   </div>
+  
 </template>
 
 <script>
@@ -162,6 +173,7 @@ export default {
       showNotification : false,
       dialog: false,
       showProfile: false,
+      isLoading: '',
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
@@ -239,6 +251,18 @@ export default {
           this.navbarClass = "navbar";
         }
       }
+    },
+    onChildClick (value) {
+      
+
+      this.isLoading = value;
+      console.log("ini is loading......" + this.isLoading)
+      setTimeout(function(){
+        this.isLoading = false;
+         console.log("ini is loading......" + this.isLoading)
+      },3000)
+      
+      
     },
     slideDrawer() {
       this.isDrawerShown = !this.isDrawerShown;
@@ -602,4 +626,12 @@ nav .header .right .btn {
     right: 2%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
   }
+
+  .progress-bar {
+  z-index : 500;
+  position : fixed;
+  left : 50%;
+  top: 50%;
+  transform : transform(-50%,-50%) 
+}
 </style>

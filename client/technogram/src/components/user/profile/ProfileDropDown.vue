@@ -21,8 +21,9 @@
           <v-list-item-title class="item" @click="signOut()">Sign Out</v-list-item-title>
         </v-list-item-content>
       </v-list>
-     
+
     </v-container>
+      
 </template>
 
 <script>
@@ -36,6 +37,8 @@ import { store } from "../../../store/index";
     data: () => ({
       username: '',
       userEmail: '',
+      isLoading: false,
+      childMessage: false,
       items: [
         { title: 'Saved News', route: 'profile' },
         { title: 'Sign Out', route: 'log-out' },
@@ -55,12 +58,12 @@ import { store } from "../../../store/index";
         this.userEmail = store.getters['user/getUserEmail'];
         console.log(this.username + ' -- ' + this.userEmail);
       },
-      
       async signOut() {
+        this.childMessage = true;
         const before = await store.getters["user/isTokenExist"];
         console.log("before: ");
         console.log(before);
-
+        this.$emit('childToParent', this.childMessage)
         const signOutRes = await store.dispatch("user/signOut");
 
         if(signOutRes instanceof Error) {
