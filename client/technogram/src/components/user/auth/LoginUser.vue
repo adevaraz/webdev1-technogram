@@ -113,7 +113,6 @@ export default {
       this.isLoading = true;
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      console.log('ini login resulttt');
       console.log(loginResult);
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
@@ -150,6 +149,7 @@ col-12 {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+
 }
 .worksans-font {
   font-family: "Work Sans", sans-serif;
@@ -162,6 +162,7 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+ 
 }
 .content-mobile {
   padding: 2rem;
@@ -171,6 +172,10 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
+}
+.dialog{
+ overflow-y: scroll;
 }
 .login_btn {
   color: white;

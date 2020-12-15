@@ -15,14 +15,27 @@
           >Saved News</v-list-item-title
         >
       </v-list-item-content>
+        <v-list-item >
+          <v-list-item-content>
+            <v-list-item-title>{{ username }}</v-list-item-title>
+            <v-list-item-subtitle>{{ userEmail }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider></v-divider>
+        <v-list
+        dense
+        nav
+      >
+        <v-list-item-content>
+          <v-list-item-title class="item" @click="$router.push({ name: 'profile' })">Saved News</v-list-item-title>
+        </v-list-item-content>
 
-      <v-list-item-content>
-        <v-list-item-title class="item" @click="signOut()"
-          >Sign Out</v-list-item-title
-        >
-      </v-list-item-content>
-    </v-list>
-  </v-container>
+        <v-list-item-content>
+          <v-list-item-title class="item" @click="signOut()">Sign Out</v-list-item-title>
+        </v-list-item-content>
+      </v-list>
+
+    </v-container>
 </template>
 
 <script>
@@ -37,6 +50,8 @@ export default {
   data: () => ({
     username: "",
     userEmail: "",
+    isLoading: false,
+    childMessage: false,
     items: [
       { title: "Saved News", route: "profile" },
       { title: "Sign Out", route: "log-out" },
@@ -46,8 +61,8 @@ export default {
         message: "",
         isError: false,
       },
-    ],
-  }),
+   ],
+}),
 
   methods: {
     getUserData() {
@@ -57,9 +72,11 @@ export default {
     },
 
     async signOut() {
+      this.childMessage = true;
       const before = await store.getters["user/isTokenExist"];
       console.log("before: ");
       console.log(before);
+      this.$emit('childToParent', this.childMessage);
 
       const signOutRes = await store.dispatch("user/signOut");
 

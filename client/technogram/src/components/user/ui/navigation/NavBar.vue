@@ -1,4 +1,5 @@
 <template v-slot:activator="{ on, attrs }">
+    
   <div :class="navbarClass">
     <nav>
       <div class="header">
@@ -73,13 +74,10 @@
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                <img
-                  class="item img-btn"
-                  @click="showProfile = !showProfile"
-                  src="../../../../assets/icons/profile.png"
-                />
-                <div class="profile" v-if="showProfile">
-                  <profile-drop-down></profile-drop-down>
+                  <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <div class="profile" v-if="showProfile">
+                    <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
+                  </div>
                 </div>
               </div>
             </div>
@@ -128,8 +126,10 @@
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
       </div>
-    </transition>
+        </transition>
+
   </div>
+  
 </template>
 
 <script>
@@ -195,6 +195,7 @@ export default {
       showNotification: false,
       dialog: false,
       showProfile: false,
+      isLoading: '',
       isLoginDialogShown : false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
@@ -272,6 +273,18 @@ export default {
           this.navbarClass = "navbar";
         }
       }
+    },
+    onChildClick (value) {
+      
+
+      this.isLoading = value;
+      console.log("ini is loading......" + this.isLoading)
+      setTimeout(function(){
+        this.isLoading = false;
+         console.log("ini is loading......" + this.isLoading)
+      },3000)
+      
+      
     },
     slideDrawer() {
       this.isDrawerShown = !this.isDrawerShown;
@@ -636,5 +649,23 @@ nav .header .right .btn {
 
 .login-btn{
   color:white;
+}
+
+.profile{
+  background: white;
+  position: absolute;
+  height:200px;
+  width: 200px;
+  padding:1rem;
+  right: 2%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
+
+.progress-bar {
+  z-index : 500;
+  position : fixed;
+  left : 50%;
+  top: 50%;
+  transform : transform(-50%,-50%) 
 }
 </style>

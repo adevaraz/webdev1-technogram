@@ -4,7 +4,7 @@
          <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
             <v-card-title>
-                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1> 
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1>
                 </v-card-title>
                     <form class="mt-10">
                         <v-row class="jutify-center">
@@ -39,7 +39,6 @@
                                 <p class="text-caption font-weight-bold text-center">Re-enter Password</p>                                    
                                 <v-text-field
                                     label="Confirm Password" 
-                                    class="text-caption font-weight-bold text-center"
                                     single-line
                                     v-model="confirmPassword" 
                                     :rules="[confirmPasswordRules,passwordConfirmationRule]"
@@ -65,6 +64,14 @@
                       v-if="error.isError">
                       {{errorMessage}}
                       </v-alert>
+                      <v-alert
+                      dense
+                      outlined
+                      type="success"
+                      v-if="error.isNotError">
+                      {{errorMessage}}
+                      </v-alert>
+                      
                     </v-col>
                             </form>
                         </div>
@@ -92,6 +99,7 @@ export default {
       password: "",
 
       error: {
+        isNotError : false,
         isError: false,
         message: "",
         confirmPassword: "",
@@ -127,7 +135,6 @@ export default {
       setToken: "user/setToken",
     }),
     async signup() {
-      this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
       const signupResult = await Auth.signup(
@@ -141,6 +148,7 @@ export default {
       if (signupResult instanceof Error) {
         this.error.message = signupResult.cause;
         this.error.isError = true;
+        this.error.isNotError = false;
       } else {
         const loginResult = await Auth.signin(this.email, this.password);
         // await this.setToken(signupResult.token, true);
