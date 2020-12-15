@@ -97,15 +97,7 @@
         ></nav-drawer>
       </div>
         </transition>
-    <overlay v-if="isLoading">  
-  
-        <v-progress-circular
-        indeterminate
-        class="progress-bar"
-        size="64"
-        color="#E52B38"
-      ></v-progress-circular>
-      </overlay>
+
   </div>
   
 </template>

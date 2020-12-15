@@ -1,6 +1,6 @@
 <template>
 
- <v-dialog max-width="600px" v-model="dialog">
+ <v-dialog class="dialog" max-width="600px" v-model="dialog">
   <template v-slot:activator="{ on, attrs }">
         <v-btn class="login_btn" color="#E52B38" small v-bind="attrs"
           v-on="on">Sign in</v-btn>
@@ -165,6 +165,7 @@ col-12 {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+
 }
 .worksans-font {
   font-family: "Work Sans", sans-serif;
@@ -177,6 +178,7 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+ 
 }
 .content-mobile {
   padding: 2rem;
@@ -187,6 +189,9 @@ col-12 {
   align-items: center;
   justify-content: center;
   
+}
+.dialog{
+ overflow-y: scroll;
 }
 .login_btn {
   color: white;
