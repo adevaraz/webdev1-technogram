@@ -14,8 +14,15 @@
         <v-row>
           <v-col cols="12" class="pl-6 profile button">
             <div text class="text-start text-none button-content">
-              <v-col cols="1" class="img-container pa-0 ma-0" align-self="center">
-                <img class="item img-btn" src="../../../../assets/icons/profile.png" />
+              <v-col
+                cols="1"
+                class="img-container pa-0 ma-0"
+                align-self="center"
+              >
+                <img
+                  class="item img-btn"
+                  src="../../../../assets/icons/profile.png"
+                />
               </v-col>
               <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
                 <div class="username-text">{{ username }}</div>
@@ -24,34 +31,52 @@
             </div>
           </v-col>
           <v-col cols="12">
-            <v-btn text small class="worksans-font text-none" @click="$router.push({ name: 'profile' })">Saved news</v-btn>
-            <v-btn text small class="worksans-font text-none" @click="signOut()">Sign Out</v-btn>
+            <v-btn
+              text
+              small
+              class="worksans-font text-none"
+              @click="$router.push({ name: 'profile' })"
+              >Saved news</v-btn
+            >
+            <v-btn text small class="worksans-font text-none" @click="signOut()"
+              >Sign Out</v-btn
+            >
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" v-if="!isLoggedIn">
-        <LoginUser></LoginUser>
+      <v-col cols="12" v-else>
+        <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{isLoginDialogShown = false}"></auth-user>
+          <v-btn
+            class="login-btn"
+            color="#E52B38"
+            small
+            @click="isLoginDialogShown = !isLoginDialogShown"
+          
+            >Sign in</v-btn
+          >
       </v-col>
       <v-col cols="12">
         <div class="border-btm mt-1"></div>
       </v-col>
-      <v-col v-for="(menu,index) in menus" cols="6" :key="menu.id">
-        <v-btn text small :class="menuClass(index)" @click="onClicked(index)">{{menu.name}}</v-btn>
+      <v-col v-for="(menu, index) in menus" cols="6" :key="menu.id">
+        <v-btn text small :class="menuClass(index)" @click="onClicked(index)">{{
+          menu.name
+        }}</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import { store } from '../../../../store/index'
-import LoginUser from "./../../auth/LoginUser.vue";
+import { mapActions, mapGetters } from "vuex";
+import { store } from "../../../../store/index";
+import AuthUser from "./../../auth/AuthUser.vue";
 
 export default {
   components: {
-    LoginUser
+    AuthUser,
   },
-  
+
   props: {
     menus: {
       type: Array,
@@ -66,17 +91,18 @@ export default {
     },
     onSearch: Function,
   },
-  data () {
+  data() {
     return {
-      key:'',
-      username: '',
-      email: ''
-    }
+      key: "",
+      username: "",
+      email: "",
+      isLoginDialogShown : false,
+    };
   },
-  
+
   methods: {
     ...mapActions({
-      loggedInToggle : 'user/loginToogle'
+      loggedInToggle: "user/loginToogle",
     }),
     menuClass(index) {
       const basicClass =
@@ -85,14 +111,14 @@ export default {
         ? basicClass + " text-decoration-underline"
         : basicClass;
     },
-    
-    getUserData(){
-        console.log("user token" + store.getters['user/isTokenExist'])
-        this.username= store.getters['user/getUsername'];
-        console.log("uname"+this.username)
-        this.userEmail=store.getters['user/getUserEmail']
-   },
-   
+
+    getUserData() {
+      console.log("user token" + store.getters["user/isTokenExist"]);
+      this.username = store.getters["user/getUsername"];
+      console.log("uname" + this.username);
+      this.email = store.getters["user/getUserEmail"];
+    },
+
     async signOut() {
       const before = await store.getters["user/isTokenExist"];
       console.log("before: ");
@@ -100,7 +126,7 @@ export default {
 
       const signOutRes = await store.dispatch("user/signOut");
 
-      if(signOutRes instanceof Error) {
+      if (signOutRes instanceof Error) {
         this.error.message = signOutRes.cause;
         this.error.isError = true;
       } else {
@@ -110,17 +136,30 @@ export default {
 
         this.$router.push("/");
       }
-    }
+    },
   },
-  
-  mounted(){
+  computed: {
+    ...mapGetters({
+      getUsername: "user/getUsername",
+      getEmail: "user/getUserEmail",
+    }),
+  },
+  watch: {
+    getUsername(value) {
+      this.username = value;
+    },
+    getEmail(value) {
+      this.email = value;
+    },
+  },
+
+  mounted() {
     this.getUserData();
-  }
+  },
 };
 </script>
 
 <style scoped>
-
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 .border-btm {
   border-bottom: 1px solid #bab4b8;
@@ -129,8 +168,6 @@ export default {
 .worksans-font {
   font-family: "Work Sans", sans-serif;
 }
-
-
 
 .username-text {
   font-family: "Work Sans", sans-serif;
@@ -143,26 +180,29 @@ export default {
   font-weight: 300;
 }
 
-.button{
+.button {
   cursor: pointer;
-
 }
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
-.border-btm{
-    border-bottom: 1px solid #BAB4B8;
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+.border-btm {
+  border-bottom: 1px solid #bab4b8;
 }
 
-.button:hover{
+.button:hover {
   background: #eeeeee;
   border-radius: 16px;
 }
 
-.button-content{
+.button-content {
   display: flex;
   justify-content: flex-start;
 }
 
 .item {
   max-height: 2em;
+}
+
+.login-btn{
+  color:white;
 }
 </style>

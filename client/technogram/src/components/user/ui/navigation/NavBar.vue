@@ -8,7 +8,9 @@
             ref="greetingText"
             class="greeting-text font-weight-bold"
             v-if="!isMobile"
-          >{{getGreetings}}</div>
+          >
+            {{ getGreetings }}
+          </div>
           <div @click="slideDrawer" ref="burger" class="burger" v-else>
             <div class="line1"></div>
             <div class="line2"></div>
@@ -20,37 +22,56 @@
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
-        <div class="right" >
+        <div class="right">
           <div class="navigation" v-if="!isMobile">
             <v-dialog v-model="dialog" persistent>
               <template v-slot:activator="{ on, attrs }">
-                <img class="item img-btn" v-bind="attrs" v-on="on" src="../../../../assets/icons/search-icon.png" />        
+                <img
+                  class="item img-btn"
+                  v-bind="attrs"
+                  v-on="on"
+                  src="../../../../assets/icons/search-icon.png"
+                />
               </template>
               <v-card max-height="1080px">
                 <v-card-title></v-card-title>
                 <v-card-text>
                   <v-container d-block>
                     <div class="d-flex flex-row-reverse cross-icon">
-                        <img class="cross-icon" @click="dialog = false" src='../../../../assets/icons/cross.png'>
+                      <img
+                        class="cross-icon"
+                        @click="dialog = false"
+                        src="../../../../assets/icons/cross.png"
+                      />
                     </div>
                     <div class="d-flex flex-row search" align-center>
-                        <v-text-field 
-                            v-model="key"
-                            placeholder="Enter keyword here..."
-                            prepend-inner-icon="mdi-magnify"
-                            v-on:keydown.enter="$router.push({ name: 'recent-result', query: {q: key} }); dialog = false"
-                        >
-                        </v-text-field>
+                      <v-text-field
+                        v-model="key"
+                        placeholder="Enter keyword here..."
+                        prepend-inner-icon="mdi-magnify"
+                        v-on:keydown.enter="
+                          $router.push({
+                            name: 'recent-result',
+                            query: { q: key },
+                          });
+                          dialog = false;
+                        "
+                      >
+                      </v-text-field>
                     </div>
-                </v-container>
+                  </v-container>
                 </v-card-text>
               </v-card>
             </v-dialog>
-            
+
             <div class="loggedin" v-if="isLoggedIn">
               <div class="">
-                <img class="item img-btn" @click="showNotification = !showNotification" src="../../../../assets/icons/bell.png" /> 
-                <div class="notification"  v-if="showNotification">
+                <img
+                  class="item img-btn"
+                  @click="showNotification = !showNotification"
+                  src="../../../../assets/icons/bell.png"
+                />
+                <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
                   <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
@@ -58,18 +79,26 @@
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
                 </div>
+              </div>
             </div>
             <div class="public" v-else>
-
-            <v-flex>  
-            <LoginUser>
-            </LoginUser>
-            </v-flex>
-
+              <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{isLoginDialogShown = false}"></auth-user>
+              <v-btn
+                class="login-btn"
+                color="#E52B38"
+                small
+                @click="isLoginDialogShown = !isLoginDialogShown"
+              
+                >Sign in</v-btn
+              >
             </div>
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
-            <img class="item img-btn" src="../../../../assets/icons/bell.png" @click="$router.push({name : 'notification'})"/>
+            <img
+              class="item img-btn"
+              src="../../../../assets/icons/bell.png"
+              @click="$router.push({ name: 'notification' })"
+            />
           </div>
         </div>
       </div>
@@ -79,11 +108,12 @@
           small
           class="text-capitalize"
           :class="menuClass(index)"
-          v-for="(menu,index) in menus"
+          v-for="(menu, index) in menus"
           :key="menu.routerName"
           @click="onMenuSelected(index)"
           :ripple="false"
-        >{{menu.name}}</v-btn>
+          >{{ menu.name }}</v-btn
+        >
       </div>
     </nav>
     <transition :name="transitionName">
@@ -103,14 +133,14 @@
 </template>
 
 <script>
-import NotificationDropdown from '../../notifications/NotificationDropdown.vue';
-import ProfileDropDown from '../../profile/ProfileDropDown.vue';
+import NotificationDropdown from "../../notifications/NotificationDropdown.vue";
+import ProfileDropDown from "../../profile/ProfileDropDown.vue";
 import NavDrawer from "./NavDrawer.vue";
 
 import categoriesData from "../../../../api/kategori/daftarKategori";
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
-import LoginUser from "./../../auth/LoginUser.vue";
+import AuthUser from "./../../auth/AuthUser.vue";
 
 const TEN_MINUTES = 1000 * 60 * 10;
 
@@ -143,11 +173,11 @@ export default {
 
     window.addEventListener("scroll", this.handleScroll);
   },
-  components: { 
-    NavDrawer, 
+  components: {
+    NavDrawer,
     ProfileDropDown,
     NotificationDropdown,
-    LoginUser
+    AuthUser,
   },
 
   props: {
@@ -162,10 +192,11 @@ export default {
       navbarClass: "navbar",
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
-      showNotification : false,
+      showNotification: false,
       dialog: false,
       showProfile: false,
       isLoading: '',
+      isLoginDialogShown : false,
       menus: [
         { name: "Home", routeName: "home", route: "", query: null },
         {
@@ -187,12 +218,12 @@ export default {
           query: "hardware",
         },
         { name: "More", routeName: "more-categories", route: "categories" },
-       
       ],
       kategori: [],
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
       currentTime: null,
+      key : ''
     };
   },
   computed: {
@@ -223,13 +254,12 @@ export default {
       return this.isMobile && this.isDrawerShown;
     },
     transitionName() {
-      console.log(this.isMobile);
-      return this.isMobile ? "slide" : "";
+      return this.isMobile ? "slide" : " ";
     },
   },
   methods: {
     ...mapActions({
-      loggedInToggle : 'user/loginToogle'
+      loggedInToggle: "user/loginToogle",
     }),
     handleScroll() {
       if (!this.isMobile) {
@@ -272,14 +302,14 @@ export default {
       this.closeDrawer();
       this.onMenuSelected(index);
     },
-    closeDrawer(){
+    closeDrawer() {
       this.isDrawerShown = !this.isDrawerShown;
       //burger animation
       this.$refs.burger.classList.toggle("toogle");
     },
-    onSearch(key){
+    onSearch(key) {
       this.closeDrawer();
-      this.$router.push({ name: 'recent-result', query: {q: key} });
+      this.$router.push({ name: "recent-result", query: { q: key } });
       this.toogleDrawer(this.isDrawerShown);
     },
     onMenuSelected(index) {
@@ -313,9 +343,10 @@ export default {
           }
 
           var i;
-          for(i = 1; i <= 3; i++) {
+          for (i = 1; i <= 3; i++) {
             const nameTmp = this.kategori[i - 1].nama_kategori;
-            this.menus[i].name = nameTmp.charAt(0).toUpperCase() + nameTmp.slice(1);
+            this.menus[i].name =
+              nameTmp.charAt(0).toUpperCase() + nameTmp.slice(1);
             this.menus[i].query = this.kategori[i - 1].nama_kategori;
           }
         }
@@ -378,7 +409,7 @@ export default {
   width: 100%;
   position: fixed;
   top: 0;
-  z-index: 5;
+  z-index: 100  ;
 }
 
 .floating {
@@ -433,7 +464,7 @@ nav .header .middle .logo img {
 }
 
 nav .header .middle .toogle img {
-  width: 5rem;
+  width: 2.5rem;
 }
 
 /* Right section */
@@ -462,15 +493,15 @@ nav .header .right .navigation .item {
   cursor: pointer;
 }
 
-.notification{
+.notification {
   background: white;
   position: absolute;
-  height:500px;
+  height: 500px;
   width: 250px;
-  padding:1rem;
+  padding: 1rem;
   right: 2%;
   overflow-y: scroll;
-  overflow-x : hidden;
+  overflow-x: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
 }
 
@@ -480,19 +511,18 @@ nav .header .right .navigation .item {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
-
 
 .img-btn:hover {
   background: rgba(80, 80, 80, 0.164);
@@ -606,20 +636,32 @@ nav .header .right .btn {
   .toogle .line3 {
     transform: rotate(45deg) translate(-3px, -4px);
   }
-
- 
 }
- .profile{
-    background: white;
-    position: absolute;
-    height:200px;
-    width: 200px;
-    padding:1rem;
-    right: 2%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
-  }
+.profile {
+  background: white;
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  padding: 1rem;
+  right: 2%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
 
-  .progress-bar {
+.login-btn{
+  color:white;
+}
+
+.profile{
+  background: white;
+  position: absolute;
+  height:200px;
+  width: 200px;
+  padding:1rem;
+  right: 2%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
+}
+
+.progress-bar {
   z-index : 500;
   position : fixed;
   left : 50%;

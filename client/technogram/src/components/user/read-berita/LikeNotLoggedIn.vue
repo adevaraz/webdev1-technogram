@@ -1,8 +1,14 @@
 <template>
+
  <v-dialog max-width="600px" v-model="dialog">
+  <template v-slot:activator="{ on, attrs }">
+        <img class="img-btn mr-1" src="../../../assets/icons/heart-empty.png" v-bind="attrs"
+          v-on="on" />
+      </template>
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" style="cursor:pointer;" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
+          
               <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
               </v-card-title>
@@ -31,7 +37,8 @@
                     </v-col>
                   </v-row>
                     <v-row align="center" justify="center">
-                      <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="onHaveNoAccountClicked">Have no account</p>
+                      <p class="text-caption font-weight-bold ">Have no account</p>
+                        <signup></signup>
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
@@ -40,7 +47,7 @@
                   </form>
                 </div>
           </v-card>
-      <transition >
+      <transition :name="transitionName">
       <!-- <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
           :isLoggedIn="isLoggedIn"
@@ -54,20 +61,17 @@
 <script>
 
 import Auth from "../../../api/pembaca/auth";
+import SignUpPembaca from "../auth/SignUpUser";
 // import NavDrawer from "../ui/navigation/NavDrawer.vue";
 import { mapGetters, mapActions } from 'vuex';
 // import { store } from "../../../store/index";
 
 export default {
-  props: {
-    onHaveNoAccountClicked : Function,
-    onDialogClosed : Function
-  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: true,
+      dialog: false,
       email: "",
       password: "",
       error: {
@@ -79,6 +83,11 @@ export default {
         password: (value) => !!value || "Password cannot be null or empty",
       },
     };
+  },
+  components :
+  {
+    'signup' : SignUpPembaca,
+    // 'nav-drawer' : NavDrawer
   },
   computed: {
     errorMessage() {
@@ -113,6 +122,7 @@ export default {
       this.isLoading = true;
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
+      console.log('ini login resulttt');
       console.log(loginResult);
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
@@ -140,7 +150,8 @@ export default {
 col-12 {
     padding-top: 0;
     padding-bottom: 0;
-  }
+}
+
 .item{
   height: 20px;
   margin: 10px;
@@ -149,11 +160,12 @@ col-12 {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
-
 }
+
 .worksans-font {
   font-family: "Work Sans", sans-serif;
 }
+
 .content {
   padding: 5rem;
   display: flex;
@@ -162,8 +174,8 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
- 
 }
+
 .content-mobile {
   padding: 2rem;
   display: flex;
@@ -172,14 +184,12 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
 }
-.dialog{
- overflow-y: scroll;
-}
+
 .login_btn {
   color: white;
 }
+
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
   font-size: 25px;
@@ -187,5 +197,15 @@ col-12 {
 
 .playfair-font{
   font-family: "Playfair Display", serif;
+}
+
+.img-btn {
+  height: 16px;
+  max-height: 16px;
+  cursor: pointer;
+}
+
+.img-btn:hover {
+  background: rgba(80, 80, 80, 0.164);
 }
 </style>

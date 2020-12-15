@@ -1,12 +1,12 @@
 <template>
-  <div @click="onBeritaSelected(source.id_berita)" class="pa-1">
+  <div @click="onBeritaSelected(source.id_berita)">
     <preview-berita v-if="!isMobile" :berita="source"></preview-berita>
-    <mobile-preview-berita v-else :berita="source" :previewMaxWord="maxWord"></mobile-preview-berita>
+    <mobile-preview-berita v-else :berita="source"></mobile-preview-berita>
   </div>
 </template>
 
 <script>
-import PreviewBerita from "../berita/PreviewBerita.vue";
+import PreviewBerita from "../berita/BeritaPreview.vue";
 import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 export default {
   components: { PreviewBerita, MobilePreviewBerita },
@@ -31,16 +31,12 @@ export default {
       }
       return false;
     },
-    maxWord(){
-      if(this.$vuetify.breakpoint.xs){
-        return 70;
-      }
-      return 140;
-    }
   },
 
   methods: {
     onBeritaSelected(id) {
+      console.log("VIRTUAL SCROLL ITEM");
+      console.log(id);
       this.$router
         .push({
           name: "read-berita",
