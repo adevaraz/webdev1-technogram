@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {ADMIN_URL , TIMEOUT} from '../const'
+import {ADMIN_URL , TIMEOUT, ACCESS_TOKEN_GOOGLE_ANALYTICS} from '../const'
 import ErrorHandler from '../errorHandler'
 const signin = async(username , password) => {
     try{
@@ -33,6 +33,19 @@ const getRefreshToken = async() => {
     }
 }
 
+const getAccessTokenGA = async() => {
+    try{
+        const url = ACCESS_TOKEN_GOOGLE_ANALYTICS;
+        const result = await axios.get(url , {
+            timeout : TIMEOUT,
+            withCredentials : true
+        })
+        return result.data;
+    }catch(err){
+        return ErrorHandler.errorHandler(err);
+    }
+} 
+
 const logout = async(token) => {
     try{
         const url = ADMIN_URL + '/signout'
@@ -51,5 +64,6 @@ const logout = async(token) => {
 export default{
     signin,
     getRefreshToken,
+    getAccessTokenGA,
     logout
 }

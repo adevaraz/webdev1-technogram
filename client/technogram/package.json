@@ -12,6 +12,7 @@
     "axios": "^0.21.0",
     "bootstrap-vue": "^2.19.0",
     "core-js": "^3.6.5",
+    "googleapis": "^66.0.0",
     "mini-toastr": "^0.8.1",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
