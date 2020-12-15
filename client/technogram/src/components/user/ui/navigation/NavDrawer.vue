@@ -44,8 +44,16 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" v-if="!isLoggedIn">
-        <LoginUser></LoginUser>
+      <v-col cols="12" v-else>
+        <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{isLoginDialogShown = false}"></auth-user>
+          <v-btn
+            class="login-btn"
+            color="#E52B38"
+            small
+            @click="isLoginDialogShown = !isLoginDialogShown"
+          
+            >Sign in</v-btn
+          >
       </v-col>
       <v-col cols="12">
         <div class="border-btm mt-1"></div>
@@ -62,11 +70,11 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { store } from "../../../../store/index";
-import LoginUser from "./../../auth/LoginUser.vue";
+import AuthUser from "./../../auth/AuthUser.vue";
 
 export default {
   components: {
-    LoginUser,
+    AuthUser,
   },
 
   props: {
@@ -88,6 +96,7 @@ export default {
       key: "",
       username: "",
       email: "",
+      isLoginDialogShown : false,
     };
   },
 
@@ -191,5 +200,9 @@ export default {
 
 .item {
   max-height: 2em;
+}
+
+.login-btn{
+  color:white;
 }
 </style>
