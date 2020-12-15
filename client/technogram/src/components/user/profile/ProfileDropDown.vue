@@ -35,7 +35,8 @@
         </v-list-item-content>
       </v-list>
 
-    </v-container>
+    </v-list>
+  </v-container>
 </template>
 
 <script>

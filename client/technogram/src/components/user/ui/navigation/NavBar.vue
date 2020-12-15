@@ -17,11 +17,13 @@
             <div class="line3"></div>
           </div>
         </div>
+        
         <div class="middle">
           <div ref="logo" class="logo">
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
+        
         <div class="right">
           <div class="navigation" v-if="!isMobile">
             <v-dialog v-model="dialog" persistent>
@@ -126,7 +128,7 @@
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
       </div>
-        </transition>
+    </transition>
 
   </div>
   
