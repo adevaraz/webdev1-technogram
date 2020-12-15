@@ -30,14 +30,19 @@
                                 v-if="isLoggedIn"
                             >
                                 <img v-if="!isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                                <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <img v-else v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                                 <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                             </div>
                             <div
                                 class="d-flex flex-row"
                                 v-else
                             >
-                                <like-not-logged-in />
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="item img-btn mr-1"
+                                    src="../../../assets/icons/heart-empty.png"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                />
                                 <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                             </div>
                         </div>
@@ -53,13 +58,19 @@
                                 v-if="isLoggedIn"
                             >
                                 <img v-if="!isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                                <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
+                                <img v-else v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
                             </div>
                             <div
                                 class="d-flex flex-row"
                                 v-else
                             >
-                                <save-not-logged-in />
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="item img-btn"
+                                    src="../../../assets/icons/unsaved-icon.png"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                
+                                />
                             </div>
                         </div>
                     </div>
@@ -113,17 +124,14 @@ import berita from "../../../api/berita/berita";
 import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
-// import LoginUser from "../auth/LoginUser";
-import LikeNotLoggedIn from './LikeNotLoggedIn.vue';
-import SaveNotLoggedIn from './SaveNotLoggedIn.vue';
+import AuthUser from "../auth/AuthUser";
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
-        LikeNotLoggedIn,
-        SaveNotLoggedIn
+        AuthUser
     },
 
     created() {
@@ -152,7 +160,8 @@ export default {
         isLiked: false,
         isSaved: false,
         relatedBeritaLoading: false,
-        errorMessage: ''
+        errorMessage: '',
+        isLoginDialogShown : false
     }),
   
     watch: {
