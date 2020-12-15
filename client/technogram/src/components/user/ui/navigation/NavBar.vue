@@ -23,7 +23,7 @@
             <img src="../../../../assets/technogram-logo.png" />
           </div>
         </div>
-        
+
         <div class="right">
           <div class="navigation" v-if="!isMobile">
             <v-dialog v-model="dialog" persistent>
@@ -80,7 +80,6 @@
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
-                </div>
               </div>
             </div>
             <div class="public" v-else>
@@ -129,9 +128,8 @@
         ></nav-drawer>
       </div>
     </transition>
-
   </div>
-  
+
 </template>
 
 <script>
