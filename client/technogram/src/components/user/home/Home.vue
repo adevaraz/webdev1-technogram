@@ -2,59 +2,36 @@
   <v-container>
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
       <v-col cols="12" v-if="isError"></v-col>
-      <v-col cols="12">
-        <h1
-          :class="!isMobile? 'playfair-font text-start' : 'playfair-font text-center'"
-        >Popular News</h1>
-      </v-col>
-      <v-col cols="12" lg="5" md="12" xl="5" sm="12" xs="12">
-        <headline-berita class="item" :berita="recentBerita[0]" :isLoading="recentLoading"></headline-berita>
-      </v-col>
-      <v-col cols="12" v-if="isMobile" class="mt-n6">
-        <div class="middle-border"></div>
-      </v-col>
-      <v-col cols="12" lg="6" offset-lg="1" md="12" xl="6" offset-xl="1" sm="12">
-        <v-row class="top-right-container">
-          <v-progress-circular
-            class="progressbar"
-            v-if="popularLoading"
-            color="#E52B38"
-            height="10"
-            indeterminate
-          ></v-progress-circular>
-          <v-col
-            cols="12"
-            sm="6"
-            md="6"
-            lg="6"
-            xl="6"
-            v-for="berita in popularBerita"
-            :key="berita.id_berita"
-            class="pt-0"
-          >
-            <small-berita class="item" :showTime="isMobile" :berita="berita"></small-berita>
-          </v-col>
-        </v-row>
+      <v-col cols="12" class="pa-0">
+        <mobile-home-header
+          :beritas="popularBerita"
+          :headlineBerita="headlineBerita"
+          :onBeritaSelected="onBeritaSelected"
+          :popularLoading="popularLoading"
+          :recentLoading="recentLoading"
+          v-if="isMobile"
+        ></mobile-home-header>
+        <dekstop-home-header :popularBeritas="popularBerita" :onBeritaSelected="onBeritaSelected" v-else></dekstop-home-header>
       </v-col>
       <v-col cols="12" v-if="!isMobile">
         <div class="middle-border"></div>
       </v-col>
-      <v-col cols="12" :class="isMobile? 'mt-n3 mb-n5' : ''">
-        <h1 :class="isMobile? 'playfair-font text-start' : 'playfair-font text-center'">Recent News</h1>
+      <v-col cols="12" :class="isMobile ? 'mt-n3 mb-n5' : ''">
+        <h1
+          :class="
+            isMobile ? 'playfair-font text-start' : 'playfair-font text-center'
+          "
+        >
+          Recent News
+        </h1>
       </v-col>
       <v-col cols="12" v-if="isMobile">
         <div class="middle-border"></div>
       </v-col>
       <v-col cols="12">
-        <v-row :class="isMobile? 'pa-0' : 'justify-center'">
-          <v-col
-            :cols="isMobile? '12' : '10' "
-            class="mt-n2"
-            v-for="berita in recentBerita"
-            :key="berita.id_berita"
-          >
-            <preview-berita v-if="!isMobile" :berita="berita"></preview-berita>
-            <mobile-preview-berita v-else :berita="berita"></mobile-preview-berita>
+        <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
+          <v-col :cols="isMobile? '12' : '10'">
+             <recent-virtual-scroll></recent-virtual-scroll>
           </v-col>
         </v-row>
       </v-col>
@@ -63,38 +40,35 @@
 </template>
 
 <script>
-import HeadlineBerita from "../berita/HeadlineBerita.vue";
-import SmallBerita from "../berita/SmallBerita.vue";
-import PreviewBerita from "../berita/PreviewBerita.vue";
-import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
-
+import RecentVirtualScroll from "./RecentVirtualScroll.vue";
+import MobileHomeHeader from "./MobileHomeHeader.vue";
+import DekstopHomeHeader from "./DekstopHomeHeader";
 export default {
   created() {
-    this.retrieveRecentBerita();
     this.retrievePopularBerita();
+    this.retrieveRecentBerita();
   },
   components: {
-    HeadlineBerita,
-    SmallBerita,
-    PreviewBerita,
-    MobilePreviewBerita,
+    RecentVirtualScroll,
+    MobileHomeHeader,
+    DekstopHomeHeader,
   },
   data() {
     return {
-      recentBerita: [],
       popularBerita: [],
       isError: false,
       errorMessage: "",
       recentLoading: false,
       popularLoading: false,
+      headlineBerita: null,
     };
   },
   methods: {
     async retrieveRecentBerita() {
       this.recentLoading = true;
-      const result = await beritaApi.recentBerita();
+      const result = await beritaApi.recentBerita(1, "");
       this.recentLoading = false;
       if (result instanceof Error) {
         this.isError = true;
@@ -102,10 +76,8 @@ export default {
           "Gagal mendapatkan berita terkini karena " + result.cause;
         return;
       }
-      result.data.forEach((element) => {
-        element.url_gambar = BASE_URL + "/" + element.url_gambar;
-        this.recentBerita.push(element);
-      });
+      result.data[0].url_gambar = BASE_URL + "/" + result.data[0].url_gambar;
+      this.headlineBerita = result.data[0];
     },
     async retrievePopularBerita() {
       this.popularLoading = true;
@@ -121,9 +93,21 @@ export default {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.popularBerita.push(element);
       });
-      console.log(this.popularBerita);
+    },
+
+    onBeritaSelected(id) {
+      this.$router
+        .push({
+          name: "read-berita",
+          params: { id: `${id}` },
+        })
+        .catch((err) => {
+          err;
+        });
+        console.log("pushhhhh!!")
     },
   },
+
   computed: {
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {

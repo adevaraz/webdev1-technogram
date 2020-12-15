@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TIMEOUT, KATEGORI_URL, BERITA_URL, BASE_URL, ADMIN_ROLE} from '../const'
+import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const getAllKategori = async () => {
@@ -58,7 +58,7 @@ const update = async (idBerita, data , token) => {
         return result.data;
     } catch (err) {
         const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
-            return await save(data , newToken);
+            return await update(idBerita, data , newToken);
         })
         return errorResult;
     }
@@ -74,6 +74,16 @@ const get = async (id) => {
     }
 };
 
+const incrementViewer = async(id) => {
+    try {
+        const currentUrl = BERITA_URL + `/update-reader/${id}`;
+        const result = await axios.put(currentUrl, {}, { timeout: TIMEOUT });
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
 
 const recentBerita = async ( perPage , key , page ) => {
     try{
@@ -81,7 +91,7 @@ const recentBerita = async ( perPage , key , page ) => {
         const result = await axios.get(recentURL , {
             timeout : TIMEOUT,
             params : {
-                perpage : perPage ||  6,
+                perpage : perPage ||  3,
                 key : key || '',
                 page : page || 1
             }
@@ -109,6 +119,72 @@ const popularBerita = async ( perPage , key , page ) => {
     }
 }
 
+const getByCat = async (perPage, category, page) => {
+    try {
+        const currentUrl = BERITA_URL + '/';
+        const result = await axios.get(currentUrl, {
+            params: {
+                perpage: perPage || 4,
+                category: category || '',
+                page: page || 1
+            }
+        });
+
+        return result.data;
+    } catch (error) {
+        return ErrorHandler.errorHandler(error);
+    }
+}
+
+const getUserNotificatedNews = async (token , perPage , key , page )  => {
+    try {
+        const notificationURL = USER_URL + `/notifikasi`;
+        const result = await axios.get(notificationURL, 
+            {
+            timeout: TIMEOUT, 
+            headers: {
+                "Authorization": token,
+            },
+            params : {
+                perpage : perPage ||  6,
+                key : key || '',
+                page : page || 1
+            }
+        });
+        return result.data;
+    } catch (err) {
+        const errorResult = await ErrorHandler.errorHandler(err , USER_ROLE , async (newToken) => {
+            return await getUserNotificatedNews(newToken ,  perPage , key , page);
+        })
+        return errorResult;
+    }
+}
+
+const savedBeritaList = async ( perPage , key , page, token ) => {
+    try{
+        const savedURL = USER_URL + '/get-save'
+        const result = await axios.get(savedURL , {
+            timeout : TIMEOUT,
+            params : {
+                perpage : perPage || 3,
+                key : key || '',
+                page : page || 1
+            },
+            headers: {
+                "Authorization" : token
+            }
+        });
+        
+        console.log("PERPAGE "+perPage);
+        return result.data;
+    }catch(err){
+        const errorResult = await ErrorHandler.errorHandler(err, USER_ROLE, async (newToken) => {
+            return await savedBeritaList(perPage, key, page, newToken);
+        })
+        return errorResult;
+    }
+}
+
 export default{
     getAllKategori,
     uploadImg,
@@ -116,6 +192,10 @@ export default{
     save,
     update,
     get,
+    incrementViewer,
     recentBerita,
-    popularBerita
+    popularBerita,
+    getByCat,
+    savedBeritaList,
+    getUserNotificatedNews
 };

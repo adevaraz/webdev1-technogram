@@ -44,51 +44,54 @@
 
 <script>
 import Admin from "../../../api/admin/admin";
+import { store } from "../../../store/index";
 export default {
   data() {
     return {
       username: "",
-       isLoading: false,
+      isLoading: false,
       password: "",
       error: {
         isError: false,
-        message: ""
+        message: "",
       },
-      rules : {
+      rules: {
         username: (value) => !!value || "Username tidak boleh kosong",
         password: (value) => !!value || "Password tidak boleh kosong",
       },
+    };
+  },
+
+  computed: {
+    errorMessage() {
+      return this.error.message;
+    },
+    isInputValid() {
+      const isEmpty = (this.username === "") | (this.password === "");
+      return !isEmpty;
+    },
+  },
+
+  methods: {
+    async addAdmin() {
+      this.isLoading = true;
+      const result = await Admin.addAdmin(
+        this.username,
+        this.password,
+        store.getters["admin/getToken"]
+      );
+      this.isLoading = false;
+      if (result instanceof Error) {
+        this.error.message = result.cause;
+        this.error.isError = true;
+      } else {
+        this.error.isError = false;
+        console.log(this.message);
+        throw result;
       }
     },
-    
-      computed: {
-        errorMessage() {
-        return this.error.message; 
-        },
-        isInputValid() {
-        const isEmpty = (this.username === "") | (this.password === "");
-        return !isEmpty;
-        },
-      },
-    
-    methods:{
-      async addAdmin(){
-        this.isLoading = true;
-        const result = await Admin.addAdmin(this.username, this.password);
-        this.isLoading = false;
-        if(result instanceof Error){
-          this.error.message = result.cause;
-          this.error.isError = true;
-   
-        }else{
-           this.error.isError = false;
-           console.log(this.message)
-          throw result
-        }
-      }
-    }
-  }
-
+  },
+};
 </script>
 
 <style>

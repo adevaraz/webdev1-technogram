@@ -1,13 +1,8 @@
 <template>
  <v-dialog max-width="600px" v-model="dialog">
-  <template v-slot:activator="{ on, attrs }">
-        <v-btn class="login_btn" color="#E52B38" small v-bind="attrs"
-          v-on="on">Sign in</v-btn>
-      </template>
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" style="cursor:pointer;" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
-          
               <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
               </v-card-title>
@@ -35,14 +30,8 @@
                         ></v-text-field>
                     </v-col>
                   </v-row>
-                    <v-row >
-                      <v-col cols="6">
-                        <p class="text-caption font-weight-bold ">Forgot your password?</p>
-                     </v-col>
-                    </v-row>
                     <v-row align="center" justify="center">
-                      <p class="text-caption font-weight-bold ">Have no account</p>
-                        <signup></signup>
+                      <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="onHaveNoAccountClicked">Have no account</p>
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
@@ -51,12 +40,12 @@
                   </form>
                 </div>
           </v-card>
-      <transition :name="transitionName">
-      <div class="drawer" v-if="shouldShowDrawer">
+      <transition >
+      <!-- <div class="drawer" v-if="shouldShowDrawer">
         <nav-drawer
           :isLoggedIn="isLoggedIn"
         ></nav-drawer>
-      </div>
+      </div> -->
     </transition>
             
 </v-dialog>
@@ -65,16 +54,20 @@
 <script>
 
 import Auth from "../../../api/pembaca/auth";
-import SignUpPembaca from "./SignUpUser.vue";
-import NavDrawer from "../ui/navigation/NavDrawer.vue";
-import {mapActions} from "vuex";
+// import NavDrawer from "../ui/navigation/NavDrawer.vue";
+import { mapGetters, mapActions } from 'vuex';
+// import { store } from "../../../store/index";
 
 export default {
+  props: {
+    onHaveNoAccountClicked : Function,
+    onDialogClosed : Function
+  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: false,
+      dialog: true,
       email: "",
       password: "",
       error: {
@@ -87,17 +80,7 @@ export default {
       },
     };
   },
-  components :
-      {
-        'signup' : SignUpPembaca,
-        'nav-drawer' : NavDrawer
-      },
-  props: {
-    isLoggedIn: {
-      default: true,
-    },
-    toogleDrawer: Function,
-  },
+
   computed: {
     errorMessage() {
       return this.error.message;
@@ -111,31 +94,41 @@ export default {
     },
     closeDialog(){
       return this.dialog
-    }
+    },
+
+    ...mapGetters(
+        {
+          isLoggedIn: 'user/isLoggedIn'
+        }
+    )
   },
   methods: {
     ...mapActions({
-      loggedIn : 'user/getNewToken',
-      setToken : 'user/setToken'
-      
+      // loggedIn : 'user/getNewToken',
+      setToken : 'user/setToken',
     }),
+
     async signin() {
-    
       this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
-      console.log(this.email);
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
-      
+      console.log(loginResult);
       
       if (loginResult instanceof Error) {
         this.error.message = loginResult.cause;
         this.error.isError = true;
       } else {
-         await this.setToken(loginResult.token, true);
+        this.setToken({
+          token : loginResult.token,
+          username : loginResult.username,
+          email : this.email,
+          kategori :loginResult.mostLikedCategory
+
+        });
+
          this.$router.push({path : '/'});
-        
       } 
     },
   },
@@ -179,6 +172,9 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.dialog{
+ overflow-y: scroll;
 }
 .login_btn {
   color: white;

@@ -187,3 +187,27 @@ exports.updateKategoriById = async(req,res,next)=> {
     }
 }
 
+/**
+ * @author 31 Zara
+ * 
+ * Get id kategori berdasarkan nama
+ */
+ exports.getByName = async(req, res, next) => {
+     try {
+        const name = req.query.name;
+        console.log(name);
+
+        const result = await Kategori.findOne({
+            where : {
+                nama_kategori : name
+            }
+        });
+
+        res.status(200).json({
+            message: 'Success get kategori',
+            data: result
+        })
+     } catch (err) {
+         next(err);
+     }
+ }

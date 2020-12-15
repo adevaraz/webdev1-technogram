@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {ADMIN_URL , TIMEOUT} from '../const'
+import {ADMIN_URL , TIMEOUT, ADMIN_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 const signin = async(username , password) => {
     try{
@@ -39,11 +39,15 @@ const logout = async(token) => {
         const result = axios.post(url , {} , {
             headers : {
                 'Authorization' : token
-            }
+            },
+            withCredentials : true
         })
         return result.data
     }catch(err){
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
+            return await logout(newToken);
+        })
+        return errorResult;
     }
 }
 

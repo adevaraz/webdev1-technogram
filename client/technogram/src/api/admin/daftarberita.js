@@ -12,10 +12,11 @@ const getAll = async() => {
     }
 }
 
-const searchBy = async(key) => {
+const searchBy = async(params) => {
     try {
-        const searchByURL = BERITA_URL + `/search?key=${key}`
-        const result = await axios.get(searchByURL);
+        // const searchByURL = BERITA_URL + `/search?key=${key}`
+        const searchByURL = BERITA_URL + `/search`
+        const result = await axios.get(searchByURL, {params});
         return result.data;
     } catch(err) {
         return ErrorHandler.errorHandler(err);
@@ -34,7 +35,7 @@ const publish = async(id, token) => {
         return result.data;
     } catch(err) {
         const errorResult = await ErrorHandler.errorHandler(err , ADMIN_ROLE , async (newToken) => {
-            return await deleteBy(id , newToken);
+            return await publish(id , newToken);
         })
         return errorResult;
     }

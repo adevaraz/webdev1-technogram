@@ -1,4 +1,5 @@
 import AdminAuth from './admin/auth'
+import UserAuth from './pembaca/auth'
 import {ADMIN_ROLE} from './const'
 
 const EXPIRED_JWT = 'jwt expired'
@@ -31,6 +32,9 @@ const processError = error => {
        cause = errorResponse.data.cause[0].msg;
     }else{
         cause = errorResponse.data.cause;
+        if(cause === 'Unknown') {
+            return processUnknownError();
+        }
     }
 
     const extractedError =  new Error(message);
@@ -61,12 +65,11 @@ const expiredAccessToken = async (role , callback) => {
         if(role === ADMIN_ROLE){
             result = await AdminAuth.getRefreshToken();
         }else{
-            result = {
-                token : 'dasdas'
-            }
+            // result = new Error('You may relogin');
+            result = await UserAuth.getRefreshToken();
         }
         if(result instanceof Error){
-            return result
+            return result;
         }
         const lastCall = await callback(result.token) || result.token;
         return lastCall;

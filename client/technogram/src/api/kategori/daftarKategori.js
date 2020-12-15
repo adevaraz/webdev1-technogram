@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {KATEGORI_URL, TIMEOUT} from '../const'
+import {ADMIN_ROLE, KATEGORI_URL, TIMEOUT} from '../const'
 import errorHandler from '../errorHandler'
 
 const retrieveAll = async() => {
@@ -26,8 +26,10 @@ const addKategori = async(namakategori, token) => {
         );
         return result.data;
     }catch(err){
-
-        return errorHandler.errorHandler(err);
+        const errorResult = await errorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
+            return await addKategori(namakategori, newToken);
+        })
+        return errorResult;
     }
 }
 
@@ -45,8 +47,10 @@ const updateKategori = async(namakategori, id, token) => {
         );
         return result.data;
     }catch(err){
-
-        return errorHandler.errorHandler(err);
+        const errorResult = await errorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
+            return await updateKategori(namakategori, id, newToken);
+        })
+        return errorResult;
     }
 }
 
@@ -62,7 +66,25 @@ const deleteOneKategori = async(id, token) => {
         );
         return result.data;
     }catch(err){
+        const errorResult = await errorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
+            return await deleteOneKategori(id, newToken);
+        })
+        return errorResult;
+    }
+}
 
+const getByName = async(name) => {
+    try {
+        const currentUrl = KATEGORI_URL + '/get-id';
+        
+        const result = await axios.get(currentUrl, {
+            params: {
+                name: name || ''
+            }
+        });
+
+        return result.data;
+    } catch (err) {
         return errorHandler.errorHandler(err);
     }
 }
@@ -71,5 +93,6 @@ export default{
     retrieveAll ,
     addKategori ,
     updateKategori ,
-    deleteOneKategori
+    deleteOneKategori,
+    getByName
 }
