@@ -12,29 +12,12 @@
         <v-list-item-title
           class="item"
           @click="$router.push({ name: 'profile' })"
-          >Saved News</v-list-item-title
-        >
-      </v-list-item-content>
-        <v-list-item >
-          <v-list-item-content>
-            <v-list-item-title>{{ username }}</v-list-item-title>
-            <v-list-item-subtitle>{{ userEmail }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider></v-divider>
-        <v-list
-        dense
-        nav
-      >
-        <v-list-item-content>
-          <v-list-item-title class="item" @click="$router.push({ name: 'profile' })">Saved News</v-list-item-title>
-        </v-list-item-content>
+        >Saved News</v-list-item-title>
 
         <v-list-item-content>
           <v-list-item-title class="item" @click="signOut()">Sign Out</v-list-item-title>
         </v-list-item-content>
-      </v-list>
-
+      </v-list-item-content>
     </v-list>
   </v-container>
 </template>

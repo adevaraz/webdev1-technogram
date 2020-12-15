@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import PreviewBerita from "../berita/BeritaPreview.vue";
+import PreviewBerita from "../berita/PreviewBerita.vue";
 import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 
 import beritaApi from "../../../api/berita/berita";
