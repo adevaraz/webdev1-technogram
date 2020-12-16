@@ -15,16 +15,16 @@
             :key="berita.id_berita"
             @click="onBeritaSelected(berita.id_berita)"
           >
-            <preview-berita
+            <left-image-preview-berita
               class="item"
               v-if="!isMobile"
               :berita="berita"
-            ></preview-berita>
-            <mobile-preview-berita
+            ></left-image-preview-berita>
+            <right-image-preview-berita
               class="item"
               v-else
               :berita="berita"
-            ></mobile-preview-berita>
+            ></right-image-preview-berita>
           </v-col>
         </v-row>
       </v-col>
@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import PreviewBerita from "../berita/PreviewBerita.vue";
-import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
+import LeftImagePreviewBerita from "../berita/LeftImageBeritaPreview.vue";
+import RightImagePreviewBerita from "../berita/RightImageBeritaPreview.vue";
 
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
@@ -64,8 +64,8 @@ export default {
     }
   },
   components: {
-    PreviewBerita,
-    MobilePreviewBerita,
+    LeftImagePreviewBerita,
+    RightImagePreviewBerita,
   },
   data() {
     return {
