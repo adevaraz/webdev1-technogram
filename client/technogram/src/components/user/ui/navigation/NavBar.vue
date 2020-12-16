@@ -26,57 +26,25 @@
 
         <div class="right">
           <div class="navigation" v-if="!isMobile">
-            <v-dialog v-model="dialog" persistent>
-              <template v-slot:activator="{ on, attrs }">
-                <img
-                  class="item img-btn"
-                  v-bind="attrs"
-                  v-on="on"
+            <div class="search-icon">
+                             <img
+                  class="navbar-item img-btn"
+                  @click="dialog=true"
                   src="../../../../assets/icons/search-icon.png"
                 />
-              </template>
-              <v-card max-height="1080px">
-                <v-card-title></v-card-title>
-                <v-card-text>
-                  <v-container d-block>
-                    <div class="d-flex flex-row-reverse cross-icon">
-                      <img
-                        class="cross-icon"
-                        @click="dialog = false"
-                        src="../../../../assets/icons/cross.png"
-                      />
-                    </div>
-                    <div class="d-flex flex-row search" align-center>
-                      <v-text-field
-                        v-model="key"
-                        placeholder="Enter keyword here..."
-                        prepend-inner-icon="mdi-magnify"
-                        v-on:keydown.enter="
-                          $router.push({
-                            name: 'recent-result',
-                            query: { q: key },
-                          });
-                          dialog = false;
-                        "
-                      >
-                      </v-text-field>
-                    </div>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
+            </div>
 
             <div class="loggedin" v-if="isLoggedIn">
               <div class="">
                 <img
-                  class="item img-btn"
+                  class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
                   src="../../../../assets/icons/bell.png"
                 />
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -96,14 +64,14 @@
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
             <img
-              class="item img-btn"
+              class="navbar-item img-btn"
               src="../../../../assets/icons/bell.png"
               @click="$router.push({ name: 'notification' })"
             />
           </div>
         </div>
       </div>
-      <div class="item" v-if="!isMobile">
+      <div class="navbar-item" v-if="!isMobile">
         <v-btn
           text
           small
@@ -128,6 +96,37 @@
         ></nav-drawer>
       </div>
     </transition>
+     <v-dialog v-if="dialog" v-model="dialog" persistent>
+              <v-card max-height="1080px">
+                <v-card-title></v-card-title>
+                <v-card-text>
+                  <v-container d-block>
+                    <div class="d-flex flex-row-reverse cross-icon">
+                      <img
+                        class="cross-icon"
+                        @click="dialog=false"
+                        src="../../../../assets/icons/cross.png"
+                      />
+                    </div>
+                    <div class="d-flex flex-row search" align-center>
+                      <v-text-field
+                        v-model="key"
+                        placeholder="Enter keyword here..."
+                        prepend-inner-icon="mdi-magnify"
+                        v-on:keydown.enter="
+                          $router.push({
+                            name: 'recent-result',
+                            query: { q: key },
+                          });
+                          dialog = false;
+                        "
+                      >
+                      </v-text-field>
+                    </div>
+                  </v-container>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
   </div>
 
 </template>
@@ -193,7 +192,8 @@ export default {
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
       showNotification: false,
-      dialog: false,
+      isSearchDialogShown: false,
+      dialog : true,
       showProfile: false,
       isLoading: '',
       isLoginDialogShown : false,
@@ -488,7 +488,7 @@ nav .header .right .navigation {
 nav .header .right .navigation .loggedin {
   display: flex;
 }
-nav .header .right .navigation .item {
+nav .header .right .navigation .navbar-item {
   margin-right: 1rem;
   cursor: pointer;
 }
@@ -573,6 +573,12 @@ nav .header .right .btn {
     z-index: 5;
   }
 
+
+  .search-icon{
+    background: blue;
+    display: flex;
+    justify-items: center;
+  }
   /* Animations */
 
   /* slide */
