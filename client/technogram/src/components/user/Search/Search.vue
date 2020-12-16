@@ -65,4 +65,13 @@ export default {
   max-height: 36px;
 }
 
+.v-card {
+  padding-top: 300px;
+  padding-bottom: 300px;
+}
+
+.v-text-field {
+  width: 200px;
+}
+
 </style>

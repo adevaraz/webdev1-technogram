@@ -349,15 +349,6 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.v-card {
-  padding-top: 200px;
-  padding-bottom: 200px;
-}
-
-.v-text-field {
-  width: 200px;
-}
-
 .navbar {
   background: white;
   border-bottom: 0.1px solid rgb(112, 112, 112, 0.3);
