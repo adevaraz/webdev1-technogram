@@ -1,7 +1,25 @@
 <template>
+<<<<<<< HEAD
  <v-dialog max-width="600px" v-model="dialog">
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
          <img class="item img-btn" style="cursor:pointer;" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
+=======
+
+ <v-dialog max-width="600px" v-model="dialog">
+  <template v-slot:activator="{ on, attrs }">
+        <v-btn class="login_btn" color="#E52B38" small v-bind="attrs"
+          v-on="on">Sign in</v-btn>
+      </template>
+      <v-card  height="100%" :elevation="isMobile ? 0 : 2">
+      <v-progress-linear
+      v-if="isLoading"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    >
+    </v-progress-linear>
+         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+>>>>>>> parent of f6aac5f... ap-auth-loading
           <div :class="isMobile? 'content-mobile' : 'content'">
               <v-card-title>
                 <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
@@ -172,9 +190,6 @@ col-12 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-.dialog{
- overflow-y: scroll;
 }
 .login_btn {
   color: white;
