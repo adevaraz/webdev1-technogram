@@ -29,8 +29,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                                <img v-else v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
                                 <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                             </div>
                             <div
@@ -39,7 +39,7 @@
                             >
                                 <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
                                 <img
-                                    class="item img-btn mr-1"
+                                    class="act-item img-btn mr-1"
                                     src="../../../assets/icons/heart-empty.png"
                                     @click="isLoginDialogShown = !isLoginDialogShown"
                                 />
@@ -48,7 +48,7 @@
                         </div>
 
                         <div id="view" class="d-flex flex-row">
-                            <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
                         </div>
                         
@@ -57,8 +57,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                                <img v-else v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" />
                             </div>
                             <div
                                 class="d-flex flex-row"
@@ -66,7 +66,7 @@
                             >
                                 <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
                                 <img
-                                    class="item img-btn"
+                                    class="act-item img-btn"
                                     src="../../../assets/icons/unsaved-icon.png"
                                     @click="isLoginDialogShown = !isLoginDialogShown"
                                 
@@ -109,7 +109,7 @@
                     class="d-flex flex-col"
                     @click="onBeritaSelected(berita.id_berita)"
                 >
-                    <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
+                    <small-berita v-if="berita.id_berita != id" class="act-item" :berita="berita"></small-berita>
                 </div>
             </div>
         </v-container>
@@ -424,7 +424,7 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.item {
+.act-item {
   cursor: pointer;
 }
 
