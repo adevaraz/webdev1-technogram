@@ -21,7 +21,7 @@
         <div class="content-inside-image">
           <slot name="content">
             <v-row>
-              <v-col cols="4" class="content pl-4" align-self="end">
+              <v-col cols="4" class="content px-4 pt-0" align-self="end">
                 <h3
                   class="news-kategori clickable-text text-center text-capitalize"
                 >
