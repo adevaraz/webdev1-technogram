@@ -114,6 +114,7 @@ export default {
       this.isLoading = true;
       const loginResult = await Auth.signin(this.email, this.password);
       this.isLoading = false;
+      console.log('ini login resulttt');
       console.log(loginResult);
       
       if (loginResult instanceof Error) {

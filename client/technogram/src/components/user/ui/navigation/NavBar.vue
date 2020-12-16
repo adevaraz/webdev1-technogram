@@ -1,5 +1,4 @@
 <template v-slot:activator="{ on, attrs }">
-    
   <div :class="navbarClass">
     <nav>
       <div class="header">
@@ -78,7 +77,7 @@
                 </div>
                   <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
                   <div class="profile" v-if="showProfile">
-                    <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
+                    <profile-drop-down></profile-drop-down>
                   </div>
               </div>
             </div>
@@ -129,7 +128,6 @@
       </div>
     </transition>
   </div>
-
 </template>
 
 <script>
@@ -273,18 +271,6 @@ export default {
           this.navbarClass = "navbar";
         }
       }
-    },
-    onChildClick (value) {
-      
-
-      this.isLoading = value;
-      console.log("ini is loading......" + this.isLoading)
-      setTimeout(function(){
-        this.isLoading = false;
-         console.log("ini is loading......" + this.isLoading)
-      },3000)
-      
-      
     },
     slideDrawer() {
       this.isDrawerShown = !this.isDrawerShown;
