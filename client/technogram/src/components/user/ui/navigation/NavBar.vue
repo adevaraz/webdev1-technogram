@@ -26,7 +26,7 @@
 
         <div class="right">
           <div class="navigation" v-if="!isMobile">
-            <div>
+            <div class="search-icon">
               <search v-if="isSearchDialogShown" :onDialogClosed=" () => { isSearchDialogShown = false }"> </search>
               <img
                 class="item img-btn"
@@ -35,18 +35,17 @@
               />
             </div>
 
-
             <div class="loggedin" v-if="isLoggedIn">
               <div class="">
                 <img
-                  class="item img-btn"
+                  class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
                   src="../../../../assets/icons/bell.png"
                 />
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -66,14 +65,14 @@
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
             <img
-              class="item img-btn"
+              class="navbar-item img-btn"
               src="../../../../assets/icons/bell.png"
               @click="$router.push({ name: 'notification' })"
             />
           </div>
         </div>
       </div>
-      <div class="submenu-bar" v-if="!isMobile">
+      <div class="navbar-item" v-if="!isMobile">
         <v-btn
           text
           small
@@ -435,7 +434,7 @@ nav .header .right .navigation {
 nav .header .right .navigation .loggedin {
   display: flex;
 }
-nav .header .right .navigation .item {
+nav .header .right .navigation .navbar-item {
   margin-right: 1rem;
   cursor: pointer;
 }
@@ -520,6 +519,12 @@ nav .header .right .btn {
     z-index: 5;
   }
 
+
+  .search-icon{
+    background: blue;
+    display: flex;
+    justify-items: center;
+  }
   /* Animations */
 
   /* slide */
