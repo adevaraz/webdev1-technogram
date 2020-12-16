@@ -31,8 +31,7 @@
                     </v-col>
                   </v-row>
                     <v-row align="center" justify="center">
-                      <p class="text-caption">Have no account?</p>
-                      <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="onHaveNoAccountClicked">Create one</p>
+                      <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="onHaveNoAccountClicked">Have no account</p>
                      </v-row>
                     <v-col class="d-flex justify-center">
                       <v-btn class="login_btn" color="#E52B38" small @click="signin">Sign in</v-btn>
