@@ -26,45 +26,15 @@
 
         <div class="right">
           <div class="navigation" v-if="!isMobile">
-            <v-dialog v-model="dialog" persistent>
-              <template v-slot:activator="{ on, attrs }">
-                <img
-                  class="item img-btn"
-                  v-bind="attrs"
-                  v-on="on"
-                  src="../../../../assets/icons/search-icon.png"
-                />
-              </template>
-              <v-card max-height="1080px">
-                <v-card-title></v-card-title>
-                <v-card-text>
-                  <v-container d-block>
-                    <div class="d-flex flex-row-reverse cross-icon">
-                      <img
-                        class="cross-icon"
-                        @click="dialog = false"
-                        src="../../../../assets/icons/cross.png"
-                      />
-                    </div>
-                    <div class="d-flex flex-row search" align-center>
-                      <v-text-field
-                        v-model="key"
-                        placeholder="Enter keyword here..."
-                        prepend-inner-icon="mdi-magnify"
-                        v-on:keydown.enter="
-                          $router.push({
-                            name: 'recent-result',
-                            query: { q: key },
-                          });
-                          dialog = false;
-                        "
-                      >
-                      </v-text-field>
-                    </div>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
+            <div>
+              <search v-if="isSearchDialogShown" :onDialogClosed=" () => { isSearchDialogShown = false }"> </search>
+              <img
+                class="item img-btn"
+                src="../../../../assets/icons/search-icon.png"
+                @click="isSearchDialogShown = !isSearchDialogShown"
+              />
+            </div>
+
 
             <div class="loggedin" v-if="isLoggedIn">
               <div class="">
@@ -103,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="item" v-if="!isMobile">
+      <div class="submenu-bar" v-if="!isMobile">
         <v-btn
           text
           small
@@ -136,7 +106,7 @@
 import NotificationDropdown from "../../notifications/NotificationDropdown.vue";
 import ProfileDropDown from "../../profile/ProfileDropDown.vue";
 import NavDrawer from "./NavDrawer.vue";
-
+import Search from "../../Search/Search";
 import categoriesData from "../../../../api/kategori/daftarKategori";
 import { mapActions } from "vuex";
 
@@ -178,6 +148,7 @@ export default {
     ProfileDropDown,
     NotificationDropdown,
     AuthUser,
+    Search
   },
 
   props: {
@@ -193,7 +164,7 @@ export default {
       isDrawerShown: false,
       isDrawerAnimationNeeded: false,
       showNotification: false,
-      dialog: false,
+      isSearchDialogShown: false,
       showProfile: false,
       isLoading: '',
       isLoginDialogShown : false,
@@ -222,8 +193,7 @@ export default {
       kategori: [],
       selectedMenu: this.$router.currentRoute.name,
       selectedMenuIndex: 0,
-      currentTime: null,
-      key : ''
+      currentTime: null
     };
   },
   computed: {
@@ -377,20 +347,6 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Work Sans", sans-serif;
-}
-
-.cross-icon {
-  margin-top: 0px;
-  height: 24px;
-  max-height: 24px;
-  margin-right: 15px;
-  cursor: pointer;
-}
-.search {
-  margin-right: 200px;
-  margin-left: 200px;
-  height: 36px;
-  max-height: 36px;
 }
 
 .v-card {
