@@ -1,15 +1,15 @@
 <template>
   <div @click="onBeritaSelected(source.id_berita)">
-    <left-image-preview-berita v-if="!isMobile" :berita="source"></left-image-preview-berita>
-    <right-image-preview-berita v-else :berita="source"></right-image-preview-berita>
+    <preview-berita v-if="!isMobile" :berita="source"></preview-berita>
+    <mobile-preview-berita v-else :berita="source"></mobile-preview-berita>
   </div>
 </template>
 
 <script>
-import LeftImagePreviewBerita from "../berita/LeftImageBeritaPreview.vue";
-import RightImagePreviewBerita from "../berita/RightImageBeritaPreview.vue";
+import PreviewBerita from "../berita/PreviewBerita.vue";
+import MobilePreviewBerita from "../berita/MobilePreviewBerita.vue";
 export default {
-  components: { LeftImagePreviewBerita, RightImagePreviewBerita },
+  components: { PreviewBerita, MobilePreviewBerita },
   name: "item-component",
   props: {
     index: {
