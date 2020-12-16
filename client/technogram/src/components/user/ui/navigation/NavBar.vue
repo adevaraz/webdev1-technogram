@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="submenu-bar" v-if="!isMobile">
+      <div class="item" v-if="!isMobile">
         <v-btn
           text
           small
