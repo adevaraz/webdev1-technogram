@@ -762,3 +762,45 @@ const nullifyClientRefreshToken = (res) =>{
   })
 }
 
+/**
+ * @author 14 KP
+ *
+ * Menambah kategori untuk personalize
+ */
+exports.addPersonalize = async (req, res, next) => {
+  const userId = req.decodedToken.id;
+  const categoryId = req.query.category;
+  console.log("userID "+userId)
+  console.log("categoryID "+categoryId)
+  try {
+    const account = await Pembaca.findByPk(userId);
+    const category = await Kategori.findByPk(categoryId);
+
+    if (account != null && category != null) {
+      // Check whether account has bookmarked news or not
+      account.hasSubscribe(category).then((exist) => {
+        if (exist) {
+          // Unbookmark -- remove from 'menyimpan' table
+          account.removeSubscribe(category);
+
+          res.status(201).json({
+            message: `Success unsaved category with id : ${categoryId}`,
+          });
+        } else {
+          // Bookmark -- add to 'menyimpan' table
+          account.addSubscribe(category);
+
+          res.status(201).json({
+            message: `Success saved category with id : ${categoryId}`,
+          });
+        }
+      });
+    } else {
+      res.status(404).json({
+        message: `Data not found`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
