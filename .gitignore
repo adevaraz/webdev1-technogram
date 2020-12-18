@@ -1,5 +1,5 @@
 # Images
-server/public/images
+server/app/public/images
 
 # Logs
 logs
