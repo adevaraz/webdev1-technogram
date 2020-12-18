@@ -61,6 +61,18 @@ const setAssociations = () => {
         as : 'count',
         foreignKey : 'id_kategori' 
     });
+
+    Pembaca.belongsToMany(Kategori , {
+        through : 'personalize',
+        as : 'subscribe',
+        foreignKey : 'id_pembaca'
+    });
+
+    Kategori.belongsToMany(Pembaca , {
+        through : 'personalize',
+        as : 'subscribe',
+        foreignKey : 'id_kategori' 
+    });
 };
 
 module.exports = setAssociations;

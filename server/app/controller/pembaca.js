@@ -762,3 +762,75 @@ const nullifyClientRefreshToken = (res) =>{
   })
 }
 
+/**
+ * @author 14 KP
+ *
+ * Menambah kategori untuk personalize
+ */
+exports.addPersonalize = async (req, res, next) => {
+  const userId = req.decodedToken.id;
+  const categoryId = req.query.category;
+  console.log("userID "+userId)
+  console.log("categoryID "+categoryId)
+  try {
+    const account = await Pembaca.findByPk(userId);
+    const category = await Kategori.findByPk(categoryId);
+
+    if (account != null && category != null) {
+      account.hasSubscribe(category).then((exist) => {
+        if (exist) {
+          account.removeSubscribe(category);
+
+          res.status(201).json({
+            message: `Success unsubscribe category with id : ${categoryId}`,
+          });
+        } else {
+          account.addSubscribe(category);
+          res.status(201).json({
+            message: `Success subscribe category with id : ${categoryId}`,
+          });
+        }
+      });
+    } else {
+      res.status(404).json({
+        message: `Data not found`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @author 14 KP
+ *
+ * Mendapatkan kategori yang disubscribe user
+ */
+exports.getPersonalize = async (req, res, next) => {
+  const id = req.decodedToken.id;
+  try {
+    const subscribe = await Pembaca.findByPk(id, {
+      include: [
+        {
+          model: Kategori,
+          as: "subscribe",
+        },
+      ],
+    });
+
+    const subscribeCat = subscribe.subscribe
+    if (id!=0 && subscribeCat!=0) {
+      res.status(200).json({
+        message: "Success retrieve subscribed categories",
+        data: subscribeCat
+      });
+    } else {
+      res.status(204).json({
+        message: "not found",
+        data: saved,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
