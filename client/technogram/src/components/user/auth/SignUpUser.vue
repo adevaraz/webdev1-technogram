@@ -1,16 +1,10 @@
 <template>
-
  <v-dialog max-width="600px" v-model="dialog">
-  <template v-slot:activator="{ on, attrs }">
-      <p class="text-caption font-weight-bold" text small v-bind="attrs"
-      v-on="on">? Create one</p>
-    </template>
-  
       <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="dialog=false" src="../../../assets/icons/cross.png" />
+         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
           <div :class="isMobile? 'content-mobile' : 'content'">
             <v-card-title>
-                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign in with email </h1> 
+                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1>
                 </v-card-title>
                     <form class="mt-10">
                         <v-row class="jutify-center">
@@ -45,7 +39,6 @@
                                 <p class="text-caption font-weight-bold text-center">Re-enter Password</p>                                    
                                 <v-text-field
                                     label="Confirm Password" 
-                                    class="text-caption font-weight-bold text-center"
                                     single-line
                                     v-model="confirmPassword" 
                                     :rules="[confirmPasswordRules,passwordConfirmationRule]"
@@ -71,6 +64,14 @@
                       v-if="error.isError">
                       {{errorMessage}}
                       </v-alert>
+                      <v-alert
+                      dense
+                      outlined
+                      type="success"
+                      v-if="error.isNotError">
+                      {{errorMessage}}
+                      </v-alert>
+                      
                     </v-col>
                             </form>
                         </div>
@@ -82,19 +83,23 @@
 <script>
 import Auth from "../../../api/pembaca/auth";
 
-import {mapActions} from "vuex";
+import { mapActions } from "vuex";
 
 export default {
+  props : {
+    onDialogClosed : Function
+  },
   data() {
     return {
       isPasswordShown: false,
       isLoading: false,
-      dialog: false,
+      dialog: true,
       email: "",
       username: "",
       password: "",
- 
+
       error: {
+        isNotError : false,
         isError: false,
         message: "",
         confirmPassword: "",
@@ -116,37 +121,50 @@ export default {
       const isEmpty = (this.email === "") | (this.password === "");
       return !isEmpty;
     },
-    isMobile(){
-      return this.$vuetify.breakpoint.xs ? true : false
+    isMobile() {
+      return this.$vuetify.breakpoint.xs ? true : false;
     },
     passwordConfirmationRule() {
-        return () => (this.password === this.confirmPassword) || "Password must match"
+      return () =>
+        this.password === this.confirmPassword || "Password must match";
     },
   },
   methods: {
     ...mapActions({
-      loggedIn : 'user/getNewToken',
-      setToken : 'user/setToken'
-      
+      loggedIn: "user/getNewToken",
+      setToken: "user/setToken",
     }),
     async signup() {
-      this.error.isError = false;
       this.error.message = "";
       this.isLoading = true;
-      const signupResult = await Auth.signup(this.email, this.username, this.password);
+      const signupResult = await Auth.signup(
+        this.email,
+        this.username,
+        this.password
+      );
+      console.log(signupResult);
       this.isLoading = false;
-        
+
       if (signupResult instanceof Error) {
         this.error.message = signupResult.cause;
         this.error.isError = true;
+        this.error.isNotError = false;
       } else {
-        await this.setToken(signupResult.token, true);
-        this.$router.push({path : '/'});
-      } 
+        const loginResult = await Auth.signin(this.email, this.password);
+        // await this.setToken(signupResult.token, true);
+        // this.$router.push({ path: "/" });
+        this.setToken({
+          token: loginResult.token,
+          username: loginResult.username,
+          email: this.email,
+          kategori: loginResult.mostLikedCategory,
+        });
+
+        this.$router.push({ path: "/" });
+      }
     },
   },
 };
-
 </script>
 
 <style scoped>
@@ -154,19 +172,21 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 
 col-12 {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .container {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
 }
-.item{
+
+.item {
   height: 20px;
   margin: 10px;
 }
+
 .content {
   padding-left: 5rem;
   padding-right: 5rem;
@@ -177,6 +197,7 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .content-mobile {
   padding-left: 2rem;
   padding-right: 2rem;
@@ -187,15 +208,20 @@ col-12 {
   align-items: center;
   justify-content: center;
 }
+
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
   font-size: 25px;
 }
 
-.playfair-font{
+.playfair-font {
   font-family: "Playfair Display", serif;
 }
 .signup_btn {
   color: white;
+}
+
+.img-btn{
+  cursor: pointer;
 }
 </style>

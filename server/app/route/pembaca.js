@@ -117,4 +117,17 @@ router.get("/like-state", authentication.validateUser, pembacaController.isLiked
  */
 router.post('/refresh' , pembacaController.getAccessToken);
 
+/**
+ * @author 14 KP
+ * 
+ * Route untuk menambahkan kategori ke daftar personalizenya
+ */
+router.post('/add-personalize', authentication.validateUser, pembacaController.addPersonalize);
+
+/**
+ * @author 14 KP
+ * 
+ * Route untuk mendapatkan kategori dari daftar personalizenya
+ */
+router.get('/get-personalize', authentication.validateUser, pembacaController.getPersonalize);
 module.exports = router;

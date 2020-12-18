@@ -58,7 +58,6 @@
 </template>
 
 <script>
-const PRIVIEW_MAX_WORDS = 100
 export default {
   props : {
     berita : {
@@ -66,6 +65,10 @@ export default {
       default(){
         return {}
       }
+    },
+    previewMaxWord : {
+      type : Number ,
+       default : 120
     }
   },
   computed: {
@@ -81,14 +84,12 @@ export default {
       return `${month} ${date} ${year}`;
     },
     preview(){
-      console.log('woy ini nih');
-      const firstSentences = this.berita.artikel.toString().split('>')[2];
-      let preview = firstSentences;
-      if(firstSentences.length > PRIVIEW_MAX_WORDS){
-        preview = firstSentences.slice(0 , PRIVIEW_MAX_WORDS);
-      }
-      return preview.split('<')[0];
-    },
+      let rawHtmlArticle = this.berita.artikel;
+      const splitRegex = /(<(.*?)>)/g;
+      const wordOnlyArticle = rawHtmlArticle.toString().replaceAll(splitRegex , "");
+      return wordOnlyArticle.substring(0 , this.previewMaxWord);
+     
+    }
     
   }
 };
@@ -122,60 +123,50 @@ export default {
   margin-left: 10%;
   
 }
-
 .news-title {
   font-size: 24px;
   font-weight: 600;
 }
-
 .news-preview {
   font-weight: 400;
   font-size: 14px;
   color: #898788;
 }
-
 .news-writer {
   font-weight: 1000;
   font-size: 12px;
 }
-
 .news-time {
   font-weight: 400;
   font-size: 1rem;
 }
-
 .news-category {
   font-weight: 400;
   font-size: 12px;
   color: #e52b38;
 }
-
 .right-col img {
   width: 10px;
   height: 10px;
 }
-
 .like-container{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     margin-left: 105%;
 }
-
 .news-likes{
    font-weight: 400;
   font-size: 0.8rem;
   color: #e52b38;
    
 }
-
 .news-date{
    font-weight: 400;
   font-size: 0.8rem;
   color: #898788;
      
 }
-
 .left-container{
     border-bottom: 0.5px solid #bab4b8b9;
 }

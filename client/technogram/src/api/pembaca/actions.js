@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TIMEOUT, USER_URL} from '../const'
+import {TIMEOUT, USER_URL, USER_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const like = async (id, category, token) => {
@@ -20,7 +20,10 @@ const like = async (id, category, token) => {
 
         return result.data;
     } catch (err) {
-        return ErrorHandler.errorHandler(err);
+        const errorResult = await ErrorHandler.errorHandler(err, USER_ROLE, async(newToken) => {
+            return await like(id, category, newToken);
+        })
+        return errorResult;
     }
 }
 
@@ -42,7 +45,10 @@ const isLiked = async (token, newsId) => {
 
         return result.data;
     } catch (error) {
-        return ErrorHandler.errorHandler(error);
+        const errorResult = await ErrorHandler.errorHandler(error, USER_ROLE, async(newToken) => {
+            return await isLiked(newToken, newsId);
+        })
+        return errorResult;
     }
 }
 
@@ -64,7 +70,10 @@ const saveBerita = async (id, token) => {
 
         return result.data;
     } catch (error) {
-        return ErrorHandler.errorHandler(error);
+        const errorResult = await ErrorHandler.errorHandler(error, USER_ROLE, async(newToken) => {
+            return await saveBerita(id, newToken);
+        })
+        return errorResult;
     }
 }
 
@@ -86,7 +95,10 @@ const isSaved = async (token, newsId) => {
 
         return result.data;
     } catch (error) {
-        return ErrorHandler.errorHandler(error);
+        const errorResult = await ErrorHandler.errorHandler(error, USER_ROLE, async(newToken) => {
+            return await isSaved(newToken, newsId);
+        })
+        return errorResult;
     }
 }
 

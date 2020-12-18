@@ -10,35 +10,68 @@
         ></v-progress-circular>
         <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
             <v-sheet
-                class="mx-16 px-2"
+                :class="isMobile? 'mx-3' : 'mx-10 px-12'"
             >
                 <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
                 <p class="worksans-font">{{ date }}</p>
 
                 <!-- Information section -->
                 <v-card
-                    :class="isMobile? 'd-flex flex-wrap mb-3' : 'd-flex flex-row mb-3'"
+                    :class="isMobile? 'd-flex flex-wrap mb-3 max-width-50' : 'd-flex flex-row mb-3'"
                     flat
                     tile
                 >
                     <h4 class="mr-auto">by {{ jurnalis }}</h4>
 
                     <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-                        <div id="likes" class="d-flex flex-row">
-                            <img v-if="!isLiked || !isLoggedIn" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                            <img v-if="isLiked" v-on:click="likeBerita()" class="item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
-                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                        <div id="like">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
+                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="act-item img-btn mr-1"
+                                    src="../../../assets/icons/heart-empty.png"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                            </div>
                         </div>
 
                         <div id="view" class="d-flex flex-row">
-                            <img class="item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
                         </div>
                         
-                        <div id="save" class="d-flex flex-row">
-                            <img v-if="!isSaved || !isLoggedIn" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                            <img v-if="isSaved" v-on:click="saveBerita()" class="item img-btn" src="../../../assets/icons/saved-icon.png" />
-                            <p> </p>
+                        <div id="save">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" />
+                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" />
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="act-item img-btn"
+                                    src="../../../assets/icons/unsaved-icon.png"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                
+                                />
+                            </div>
                         </div>
                     </div>
                 </v-card>
@@ -54,7 +87,7 @@
                         />
                     </div>
 
-                    <div v-html=artikel></div>
+                    <div :class="isMobile? 'article responsive-img break-words' : 'article responsive-img'" v-html=artikel></div>
 
                     <p class="grey--text text--darken-2">Written by</p>
                     <h4>{{ jurnalis }}</h4>
@@ -62,7 +95,7 @@
                 </div>
             </v-sheet>
 
-            <div class="px-16 mx-12 my-16">
+            <div class="px-2 mx-2 my-16">
                 <h3 class="worksans-font red-text">Recommendations</h3>
                 <v-progress-circular
                     class="small-progressbar"
@@ -76,7 +109,7 @@
                     class="d-flex flex-col"
                     @click="onBeritaSelected(berita.id_berita)"
                 >
-                    <small-berita v-if="berita.id_berita != id" class="item" :berita="berita"></small-berita>
+                    <small-berita v-if="berita.id_berita != id" class="act-item" :berita="berita"></small-berita>
                 </div>
             </div>
         </v-container>
@@ -91,18 +124,19 @@ import berita from "../../../api/berita/berita";
 import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
+import AuthUser from "../auth/AuthUser";
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
+        AuthUser
     },
 
     created() {
         this.incrementViewer(this.$route.params.id);
         this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
     },
@@ -126,7 +160,8 @@ export default {
         isLiked: false,
         isSaved: false,
         relatedBeritaLoading: false,
-        errorMessage: ''
+        errorMessage: '',
+        isLoginDialogShown : false
     }),
   
     watch: {
@@ -389,7 +424,7 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
-.item {
+.act-item {
   cursor: pointer;
 }
 
@@ -417,8 +452,28 @@ export default {
     transition: translate(-50%, -50%);
 }
 
+.max-width-50 {
+    max-width: 50px;
+}
+
+.break-words {
+    word-wrap: break-word;
+    max-width: 300px;
+}
+
 .small-progressbar {
     left: 50%;
     top: 20%;
+}
+
+.responsive-img ::v-deep img {
+    width: 100%;
+}
+
+.article ::v-deep br {
+    content: " ";
+    display: block;
+    margin: 10px 10;
+    line-height: 20px;
 }
 </style>

@@ -1,0 +1,28 @@
+<template>
+    <div>
+        <login-user v-if="isLogin" :onHaveNoAccountClicked="changeMode" :onDialogClosed="onDialogClosed"></login-user>
+        <sign-up-user :onDialogClosed="onDialogClosed" v-else></sign-up-user>
+    </div>
+</template>
+
+<script>
+import LoginUser from './LoginUser.vue'
+import SignUpUser from './SignUpUser.vue'
+export default {
+  components: { LoginUser, SignUpUser },
+    props : {
+        onDialogClosed : Function
+    },
+    data(){
+        return {
+            isLogin : true
+        }
+    },
+    methods :{
+        changeMode(){
+            this.isLogin = !this.isLogin;
+        },
+
+    }
+}
+</script>

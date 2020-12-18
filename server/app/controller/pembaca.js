@@ -467,23 +467,37 @@ exports.isSaved = async (req, res, next) => {
 */
 exports.getSave = async (req, res, next) => {
   const id = req.decodedToken.id;
-  console.log(id);
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perpage || 5;
+  const offset = (currentPage-1) * perPage;
+  console.log("perpage server: "+perPage)
+  console.log("MASUK NANYA ID "+id);
   try {
     const saved = await Pembaca.findByPk(id, {
-    
       include: [
         {
           model: Berita,
           as: "saved",
         },
       ],
+    
     });
 
     const savedBerita = saved.saved
+    const sliceOfSaved = savedBerita.slice(offset , +offset + +perPage);
+    const nextPageOffset = (currentPage) * perPage;
+    const nextPage = savedBerita.length > nextPageOffset
+
+    console.log(savedBerita.length+ "ini panjang saved berita")
+    console.log("panjang slice "+sliceOfSaved.length)
     if (savedBerita.length > 0) {
       res.status(200).json({
         message: "Success retrieve saved data",
-        data: savedBerita
+        data: {
+          sliceOfSaved,
+          nextPage
+        }
+         
       });
     } else {
       res.status(204).json({
@@ -653,12 +667,22 @@ exports.getAccessToken = async (req , res , next ) => {
       error.cause = 'You might re-login to access this route'
       throw error;      
     }
+
+    let mostLikeCategory;
+      //Get mostliked category name
+      console.log(pembaca);
+      if(pembaca.most_liked_category){
+         mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+      }
     
     const newToken = await createAccessToken(pembaca);
 
     res.status(201).json({
       message : 'success create new access token',
-      token : newToken
+      token : newToken,
+      username: pembaca.username,
+      email: pembaca.email,
+      mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
     })
 
   }catch(err){
@@ -738,3 +762,75 @@ const nullifyClientRefreshToken = (res) =>{
   })
 }
 
+/**
+ * @author 14 KP
+ *
+ * Menambah kategori untuk personalize
+ */
+exports.addPersonalize = async (req, res, next) => {
+  const userId = req.decodedToken.id;
+  const categoryId = req.query.category;
+  console.log("userID "+userId)
+  console.log("categoryID "+categoryId)
+  try {
+    const account = await Pembaca.findByPk(userId);
+    const category = await Kategori.findByPk(categoryId);
+
+    if (account != null && category != null) {
+      account.hasSubscribe(category).then((exist) => {
+        if (exist) {
+          account.removeSubscribe(category);
+
+          res.status(201).json({
+            message: `Success unsubscribe category with id : ${categoryId}`,
+          });
+        } else {
+          account.addSubscribe(category);
+          res.status(201).json({
+            message: `Success subscribe category with id : ${categoryId}`,
+          });
+        }
+      });
+    } else {
+      res.status(404).json({
+        message: `Data not found`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @author 14 KP
+ *
+ * Mendapatkan kategori yang disubscribe user
+ */
+exports.getPersonalize = async (req, res, next) => {
+  const id = req.decodedToken.id;
+  try {
+    const subscribe = await Pembaca.findByPk(id, {
+      include: [
+        {
+          model: Kategori,
+          as: "subscribe",
+        },
+      ],
+    });
+
+    const subscribeCat = subscribe.subscribe
+    if (id!=0 && subscribeCat!=0) {
+      res.status(200).json({
+        message: "Success retrieve subscribed categories",
+        data: subscribeCat
+      });
+    } else {
+      res.status(204).json({
+        message: "not found",
+        data: saved,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};

@@ -1,12 +1,20 @@
 <template>
-  <v-container fluid>
-    <virtual-list ref="virtual-scroller" class="list-infinite scroll-touch" :page-mode="true" :data-key="'id'" :data-sources="items" :data-component="itemComponent" v-on:tobottom="onScrollToBottom" :keeps="20">
+  <v-container fluid  class="pa-0"> 
+    <virtual-list   
+        ref="list" 
+        class="list-infinite scroll-touch" 
+        :page-mode="true" :data-key="'id'" 
+        :data-sources="items" 
+        :data-component="itemComponent" 
+        :estimate-size="70"
+      v-on:tobottom="onScrollToBottom" :keeps="20"
+      >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center" v-if="isEndOfList">
-          <h3>No more item</h3>
+        <div class="no-item text-center mt-5" v-if="isEndOfList">
+          <h3>No more item &#128512;</h3>
         </div>
       </div>
     </virtual-list>
@@ -30,6 +38,14 @@ export default {
       items: [],
       isEndOfList: false,
     };
+  },
+  computed : {
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      }
+      return false;
+    }
   },
   methods: {
     onScrollToBottom() {
@@ -55,8 +71,9 @@ export default {
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
-        element.id = new Date().toString();
+        element.id = element.id_berita;
         this.items.push(element);
+        this.$refs.list.updatePageModeFront();
       });
     },
   },
@@ -70,7 +87,7 @@ export default {
 }
 
 .no-item {
-  border-top: 1px solid black;
+  font-size: 0.7rem;
 }
 
 .list-infinite::-webkit-scrollbar {
@@ -81,7 +98,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  padding: 0 10rem;
+  overflow-x:hidden;
   position: relative;
 }
 
