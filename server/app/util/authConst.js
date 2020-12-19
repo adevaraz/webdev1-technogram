@@ -11,7 +11,7 @@ const USER_REDIS_EXPIRED = USER_ACCESSTOKEN_EXPIRED  + 2 *60
 const USER_COOKIES_EXPIRED = USER_REFRESHTOKEN_EXPIRED * 1000
 
 // User verification token expired (1 day)
-const USER_VERIF_EXPIRED = 24 * 60 * 1000;
+const USER_VERIF_EXPIRED = 60 * 60 * 24;
 
 // Admin Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
 const ADMIN_ACCESSTOKEN_EXPIRED = 60 * 60;
