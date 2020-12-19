@@ -160,7 +160,7 @@ export default {
           kategori: loginResult.mostLikedCategory,
         });
 
-        this.$router.push({ path: "/" });
+        this.$router.push({ path: "/personalization" });
       }
     },
   },
