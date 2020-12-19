@@ -26,6 +26,10 @@ const Pembaca = sequelize.define("pembaca", {
     },
     last_changed_pwd : {
         type : Sequelize.BIGINT,
+    },
+    is_verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 });
 

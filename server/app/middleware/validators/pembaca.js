@@ -29,6 +29,7 @@ const createPembacaValidationRules = () => {
                         email: value
                     }
                 });
+
                 if(isExist) {
                     throw new Error("E-mail is already exist.");
                 } else {
