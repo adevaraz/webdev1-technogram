@@ -15,6 +15,13 @@ router.post("/create", createPembacaValidationRules(), validate, pembacaControll
 /**
  * @author 31 ZV
  * 
+ * Route untuk memeriksa apakah berita sudah dilike atau belum
+ */
+router.put("/confirm", pembacaController.verifyEmailConfirm);
+
+/**
+ * @author 31 ZV
+ * 
  * Route untuk mengambil semua akun pembaca
  */
 router.get("/all-account", pembacaController.getAll);
