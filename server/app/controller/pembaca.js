@@ -34,7 +34,11 @@ exports.create = async (req, res, next) => {
 
     await Pembaca.create(pembaca);
 
-    const verificationToken = await sendVerifEmail(pembaca);
+    const insertedPembaca = await Pembaca.findOne({
+      where : { email: req.body.email }
+    });
+    
+    const verificationToken = await sendVerifEmail(insertedPembaca);
 
     res.status(201).json({
       message: "Verification email sent successfully",
@@ -52,7 +56,9 @@ exports.create = async (req, res, next) => {
  */
 exports.verifyEmailConfirm = async (req, res, next) => {
   try {
-    const pembacaId = req.decodedToken.id;
+    const token = req.query.ref;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const pembacaId = decoded.id;
 
     const account = await Pembaca.findByPk(pembacaId);
     
@@ -75,6 +81,7 @@ exports.verifyEmailConfirm = async (req, res, next) => {
     } else {
       res.status(404).json({
         message: `Account with id ${pembacaId} not found`,
+        data: decoded
       });
     }
 
