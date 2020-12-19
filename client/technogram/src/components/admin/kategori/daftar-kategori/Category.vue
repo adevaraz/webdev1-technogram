@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import categoriesData from "../../../../api/kategori/daftarKategori";
+import categoriesData from "../../../../api/kategori/daftarKategori"
 import { store } from '../../../../store/index'
 export default {
   data: () => ({
