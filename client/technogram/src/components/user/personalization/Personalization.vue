@@ -1,6 +1,6 @@
 <template>
 <v-container>
-   <v-row class="content">
+   <v-row :class="isMobile? 'content-mobile' : 'content'">
     <v-col
     md="6"
     offset-md="12"
@@ -14,6 +14,7 @@
       align="center">
         <v-btn
             class="button"
+            color="secondary"
             :class="categoryClass(index)"
             v-for="(item,index) in kategori"
             :key="item.nama_kategori"
@@ -28,9 +29,10 @@
       offset-md="12"
       align="center">
       <v-btn
-        
+        color ="#E52B38"
+        class ="submit"
         rounded
-        @click="addKategoriFix">
+        @click="AddPersonalize">
         Done
         </v-btn>
         </v-col>
@@ -41,7 +43,8 @@
 </template>
 
 <script>
-import categoriesData from "../../../api/personalization/personalization.js";
+import { store } from "../../../store/index";
+import personalize from "../../../api/personalization/personalization.js";
 export default {
   data: () => ({
       isLoading: false,
@@ -50,6 +53,11 @@ export default {
       kategoriSelected:[],
       kategoriSelectedFix:[]
   }),
+  computed :{
+      isMobile() {
+      return this.$vuetify.breakpoint.xs ? true : false;
+    },
+  },
   methods :{
   addKategori(value, index){
 
@@ -69,15 +77,26 @@ export default {
           }
   },
   categoryClass(index){
-      this.isButtonClicked[index]==true ? "black"
-        : "white";
-
-        console.log(this.isButtonClicked[index])
+      this.isButtonClicked[index]==true ? "button text-decoration-underline text-none"
+        : "button  text-none";
   },
-
+  async AddPersonalize() {
+    var result;
+    this.kategoriSelected.forEach((element)=>{
+      result = personalize.addPersonalize(
+        element,
+        store.getters["user/getToken"]
+      )
+    })
+        if (result instanceof Error) {
+        this.error.message = result.cause;
+      } else {
+        this.$router.push({ path: "/" });
+      }
+  },
   async retrieveKategori() {
       try {
-        const kategoriResult = await categoriesData.retrieveAll();
+        const kategoriResult = await personalize.retrieveAll();
         if (kategoriResult instanceof Error) {
           throw kategoriResult;
         } else {
@@ -113,6 +132,9 @@ export default {
 .content {
     padding-top : 5rem;
 }
+.content-mobile {
+  padding : 3rem;
+}
 .progress-bar {
   z-index : 500;
   position : fixed;
@@ -126,6 +148,10 @@ export default {
 
 .category {
     margin-top: 2rem;
+}
+
+.submit {
+  color: white;
 }
 
 .container{

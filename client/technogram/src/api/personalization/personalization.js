@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {ADMIN_ROLE, KATEGORI_URL, TIMEOUT} from '../const'
+import { KATEGORI_URL, TIMEOUT, USER_URL, USER_ROLE} from '../const'
 import errorHandler from '../errorHandler'
 
 const retrieveAll = async() => {
@@ -29,7 +29,32 @@ const getByName = async(name) => {
     }
 }
 
+const addPersonalize = async(category, token) => {
+    try {
+        const addPersonalizeURL = USER_URL + '/add-personalize'
+        const result = await axios.post(
+            addPersonalizeURL,
+            {
+                category,
+            },
+            {
+                headers: {
+                    Authorization: token,
+                },
+                timeout: TIMEOUT,
+                withCredentials: true,
+            }
+        );
+        return result.data;
+    }catch (err) {
+        const errorResult = await errorHandler.errorHandler(err, USER_ROLE, async(newToken) => {
+            return await addPersonalize(category, newToken);
+        })
+        return errorResult;
+    }
+}
 export default{
     retrieveAll ,
-    getByName
+    getByName,
+    addPersonalize
 }
