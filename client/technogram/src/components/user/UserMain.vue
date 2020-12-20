@@ -20,10 +20,12 @@
 </template>
 
 <script>
-import NavBar from "./ui/navigation/NavBar.vue";
-import NotificationToast from "./ui/modals/NotificationToast.vue";
+
+
+const NavBar = () => import("./ui/navigation/NavBar.vue");
+const NotificationToast = () => import("./ui/modals/NotificationToast.vue");
+import openSocket from "socket.io-client"
 import { mapGetters } from "vuex";
-import openSocket from "socket.io-client";
 import { BASE_URL } from "../../api/const.js";
 import { store } from "../../store/index";
 //import LoginUser from "./LoginUser.vue";

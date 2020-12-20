@@ -118,8 +118,8 @@
 
 <script>
 import { BASE_URL } from "../../../api/const";
-import { VueEditor } from "vue2-editor";
-import berita from "../../../api/berita/berita";
+const VueEditor = ()=> import("vue2-editor");
+import berita from "../../../api/berita/berita"
 import { store } from "../../../store/index";
 export default {
   name: "add-berita",

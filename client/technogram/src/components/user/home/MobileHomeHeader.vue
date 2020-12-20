@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import HeadlineBerita from "../berita/HeadlineBerita.vue";
-import SmallBerita from "../berita/SmallBerita.vue";
+const HeadlineBerita = () => import("../berita/HeadlineBerita.vue");
+const SmallBerita = () => import("../berita/SmallBerita.vue");
 export default {
     components :{
         HeadlineBerita,
