@@ -24,8 +24,8 @@
 
 <script>
 import beritaApi from "../../../api/berita/berita";
+const SmallBerita = () => import("../berita/SmallBerita.vue");
 import { BASE_URL } from "../../../api/const";
-import SmallBerita from "../berita/SmallBerita.vue";
 import { store } from "../../../store/index";
 export default {
   components: {

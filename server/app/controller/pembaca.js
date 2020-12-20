@@ -8,6 +8,8 @@ const bcrypt = require("bcryptjs");
 const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
 const {UserConst : UserAuthConst} = require('../util/authConst');
+const mail = require("./mailer");
+
 /**
  * @author 31 ZV
  *
@@ -32,14 +34,61 @@ exports.create = async (req, res, next) => {
 
     await Pembaca.create(pembaca);
 
+    const insertedPembaca = await Pembaca.findOne({
+      where : { email: req.body.email }
+    });
+    
+    const verificationToken = await sendVerifEmail(insertedPembaca);
+
     res.status(201).json({
-      message: "Account created successfully",
-      data: pembaca,
+      message: "Verification email sent successfully",
+      data: verificationToken,
     });
   } catch (err) {
     next(err);
   }
 };
+
+/**
+ * @author 31 ZV
+ *
+ * Memeriksa token verifikasi email
+ */
+exports.verifyEmailConfirm = async (req, res, next) => {
+  try {
+    const token = req.query.ref;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const pembacaId = decoded.id;
+
+    const account = await Pembaca.findByPk(pembacaId);
+    
+    if(account != null) {
+      if(!account.is_verified) {
+        const activateAccount = await account.update({
+          is_verified: true
+        })
+  
+        res.status(201).json({
+          message: `Account with id ${pembacaId} succesfully activated`,
+          data: account.is_verified
+        });
+      } else {
+        res.status(201).json({
+          message: `Account with id ${pembacaId} has been activated before`,
+          data: account.is_verified
+        });
+      }
+    } else {
+      res.status(404).json({
+        message: `Account with id ${pembacaId} not found`,
+        data: decoded
+      });
+    }
+
+  } catch (err) {
+    next(err);
+  }
+}
 
 /**
  * @author 31 ZV
@@ -523,33 +572,43 @@ exports.signin = async (req, res, next) => {
         email: email,
       },
     });
-    if (pembaca) {
-      const isPasswordTrue = bcrypt.compare(password, pembaca.password);
-      if (!isPasswordTrue) {
+
+    // Check whether account verified or not
+    if(pembaca.is_verified) {
+      if (pembaca) {
+        const isPasswordTrue = bcrypt.compare(password, pembaca.password);
+        if (!isPasswordTrue) {
+          const error = new Error("Invalid credential");
+          error.statusCode = 401;
+          error.cause = "Wrong password";
+          throw error;
+        }
+        let mostLikeCategory;
+        //Get mostliked category name
+        console.log(pembaca);
+        if(pembaca.most_liked_category){
+           mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+        }
+        //generate token 
+        const accessToken = await createAccessToken(pembaca);
+        await createRefreshToken(pembaca,res);
+        res.status(200).json({
+          message: "sign in Success",
+          token: accessToken,
+          mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
+          username: pembaca.username
+        });
+      } else {
         const error = new Error("Invalid credential");
         error.statusCode = 401;
-        error.cause = "Wrong password";
+        error.cause = "Account with such email is not exist";
         throw error;
       }
-      let mostLikeCategory;
-      //Get mostliked category name
-      console.log(pembaca);
-      if(pembaca.most_liked_category){
-         mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
-      }
-      //generate token 
-      const accessToken = await createAccessToken(pembaca);
-      await createRefreshToken(pembaca,res);
-      res.status(200).json({
-        message: "sign in Success",
-        token: accessToken,
-        mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
-        username: pembaca.username
-      });
     } else {
-      const error = new Error("Invalid credential");
-      error.statusCode = 401;
-      error.cause = "Account with such email is not exist";
+      const error = new Error("Unverified account");
+      error.statusCode = 403;
+      error.cause = "Account has not been verified";
+
       throw error;
     }
   } catch (err) {
@@ -718,9 +777,6 @@ const createRefreshToken = async (pembaca , res) => {
   return token; 
 }
 
-
-
-
 /*
 @author 16 MN
 membuat access token bagi pembaca
@@ -834,3 +890,44 @@ exports.getPersonalize = async (req, res, next) => {
     next(err);
   }
 };
+
+/** 
+ * @author 31 ZV
+ *
+ * Mengirim email verifikasi
+ */
+const sendVerifEmail = async (pembaca) => {
+  const verificationToken = jwt.sign(
+    { id: pembaca.id_pembaca },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: UserAuthConst.USER_VERIF_EXPIRED }
+  );
+
+  // Send verification email with token
+  const res = mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
+
+  return verificationToken;
+}
+
+/** 
+ * @author 31 ZV
+ *
+ * Mengirim email verifikasi
+ */
+exports.resendVerifEmail = async (req, res, next) => {
+  try {
+    const email = req.query.email;
+    const account = await Pembaca.findOne({
+      where : { email: email }
+    });
+
+    const verificationToken = await sendVerifEmail(account);
+
+    res.status(200).json({
+      message: "Success resend verification email",
+      data: verificationToken
+    });
+  } catch (err) {
+    next(err);
+  }
+}

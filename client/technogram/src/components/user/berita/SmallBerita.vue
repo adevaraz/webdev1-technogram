@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import LazyImage from "../ui/LazyImage.vue";
+const LazyImage = () => import("../ui/LazyImage.vue");
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
 

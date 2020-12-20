@@ -49,10 +49,12 @@
 </template>
 
 <script>
-import BeritaCategorySection from "./BeritaCategorySection.vue";
+
 import categoryApi from "../../../api/kategori/daftarKategori";
-import DescriptiveBerita from "../berita/DescriptiveBerita.vue";
-import CuttedBerita from '../berita/CuttedBerita.vue';
+
+const BeritaCategorySection = () => import("./BeritaCategorySection.vue");
+const DescriptiveBerita = () => import("../berita/DescriptiveBerita.vue");
+const CuttedBerita = () => import("../berita/CuttedBerita.vue");
 export default {
   components: { BeritaCategorySection, DescriptiveBerita, CuttedBerita },
   async created() {

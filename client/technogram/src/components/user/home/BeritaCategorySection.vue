@@ -47,9 +47,9 @@
 
 <script>
 import beritaApi from "../../../api/berita/berita";
+const InsideImageBerita = () => import("../berita/InsideImageBerita.vue");
+const TextOnlyBerita = () => import("../berita/TextOnlyBerita.vue");
 import { BASE_URL } from "../../../api/const";
-import InsideImageBerita from "../berita/InsideImageBerita.vue";
-import TextOnlyBerita from "../berita/TextOnlyBerita.vue";
 export default {
   components: { TextOnlyBerita, InsideImageBerita },
   created() {

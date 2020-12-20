@@ -129,12 +129,14 @@
 import { BASE_URL } from "../../../api/const";
 import { store } from "../../../store/index";
 import { mapGetters } from 'vuex';
-import berita from "../../../api/berita/berita";
+
+import berita from "../../../api/berita/berita"
 import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
-import SmallBerita from "../berita/SmallBerita.vue";
-import AuthUser from "../auth/AuthUser";
-import Share from "./Share";
+
+const SmallBerita = () => import("../berita/SmallBerita.vue");
+const AuthUser = () => import("../auth/AuthUser");
+const Share = () => import("./Share");
 
 export default {
     name: "read-berita",

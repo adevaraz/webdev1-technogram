@@ -6,7 +6,7 @@
 
 <script>
 
-import NotificationDetailRecycler from './NotificationDetailRecycler.vue'
+const NotificationDetailRecycler = () => import("./NotificationDetailRecycler.vue");
 
 export default {
   components: {
