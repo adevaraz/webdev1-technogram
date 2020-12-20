@@ -13,7 +13,7 @@
             <div id="location-chart"></div>
         </v-card>
         <v-card class="pa-5">
-            <h3 style=" margin-bottom:20px ; font-family:'Playfair Display' ">Browser used in the last 30 days</h3>
+            <h3 style=" margin-bottom:20px ; font-family:'Playfair Display' ">Top 5 Browser used in the last 30 days</h3>
             <div id="browser-chart"></div>
         </v-card>
         <v-overlay :value="isLoading">
@@ -111,6 +111,7 @@ export default {
                         'metrics': 'ga:sessions',
                         'sort': '-ga:sessions',
                         'dimensions': 'ga:browser',
+                        'max-results': 5
                     },
                     chart: {
                         'container': 'browser-chart',
