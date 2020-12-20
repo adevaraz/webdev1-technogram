@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const Kategori = require('../model/kategori');
 const PembacaKategori = require('../model/pembacaKategori');
 const {UserConst : UserAuthConst} = require('../util/authConst');
-const { transporter } = require("./mailer");
+const mail = require("./mailer");
 
 /**
  * @author 31 ZV
@@ -574,7 +574,7 @@ exports.signin = async (req, res, next) => {
     });
 
     // Check whether account verified or not
-    if(!pembaca.is_verified) {
+    if(pembaca.is_verified) {
       if (pembaca) {
         const isPasswordTrue = bcrypt.compare(password, pembaca.password);
         if (!isPasswordTrue) {
@@ -891,7 +891,8 @@ exports.getPersonalize = async (req, res, next) => {
   }
 };
 
-/** @author 31 ZV
+/** 
+ * @author 31 ZV
  *
  * Mengirim email verifikasi
  */
@@ -902,19 +903,8 @@ const sendVerifEmail = async (pembaca) => {
     { expiresIn: UserAuthConst.USER_VERIF_EXPIRED }
   );
 
-  // Checking connection
-  await transporter.verify((err, success) => {
-    if(err) return new Error(err);
-    console.log("Your config is correct");
-  });
-
   // Send verification email with token
-  const res = await transporter.sendMail({
-    from: '"Technogram" <id.technogram@gmail.com>',
-    to: pembaca.email,
-    subject: "Email Verifikasi Akun Technogram",
-    text: `Halo, ${pembaca.username}! Untuk mengaktifkan akun Anda, silahkan tekan link berikut ini : https://technogram.tech/confirm?ref=${verificationToken}`
-  });
+  const res = mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
 
   return verificationToken;
 }
