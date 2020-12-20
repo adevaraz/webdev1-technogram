@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import verifApi from "../../../api/pembaca/verification";
+
 export default {
     
 }

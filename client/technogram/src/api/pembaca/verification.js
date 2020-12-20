@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TIMEOUT, USER_URL, USER_ROLE} from '../const'
+import {USER_URL} from '../const'
 import ErrorHandler from '../errorHandler'
 
 const confirmVerification = async (verificationToken) => {
