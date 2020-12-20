@@ -15,7 +15,7 @@ export default [
         },
         {
             path : '/personalization',
-            component : () => import "(./components/user/personalization/Personalization.vue"),
+            component : () => import ("./components/user/personalization/Personalization.vue"),
             name : 'personalization'
         },
         { 
