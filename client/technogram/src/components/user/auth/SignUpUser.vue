@@ -82,7 +82,6 @@
 
 <script>
 import Auth from "../../../api/pembaca/auth";
-
 import { mapActions } from "vuex";
 
 export default {

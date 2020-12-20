@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import SmallBerita from '../berita/SmallBerita.vue'
+const SmallBerita = () => import("../berita/SmallBerita.vue");
   export default {
   components: { SmallBerita },
     name: 'item-component',

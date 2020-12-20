@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import LoginUser from './LoginUser.vue'
-import SignUpUser from './SignUpUser.vue'
+const LoginUser = () => import("./LoginUser.vue");
+const SignUpUser = () => import("./SignUpUser.vue");
 export default {
   components: { LoginUser, SignUpUser },
     props : {

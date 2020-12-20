@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import NoImageBerita from "../berita/NoImageBerita.vue";
-import RightImagePreviewBerita from "../berita/RightImageBeritaPreview.vue";
+const NoImageBerita = () => import("../berita/NoImageBerita.vue");
+const RightImagePreviewBerita = () => import("../berita/RightImageBeritaPreview.vue");
 export default {
   components: { NoImageBerita, RightImagePreviewBerita },
   name: "item-component",

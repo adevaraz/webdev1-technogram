@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import LazyImage from "../ui/LazyImage.vue";
+const LazyImage = () => import("../ui/LazyImage.vue");
 export default {
   components: {
     LazyImage,
