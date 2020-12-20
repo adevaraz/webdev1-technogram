@@ -10,8 +10,13 @@ export default [
         },
         {
             path : '/categories',
-            component : ()=>import("./components/user/category/Category.vue"),
+            component : () => import("./components/user/category/Category.vue"),
             name : 'more-categories'
+        },
+        {
+            path : '/personalization',
+            component : () => import "(./components/user/personalization/Personalization.vue"),
+            name : 'personalization'
         },
         { 
             path : '/search-result',

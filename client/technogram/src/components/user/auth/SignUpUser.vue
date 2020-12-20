@@ -159,7 +159,7 @@ export default {
           kategori: loginResult.mostLikedCategory,
         });
 
-        this.$router.push({ path: "/" });
+        this.$router.push({ path: "/personalization" });
       }
     },
   },
@@ -187,8 +187,7 @@ col-12 {
 }
 
 .content {
-  padding-left: 5rem;
-  padding-right: 5rem;
+  padding : 4rem;
   display: flex;
   height: 100%;
   width: 100%;
