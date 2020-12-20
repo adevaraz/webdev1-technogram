@@ -30,6 +30,17 @@ exports.verifyMail = async (email, username, token) => transporter.sendMail({
     }
 });
 
+exports.forgetPassorMail = async (email , username , token) => transporter.sendMail({
+    from: '"Technogram" <id.technogram@gmail.com>',
+    to: email,
+    subject: "Reset Password Akun Technogram",
+    template: "forgetpassword",
+    context: {
+        user: username,
+        verificationToken: token
+    }
+});
+
 const handlebarOptions = {
     viewEngine: {
       extName: '.handlebars',

@@ -104,6 +104,17 @@ export default [
         component : () => import("./components/admin/log-in/LoginAdmin.vue")
     },
     {
+        path : '/resetpassword',
+        name : 'reset-password',
+        component : () => import("./components/user/auth/ResetPassword.vue")
+
+    },
+    {
+        path : '/request-resetpassword',
+        name : 'request-reset-password',
+        component : () => import("./components/user/auth/RequestResetPassword.vue")
+    },
+    {
         path: "/admin/*",
         name: "not-found-admin",
         component: () => import("./components/error/ErrorAdmin.vue")
@@ -112,5 +123,5 @@ export default [
         path: "/*",
         name: "not-found-user",
         component: () => import("./components/error/ErrorUser.vue")
-    }
+    },
 ];
