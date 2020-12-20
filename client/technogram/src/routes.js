@@ -14,6 +14,16 @@ export default [
             name : 'more-categories'
         },
         {
+            path : '/verification',
+            component : () => import ("./components/user/verification/Verification.vue"),
+            name : 'verification'
+        },
+        {
+            path : '/confirm',
+            component : () => import ("./components/user/verification/ConfirmationStatus.vue"),
+            name : 'confirm'
+        },
+        {
             path : '/personalization',
             component : () => import ("./components/user/personalization/Personalization.vue"),
             name : 'personalization'
