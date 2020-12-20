@@ -30,6 +30,7 @@
 
 <script>
 import categoryApi from "../../../api/kategori/daftarKategori"
+
 export default {
     data() {
         return {

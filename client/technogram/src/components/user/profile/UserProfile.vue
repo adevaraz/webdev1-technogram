@@ -47,10 +47,13 @@
 </template>
 
 <script>
-import LeftImagePreviewBerita from "../berita/LeftImageBeritaPreview.vue";
-import RightImagePreviewBerita from "../berita/RightImageBeritaPreview.vue";
 
-import beritaApi from "../../../api/berita/berita";
+
+const LeftImagePreviewBerita = () => import("../berita/LeftImageBeritaPreview.vue");
+const RightImagePreviewBerita = () => import("../berita/RightImageBeritaPreview.vue");
+
+
+const beritaApi = () => import("../../../api/berita/berita");
 import { BASE_URL } from "../../../api/const";
 import { store } from '../../../store/index';
 const NEWS_PERCALL = 5;

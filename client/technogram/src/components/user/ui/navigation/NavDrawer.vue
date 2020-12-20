@@ -70,8 +70,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { store } from "../../../../store/index";
-import AuthUser from "./../../auth/AuthUser.vue";
 
+const AuthUser = () => import("./../../auth/AuthUser.vue");
 export default {
   components: {
     AuthUser,

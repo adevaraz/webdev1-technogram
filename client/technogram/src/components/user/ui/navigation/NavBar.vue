@@ -133,11 +133,12 @@
 </template>
 
 <script>
-import NotificationDropdown from "../../notifications/NotificationDropdown.vue";
-import ProfileDropDown from "../../profile/ProfileDropDown.vue";
-import NavDrawer from "./NavDrawer.vue";
-import Search from "../../Search/Search"
-import categoriesData from "../../../../api/kategori/daftarKategori";
+const NotificationDropdown = () => import("../../notifications/NotificationDropdown.vue");
+const ProfileDropDown = () => import("../../profile/ProfileDropDown.vue");
+const NavDrawer = () => import("./NavDrawer.vue");
+const Search = () => import("../../Search/Search");
+
+import categoriesData from "../../../../api/kategori/daftarKategori"
 import { mapActions } from "vuex";
 
 import AuthUser from "./../../auth/AuthUser.vue";

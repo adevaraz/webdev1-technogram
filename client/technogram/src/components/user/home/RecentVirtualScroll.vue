@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import RecentHomeItem from "./RecentVirtualScrollItem";
+const RecentHomeItem = () => import("./RecentVirtualScrollItem");
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 const NEWS_PERCALL = 10;

@@ -24,8 +24,8 @@
 <script>
 //const PRIVIEW_MAX_WORDS = 70
 import beritaApi from "../../../api/berita/berita";
+const MostLikesItem = () => import("./SearchResultItem");
 import { BASE_URL } from "../../../api/const";
-import MostLikesItem from "./SearchResultItem"
 const NEWS_PERCALL = 5;
 export default {
   created() {

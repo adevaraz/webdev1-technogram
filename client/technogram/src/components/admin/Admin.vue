@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Navbar from "./ui/Navbar.vue";
+const Navbar = () => import("./ui/Navbar.vue");
 import { store } from "../../store/index";
 export default {
   components: {
