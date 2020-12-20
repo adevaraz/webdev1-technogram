@@ -23,8 +23,8 @@
 
 <script>
 import beritaApi from "../../../api/berita/berita";
+const RecentItem = () => import("./SearchResultItem");
 import { BASE_URL } from "../../../api/const";
-import RecentItem from "./SearchResultItem";
 const NEWS_PERCALL = 5;
 export default {
   created() {

@@ -15,9 +15,8 @@
 </template>
 
 <script>
-import ByRecent from './ByRecent';
-import ByMostLikes from './ByMostLikes';
-
+const ByRecent = () => import("./ByRecent");
+const ByMostLikes = () => import("./ByMostLikes");
 export default {
     components: { 
         ByRecent, ByMostLikes 

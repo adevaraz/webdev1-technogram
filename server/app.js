@@ -13,6 +13,8 @@ const cors = require('cors');
 //nanti disini require model-model nya
 const sequelize = require("./app/util/database");
 const Associations = require("./app/util/associations");
+const {google} = require("googleapis");
+const privateKey = require("./app/analytics-key/Technogram_Project-269c0d250d29.json");
 
 
 const corstOptionDelegate = (req , callback ) => {
@@ -53,6 +55,25 @@ app.use("/news" , beritaRoutes);
 app.use("/account", pembacaRoutes);
 app.use("/admin", adminRoutes);
 app.use('/kategori' , kategoriRoutes);
+/*Generating access token for google analytics*/
+app.get("/accessTokens", (req,res) => {
+
+  // configure a JWT auth client
+  let jwtClient = new google.auth.JWT(
+    privateKey.client_email,
+    null,
+    privateKey.private_key,
+    'https://www.googleapis.com/auth/analytics.readonly');
+
+    jwtClient.authorize(function (err, token) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send('Error');
+    } else {
+      return res.send(token.access_token);
+    }
+  });
+})
 
 /*
  @author 16 MN

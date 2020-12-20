@@ -52,6 +52,7 @@ export default {
   height: 24px;
   max-height: 24px;
   margin-right: 15px;
+  margin-bottom: 100px;
   cursor: pointer;
 }
 
@@ -63,8 +64,8 @@ export default {
 }
 
 .v-card {
-  padding-top: 300px;
-  padding-bottom: 300px;
+    padding-top: 50px;
+    padding-bottom: 140px;
 }
 
 .v-text-field {

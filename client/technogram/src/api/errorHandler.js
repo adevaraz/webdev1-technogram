@@ -13,7 +13,7 @@ const  errorHandler = async (error ,  role , callback) =>  {
         return processUnknownError(); 
     }
 
-    if(error.response.data.message === EXPIRED_JWT){
+    if(!role && !callback && error.response.data.message === EXPIRED_JWT){
         //If jwt expired process this handler
         const result =  await expiredAccessToken(role , callback);
         return result;

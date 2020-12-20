@@ -41,10 +41,10 @@
 
 <script>
 import beritaApi from "../../../api/berita/berita";
+const RecentVirtualScroll = () => import("./RecentVirtualScroll.vue");
+const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
+const DekstopHomeHeader = () => import("./DekstopHomeHeader");
 import { BASE_URL } from "../../../api/const";
-import RecentVirtualScroll from "./RecentVirtualScroll.vue";
-import MobileHomeHeader from "./MobileHomeHeader.vue";
-import DekstopHomeHeader from "./DekstopHomeHeader";
 export default {
   created() {
     this.retrievePopularBerita();

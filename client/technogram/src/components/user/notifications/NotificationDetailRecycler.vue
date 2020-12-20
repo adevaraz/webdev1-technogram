@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import NotificationItem from "./NotificationItem.vue";
+const NotificationItem = () => import("./NotificationItem.vue");
 import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 import { store } from "../../../store/index";

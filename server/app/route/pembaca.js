@@ -3,7 +3,7 @@ const pembacaController = require("../controller/pembaca");
 const router = express.Router();
 const authentication = require("../middleware/authentication");
 const { validate } = require("../middleware/validation");
-const { createPembacaValidationRules, pembacaSignInValidationRules, updatePembacaValidationRules } = require("../middleware/validators/pembaca");
+const { createPembacaValidationRules, pembacaSignInValidationRules, updatePembacaValidationRules, pembacaResetPasswordRules, pembacaSendResetPasswordEmailRules } = require("../middleware/validators/pembaca");
 
 /**
  * @author 31 ZV
@@ -11,6 +11,20 @@ const { createPembacaValidationRules, pembacaSignInValidationRules, updatePembac
  * Route untuk membuat akun baru
  */
 router.post("/create", createPembacaValidationRules(), validate, pembacaController.create);
+
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk melakukan confirm email
+ */
+router.put("/confirm", pembacaController.verifyEmailConfirm);
+
+/**
+ * @author 31 ZV
+ * 
+ * Route untuk memeriksa apakah berita sudah dilike atau belum
+ */
+router.post("/resend-verif-email", pembacaController.resendVerifEmail);
 
 /**
  * @author 31 ZV
@@ -130,4 +144,21 @@ router.post('/add-personalize', authentication.validateUser, pembacaController.a
  * Route untuk mendapatkan kategori dari daftar personalizenya
  */
 router.get('/get-personalize', authentication.validateUser, pembacaController.getPersonalize);
+
+
+/**
+ * @author 16 MN
+ * 
+ * Route untuk meminta mengirim reset password
+ */
+router.post('/reset-password-email', pembacaSendResetPasswordEmailRules(), validate , pembacaController.requestResetPasswordEmail);
+
+
+/**
+ * @author 16 MN
+ * 
+ * Route untuk melakukan reset password
+ */
+router.put('/reset-password-confirm', pembacaResetPasswordRules(), validate , pembacaController.resetPassword);
+
 module.exports = router;

@@ -10,12 +10,12 @@
     <v-list dense nav>
       <v-list-item-content>
         <v-list-item-title
-          class="item"
+          class="profile-item"
           @click="$router.push({ name: 'profile' })"
         >Saved News</v-list-item-title>
 
         <v-list-item-content>
-          <v-list-item-title class="item" @click="signOut()">Sign Out</v-list-item-title>
+          <v-list-item-title class="profile-item" @click="signOut()">Sign Out</v-list-item-title>
         </v-list-item-content>
       </v-list-item-content>
     </v-list>
@@ -100,7 +100,7 @@ export default {
 .notification-header {
   border-bottom: 1px solid #d9d9d9;
 }
-.item {
+.profile-item {
   cursor: pointer;
 }
 .more {

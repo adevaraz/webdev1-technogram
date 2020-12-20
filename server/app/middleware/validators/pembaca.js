@@ -29,8 +29,13 @@ const createPembacaValidationRules = () => {
                         email: value
                     }
                 });
+
                 if(isExist) {
-                    throw new Error("E-mail is already exist.");
+                    if(isExist.is_verified) {
+                        throw new Error("E-mail is already exist.");
+                    } else {
+                        throw new Error("E-mail is already exist. Please verify your email.");
+                    }
                 } else {
                     return true;
                 }
@@ -111,8 +116,28 @@ const pembacaSignInValidationRules = () => {
     ];
 };
 
+const pembacaResetPasswordRules = () => {
+    return [
+        body('password')
+            .trim()
+            .notEmpty().withMessage("Password tidak boleh kosong.")
+            .isLength({min: 3}).withMessage("Password harus minimal 3 karakter")
+    ];
+}
+
+const pembacaSendResetPasswordEmailRules = () => {
+    return [
+        body('email')
+            .trim()
+            .notEmpty().withMessage("Email tidak boleh kosong.")
+            .isEmail().withMessage("Email harus berformat email yang valid.")
+    ];
+}
+
 module.exports = {
     pembacaSignInValidationRules,
     createPembacaValidationRules,
-    updatePembacaValidationRules
+    updatePembacaValidationRules,
+    pembacaResetPasswordRules,
+    pembacaSendResetPasswordEmailRules
 };

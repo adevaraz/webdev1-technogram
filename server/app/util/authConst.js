@@ -10,6 +10,13 @@ const USER_REDIS_EXPIRED = USER_ACCESSTOKEN_EXPIRED  + 2 *60
 // User Cookies expired , value same as refresh token  ( x 1000 cause cookies expired written in millisecond)
 const USER_COOKIES_EXPIRED = USER_REFRESHTOKEN_EXPIRED * 1000
 
+// User verification token expired (1 day)
+const USER_VERIF_EXPIRED = 60 * 60 * 24;
+
+
+// User reset password token expired (30 minutes)
+const USER_RESET_PASSWORD_EXPIRED = 60 * 5
+
 // Admin Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
 const ADMIN_ACCESSTOKEN_EXPIRED = 60 * 60;
 
@@ -29,7 +36,9 @@ module.exports = {
         USER_ACCESSTOKEN_EXPIRED,
         USER_REFRESHTOKEN_EXPIRED,
         USER_REDIS_EXPIRED,
-        USER_COOKIES_EXPIRED
+        USER_COOKIES_EXPIRED,
+        USER_VERIF_EXPIRED,
+        USER_RESET_PASSWORD_EXPIRED
     },
     AdminConst : {
         ADMIN_ACCESSTOKEN_EXPIRED,
