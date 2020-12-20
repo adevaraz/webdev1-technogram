@@ -135,7 +135,7 @@ export default {
         this.error.isError = true;
       } else {
         await this.setToken(loginResult.token);
-        this.$router.push({ path: "/admin" });
+        this.$router.push({ path: "/admin/home" });
       }
     },
   },
