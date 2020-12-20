@@ -99,9 +99,10 @@ export default {
     },
     initSocket() {
       this.socket = openSocket.connect(BASE_URL);
-      this.socket.emit("room", this.mostLikedCategory);
+      this.socket.emit("room", this.mostLikedCategory.toLowerCase());
       this.socket.on("notification", (result) => {
         if (result.action === "publish") {
+          console.log(result);
           const newsTitle = result.data.judul.slice(0, 50);
           const beritaId = result.data.id_berita;
           this.queueNotification(newsTitle, beritaId);
