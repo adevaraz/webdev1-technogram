@@ -68,6 +68,11 @@ export default [
         component : () => import("./components/admin/Admin.vue"),
         children: [
         {
+            path: "/admin/home",
+            name: "analytics-home",
+            component: () => import("./components/admin/google-analytics/Analytics.vue"),
+        },
+        {
             path: "/admin/berita/all",
             name: "daftar-berita",
             component: ()=> import("./components/admin/berita/DaftarBerita"),
