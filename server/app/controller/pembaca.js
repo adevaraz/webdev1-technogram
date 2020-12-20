@@ -908,3 +908,12 @@ const sendVerifEmail = async (pembaca) => {
 
   return verificationToken;
 }
+
+/** 
+ * @author 31 ZV
+ *
+ * Mengirim email verifikasi
+ */
+exports.resendEmail = async (req, res, next) => {
+  
+}
