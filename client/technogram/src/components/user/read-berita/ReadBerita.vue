@@ -73,6 +73,15 @@
                                 />
                             </div>
                         </div>
+
+                        <div id="share">
+                            <div
+                                class="d-flex flex-row ml-3"
+                            >
+                                <share v-if="share" :onDialogClosed=" () => { share = false }" :judul_berita="judul"></share>
+                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.png" />
+                            </div>
+                        </div>
                     </div>
                 </v-card>
 
@@ -125,13 +134,15 @@ import pembacaAct from "../../../api/pembaca/actions"
 import kategori from "../../../api/kategori/daftarKategori";
 import SmallBerita from "../berita/SmallBerita.vue";
 import AuthUser from "../auth/AuthUser";
+import Share from "./Share";
 
 export default {
     name: "read-berita",
 
     components: {
         SmallBerita,
-        AuthUser
+        AuthUser,
+        Share
     },
 
     created() {
@@ -161,7 +172,8 @@ export default {
         isSaved: false,
         relatedBeritaLoading: false,
         errorMessage: '',
-        isLoginDialogShown : false
+        isLoginDialogShown : false,
+        share: false
     }),
   
     watch: {
