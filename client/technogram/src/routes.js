@@ -17,6 +17,7 @@ import AddAdmin from './components/admin/admin/AddAdmin';
 import NotificationDetail from './components/user/notifications/NotificationDetail.vue'
 import NotFoundAdmin from './components/error/ErrorAdmin.vue';
 import NotFoundUser from './components/error/ErrorUser.vue';
+import Analytics from './components/admin/google-analytics/Analytics.vue';
 
 import LoginPembaca from './components/user/auth/LoginUser';
 import SignUpPembaca from './components/user/auth/SignUpUser';
@@ -85,6 +86,11 @@ export default [
         path : '/admin', 
         component : Admin,
         children: [
+        {
+            path: "/admin/home",
+            name: "analytics-home",
+            component: Analytics,
+        },
         {
             path: "/admin/berita/all",
             name: "daftar-berita",
