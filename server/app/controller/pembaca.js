@@ -914,6 +914,20 @@ const sendVerifEmail = async (pembaca) => {
  *
  * Mengirim email verifikasi
  */
-exports.resendEmail = async (req, res, next) => {
-  
+exports.resendVerifEmail = async (req, res, next) => {
+  try {
+    const email = req.query.email;
+    const account = await Pembaca.findOne({
+      where : { email: email }
+    });
+
+    const verificationToken = await sendVerifEmail(account);
+
+    res.status(200).json({
+      message: "Success resend verification email",
+      data: verificationToken
+    });
+  } catch (err) {
+    next(err);
+  }
 }
