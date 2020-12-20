@@ -22,6 +22,13 @@ router.put("/confirm", pembacaController.verifyEmailConfirm);
 /**
  * @author 31 ZV
  * 
+ * Route untuk memeriksa apakah berita sudah dilike atau belum
+ */
+router.post("/resend-verif-email", pembacaController.resendVerifEmail);
+
+/**
+ * @author 31 ZV
+ * 
  * Route untuk mengambil semua akun pembaca
  */
 router.get("/all-account", pembacaController.getAll);

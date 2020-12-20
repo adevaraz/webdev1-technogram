@@ -31,7 +31,11 @@ const createPembacaValidationRules = () => {
                 });
 
                 if(isExist) {
-                    throw new Error("E-mail is already exist.");
+                    if(isExist.is_verified) {
+                        throw new Error("E-mail is already exist.");
+                    } else {
+                        throw new Error("E-mail is already exist. Please verify your email.");
+                    }
                 } else {
                     return true;
                 }
