@@ -27,7 +27,7 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title @click="$router.push({ name: home.route })">Home</v-list-item-title>
           </v-list-item-content>
         </template>
       </v-list-group>
@@ -116,6 +116,9 @@ import { store } from '../../../store/index'
   export default {
     name: 'navbar',
     data: () => ({
+        home: {
+          text: 'Analytics', route: 'analytics-home' 
+        },
         beritas: [
           { text: 'Daftar Berita', route: 'daftar-berita' },
           { text: 'Unggah Berita', route: 'add-berita' },
