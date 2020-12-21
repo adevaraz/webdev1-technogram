@@ -58,7 +58,7 @@ import verifApi from "../../../api/pembaca/verification";
 export default {
     created() {
         if(!this.currentToken) {
-            setTimeout( () => this.$router.push({ path: '/personalization' }), 2000);
+            setTimeout( () => this.$router.push({ path: '/' }), 2000);
         }
 
         this.checkConfirmation();
