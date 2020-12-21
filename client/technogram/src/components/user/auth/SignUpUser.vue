@@ -54,6 +54,7 @@
                         color="#E52B38"
                         @click="signup"
                         class="signup_btn"
+                        :userEmail="this.email"
                       >Sign up</v-btn>
                     </v-col>
                     <v-col>
@@ -132,7 +133,9 @@ export default {
     ...mapActions({
       loggedIn: "user/getNewToken",
       setToken: "user/setToken",
+      setEmail: "user/setEmail"
     }),
+
     async signup() {
       this.error.message = "";
       this.isLoading = true;
@@ -149,17 +152,24 @@ export default {
         this.error.isError = true;
         this.error.isNotError = false;
       } else {
-        const loginResult = await Auth.signin(this.email, this.password);
+        // const loginResult = await Auth.signin(this.email, this.password);
         // await this.setToken(signupResult.token, true);
         // this.$router.push({ path: "/" });
-        this.setToken({
-          token: loginResult.token,
-          username: loginResult.username,
-          email: this.email,
-          kategori: loginResult.mostLikedCategory,
+        // this.setToken({
+        //   token: loginResult.token,
+        //   username: loginResult.username,
+        //   email: this.email,
+        //   kategori: loginResult.mostLikedCategory,
+        // });
+
+        // this.$router.push({ path: "/personalization" });
+
+        this.setEmail(this.email);
+        this.$router.push({
+          path: "/verification"
         });
 
-        this.$router.push({ path: "/personalization" });
+        this.dialog = false;
       }
     },
   },

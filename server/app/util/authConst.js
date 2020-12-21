@@ -13,13 +13,13 @@ const USER_COOKIES_EXPIRED = USER_REFRESHTOKEN_EXPIRED * 1000
 // User verification token expired (1 day)
 const USER_VERIF_EXPIRED = 60 * 60 * 24;
 
-
 // User reset password token expired (30 minutes)
 const USER_RESET_PASSWORD_EXPIRED = 60 * 5
 
+// -------------------------------------------------------------------------------------------------------------
+
 // Admin Access Token expired in 1 hours (calculated in seconds 3600 seconds) 
 const ADMIN_ACCESSTOKEN_EXPIRED = 60 * 60;
-
 
 //Admin Refresh token expired in 2 days (calculated in seconds )
 const ADMIN_REFRESHTOKEN_EXPIRED = 60 * 60 * 24 * 2;

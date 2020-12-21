@@ -66,26 +66,41 @@ exports.verifyEmailConfirm = async (req, res, next) => {
         const activateAccount = await account.update({
           is_verified: true
         })
+
+        let mostLikedCategory;
+        if(account.most_liked_category) {
+          mostLikedCategory = await Kategori.findByPk(account.most_liked_category);
+        }
+
+        const accessToken = await createAccessToken(account);
+        await createRefreshToken(account, res);
   
         res.status(201).json({
           message: `Account with id ${pembacaId} succesfully activated`,
-          data: account.is_verified
+          data: activateAccount,
+          token: accessToken,
+          mostLikedCategory: mostLikedCategory != undefined ? mostLikedCategory.nama_kategori : null
         });
       } else {
         res.status(201).json({
           message: `Account with id ${pembacaId} has been activated before`,
-          data: account.is_verified
+          data: account
         });
       }
     } else {
       res.status(404).json({
-        message: `Account with id ${pembacaId} not found`,
-        data: decoded
+        message: `Account with id ${pembacaId} not found`
       });
     }
 
   } catch (err) {
-    next(err);
+    if(err.message === "jwt expired") {
+      const error = new Error("Timeout");
+      error.statusCode = 401;
+      error.cause = "This link is expired.";
+      next(error);
+    } else {
+      next(err);
   }
 }
 
@@ -117,8 +132,6 @@ exports.requestResetPasswordEmail = async (req , res , next)=> {
       error.cause = "Account has not been verified, you can resend verification email to sign in";
       throw error;
     }
-
-    
 
     const resetPasswordToken = jwt.sign(
       { id: pembaca.id_pembaca },
@@ -723,6 +736,7 @@ exports.signin = async (req, res, next) => {
       const error = new Error("Unverified account");
       error.statusCode = 403;
       error.cause = "Account has not been verified";
+
       throw error;
     }
   } catch (err) {
@@ -1018,16 +1032,8 @@ const sendVerifEmail = async (pembaca) => {
   );
 
   // Send verification email with token
-  const res = await mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
-
-  return verificationToken;
+  mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
 }
-
-/** 
- * @author 31 ZV
- *
- * Mengirim email verifikasi
- */
 
 /** 
  * @author 31 ZV
