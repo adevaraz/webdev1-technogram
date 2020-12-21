@@ -4,8 +4,13 @@ import ErrorHandler from '../errorHandler'
 
 const confirmVerification = async (verificationToken) => {
     try {
-        const currentUrl = USER_URL + `/confirm?ref=${verificationToken}`;
-        const result = await axios.put(currentUrl);
+        console.log(verificationToken)
+        const currentUrl = USER_URL + `/confirm`;
+        const result = await axios.put(currentUrl, {}, {
+            params: {
+                ref: verificationToken
+            }
+        });
 
         return result.data;
     } catch (err) {
@@ -16,7 +21,7 @@ const confirmVerification = async (verificationToken) => {
 const resendVerifEmail = async (email) => {
     try {
         const currentUrl = USER_URL + `/resend-verif-email`;
-        const result = await axios.post(currentUrl, email);
+        const result = await axios.post(currentUrl, { email: email });
 
         return result.data;
     } catch (err) {

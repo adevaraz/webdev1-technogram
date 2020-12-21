@@ -1,5 +1,17 @@
 <template>
-    <v-container pt-2>
+    <v-container 
+        pt-2
+        :loading="isLoading"
+        height="100%"
+    >
+        <template slot="progress">
+            <v-progress-linear
+                color="#E52B38"
+                height="10"
+                indeterminate
+            />
+        </template>
+
         <v-col>
             <v-row
                 class="pa-2"
@@ -33,26 +45,45 @@
                 justify="center"
             >
                 <p class="text-caption pr-1">Haven't received the email yet?</p>
-                <p class="text-caption font-weight-bold" style="cursor:pointer;">Resend Email</p>
-            </v-row>
-            <v-row
-                class="pa-4"
-                align="center"
-                justify="center"
-            >
-                <v-btn to="/">
-                    Kembali ke laman utama
-                </v-btn>
+                <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="resendVerifEmail">Resend Email</p>
             </v-row>
         </v-col>
     </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import verifApi from "../../../api/pembaca/verification";
 
 export default {
-    
+    data: () => ({
+        errorMessage: "",
+        isLoading: false,
+        isError: false
+    }),
+
+    methods: {
+        ...mapGetters ({
+            getEmail: "user/getUserEmail"
+        }),
+
+        async resendVerifEmail() {
+            try {
+                this.isLoading = true;
+                const result = await verifApi.resendVerifEmail(this.getEmail());
+                this.isLoading = false;
+
+                if(result instanceof Error) {
+                    this.errorMessage = result.cause;
+                    this.isError = true;
+                }
+
+                console.log(result);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 }
 </script>
 

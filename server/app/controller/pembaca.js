@@ -38,11 +38,10 @@ exports.create = async (req, res, next) => {
       where : { email: req.body.email }
     });
     
-    const verificationToken = await sendVerifEmail(insertedPembaca);
+    await sendVerifEmail(insertedPembaca);
 
     res.status(201).json({
-      message: "Verification email sent successfully",
-      data: verificationToken,
+      message: "Verification email sent successfully"
     });
   } catch (err) {
     next(err);
@@ -64,29 +63,45 @@ exports.verifyEmailConfirm = async (req, res, next) => {
     
     if(account != null) {
       if(!account.is_verified) {
-        const activateAccount = await account.update({
+        await account.update({
           is_verified: true
-        })
+        });
+
+        let mostLikedCategory;
+        if(account.most_liked_category) {
+          mostLikedCategory = await Kategori.findByPk(account.most_liked_category);
+        }
+
+        const accessToken = await createAccessToken(account);
+        await createRefreshToken(account, res);
   
         res.status(201).json({
           message: `Account with id ${pembacaId} succesfully activated`,
-          data: account.is_verified
+          data: account,
+          token: accessToken,
+          mostLikedCategory: mostLikedCategory != undefined ? mostLikedCategory.nama_kategori : null
         });
       } else {
         res.status(201).json({
           message: `Account with id ${pembacaId} has been activated before`,
-          data: account.is_verified
+          data: account
         });
       }
     } else {
       res.status(404).json({
-        message: `Account with id ${pembacaId} not found`,
-        data: decoded
+        message: `Account with id ${pembacaId} not found`
       });
     }
 
   } catch (err) {
-    next(err);
+    if(err.message === "jwt expired") {
+      const error = new Error("Timeout");
+      error.statusCode = 401;
+      error.cause = "This link is expired.";
+      next(error);
+    } else {
+      next(err);
+    }
   }
 }
 
@@ -904,8 +919,7 @@ const sendVerifEmail = async (pembaca) => {
   );
 
   // Send verification email with token
-  const res = mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
-
+  mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
   return verificationToken;
 }
 
@@ -916,16 +930,15 @@ const sendVerifEmail = async (pembaca) => {
  */
 exports.resendVerifEmail = async (req, res, next) => {
   try {
-    const email = req.query.email;
+    const email = req.body.email;
     const account = await Pembaca.findOne({
       where : { email: email }
     });
 
-    const verificationToken = await sendVerifEmail(account);
+    await sendVerifEmail(account);
 
     res.status(200).json({
-      message: "Success resend verification email",
-      data: verificationToken
+      message: "Success resend verification email"
     });
   } catch (err) {
     next(err);

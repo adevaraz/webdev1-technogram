@@ -103,6 +103,7 @@ const UserModule = {
             }
             commit("SET_SUCCESS", "Success get new Access token");
         },
+
         async getNewToken({ commit, state }) {
             commit("SET_LOADING");
             console.log("loading");
@@ -121,6 +122,10 @@ const UserModule = {
             console.log(state);
             commit("SET_SUCCESS", "Success get new Access token");
         },
+
+        setEmail({ commit }, email) {
+            commit("SET_EMAIL", email);
+        }
     },
 };
 

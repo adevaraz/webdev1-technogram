@@ -1,6 +1,13 @@
 <template>
     <v-container pt-2>
-        <div id="success">
+        <v-progress-circular
+            class="progressbar"
+            v-if="isLoading"
+            color="#E52B38"
+            height="10"
+            indeterminate
+        />
+        <div v-if="isSucceed">
             <v-col>
                 <v-row
                     class="pa-2"
@@ -21,16 +28,9 @@
                 >
                     <a href="https://storyset.com/mobile">Illustration by Freepik Storyset</a>
                 </v-row>
-                <v-row
-                    class="pa-4"
-                    align="center"
-                    justify="center"
-                >
-                    Please sign in first to use your account.
-                </v-row>
             </v-col>
         </div>
-        <div id="failed">
+        <div v-else-if="!isSucceed && !isLoading">
             <v-col>
                 <v-row
                     class="pa-2"
@@ -44,7 +44,7 @@
                     align="center"
                     justify="center"
                 >
-                    Click <span class="text-decoration-underline px-1" style="cursor:pointer;"> here </span> to resend verification email.
+                    Click <span class="text-decoration-underline px-1" style="cursor:pointer;"> here </span> to resend the verification email.
                 </v-row>
             </v-col>
         </div>
@@ -52,8 +52,73 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import verifApi from "../../../api/pembaca/verification";
+
 export default {
-    
+    created() {
+        if(!this.currentToken) {
+            setTimeout( () => this.$router.push({ path: '/' }), 2000);
+        }
+
+        this.checkConfirmation();
+    },
+
+    data: () => ({
+        errorMessage: "",
+        isLoading: false,
+        isError: false,
+        isSucceed: false
+    }),
+
+    computed: {
+        currentToken() {
+            return this.$route.query.ref;
+        }
+    },
+
+    methods: {
+        ...mapActions({
+            setToken: "user/setToken"
+        }),
+
+        ...mapGetters({
+            getToken: "user/getToken"
+        }),
+
+        async checkConfirmation() {
+            try {
+                this.isError = false;
+                this.isLoading = true;
+                const result = await verifApi.confirmVerification(this.currentToken);
+                this.isLoading = false;
+                console.log(this.currentToken)
+
+                if(result instanceof Error) {
+                    this.errorMessage = result.cause;
+                    this.isError = true;
+                    this.isSucceed = false;
+                } else {
+                    this.isSucceed = true;
+
+                    this.setToken({
+                        token: result.token,
+                        username: result.data.username,
+                        email: result.data.email,
+                        kategori: result.data.mostLikedCategory
+                    });
+
+                    setTimeout( () => this.$router.push({ path: '/' }), 3000);
+                }
+
+            } catch (err) {
+                this.isError = true;
+                this.isLoading = false;
+                this.isSucceed = false;
+                console.log(err);
+            }
+        }
+    }
 }
 </script>
 
