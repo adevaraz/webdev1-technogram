@@ -15,6 +15,11 @@
       </v-row>
       <v-row>
         <v-col align="center" justify="center">
+          <a href="https://storyset.com/web">Illustration by Freepik Storyset</a>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col align="center" justify="center">
           <div class="text-h6 font-weight-medium">
             Silahkan Hubungi Tim Technogram jika ada Kendala :)
           </div>
@@ -43,6 +48,12 @@ export default {
 </script>
 
 <style>
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+}
+
 .layout {
   background-color: rgb(251, 251, 251);
 }
