@@ -97,37 +97,6 @@
         ></nav-drawer>
       </div>
     </transition>
-     <!-- <v-dialog v-if="dialog" v-model="dialog" persistent>
-              <v-card max-height="1080px">
-                <v-card-title></v-card-title>
-                <v-card-text>
-                  <v-container d-block>
-                    <div class="d-flex flex-row-reverse cross-icon">
-                      <img
-                        class="cross-icon"
-                        @click="dialog=false"
-                        src="../../../../assets/icons/cross.png"
-                      />
-                    </div>
-                    <div class="d-flex flex-row search" align-center>
-                      <v-text-field
-                        v-model="key"
-                        placeholder="Enter keyword here..."
-                        prepend-inner-icon="mdi-magnify"
-                        v-on:keydown.enter="
-                          $router.push({
-                            name: 'recent-result',
-                            query: { q: key },
-                          });
-                          dialog = false;
-                        "
-                      >
-                      </v-text-field>
-                    </div>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-dialog> -->
   </div>
 
 </template>
@@ -548,6 +517,7 @@ nav .header .right .btn {
   .burger {
     cursor: pointer;
   }
+
   .burger div {
     width: 18px;
     height: 1px;
@@ -566,9 +536,7 @@ nav .header .right .btn {
     z-index: 5;
   }
 
-
   .search-icon{
-    background: blue;
     display: flex;
     justify-items: center;
   }
