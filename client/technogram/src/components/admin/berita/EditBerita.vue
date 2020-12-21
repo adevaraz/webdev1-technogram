@@ -133,12 +133,13 @@
 
 <script>
 import { BASE_URL } from "../../../api/const";
-const VueEditor = ()=> import("vue2-editor");
 import  berita from "../../../api/berita/berita";
 import { store } from "../../../store/index";
 export default {
   name: "edit-berita",
-  components: { VueEditor },
+  components: {  VueEditor : () => import("vue2-editor").then(result => {
+    return result.VueEditor
+  })},
   data() {
     return {
       isReset: false,

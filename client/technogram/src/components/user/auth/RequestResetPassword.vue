@@ -22,30 +22,17 @@
                     :src="require('../../../assets/technogram-creator-b.png')"
                   ></v-img>
                 </div>
-                <form class="mt-10" @submit.prevent="signin">
+                <form class="mt-10" @submit.prevent="resetPassword" v-if="!isEmailSent">
                   <v-row class="jutify-center">
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">
-                        Username
+                        Email
                       </p>
                       <v-text-field
-                        :rules="[rules.username]"
-                        v-model="username"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <p class="text-caption font-weight-bold text-center">
-                        Password
-                      </p>
-                      <v-text-field
-                        v-model="password"
-                        :rules="[rules.password]"
-                        :append-icon="
-                          isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'
-                        "
-                        :type="isPasswordShown ? 'text' : 'password'"
+                        v-model="email"
+                        :rules="[rules.isEmail,rules.isEmailValid]"
+                        type="text"
                         class="input-group--focused"
-                        @click:append="isPasswordShown = !isPasswordShown"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -65,11 +52,12 @@
                         color="#E52B38"
                         class="login_btn"
                         :disabled="!isInputValid"
-                        >Sign in</v-btn
+                        >Send Reset Password Email</v-btn
                       >
                     </v-col>
                   </v-row>
                 </form>
+                <div v-else><h1>Email terkirim</h1></div>
               </div>
             </v-card>
           </v-col>
@@ -88,23 +76,21 @@
 </template>
 
 <script>
-import Auth from "../../../api/admin/auth";
-import { mapActions } from "vuex";
+import UserAuth from "../../../api/pembaca/auth";
 export default {
   data() {
     return {
-      isPasswordShown: false,
       isLoading: false,
-      username: "",
-      password: "",
+      email : "",
       error: {
         isError: false,
         message: "",
       },
       rules: {
-        username: (value) => !!value || "Username tidak boleh kosong",
-        password: (value) => !!value || "Password tidak boleh kosong",
+        isEmail: (value) => !!value || "Email tidak boleh kosong",
+        isEmailValid : (value) => value.includes('@') || "Email tidak valid"
       },
+      isEmailSent : false
     };
   },
   computed: {
@@ -112,31 +98,36 @@ export default {
       return this.error.message;
     },
     isInputValid() {
-      const isEmpty = (this.username === "") | (this.password === "");
-      return !isEmpty;
+        console.log(this.rules.isEmail(this.email));
+        console.log(this.rules.isEmailValid(this.email));
+      if(this.rules.isEmail(this.email) !== true|| this.rules.isEmailValid(this.email)  !== true){
+          return false
+      }
+      return true;
     },
     isMobile() {
       return this.$vuetify.breakpoint.xs ? true : false;
     },
   },
   methods: {
-    ...mapActions({
-      setToken: "admin/setToken",
-    }),
-    async signin() {
-      console.log(this.isMobile);
-      this.error.isError = false;
-      this.error.message = "";
-      this.isLoading = true;
-      const loginResult = await Auth.signin(this.username, this.password);
-      this.isLoading = false;
-      if (loginResult instanceof Error) {
-        this.error.message = loginResult.cause;
-        this.error.isError = true;
-      } else {
-        await this.setToken(loginResult.token);
-        this.$router.push({ path: "/admin/home" });
-      }
+    async resetPassword() {
+        try{
+            this.error.isError = false;
+            this.error.message = "";
+            this.isLoading = true;
+            const result = await  UserAuth.requestRestPasswordEmail(this.email);
+            this.isLoading = false;
+            if (result instanceof Error) {
+                this.error.message = result.cause;
+                this.error.isError = true;
+            } else {
+                this.isEmailSent = true;
+            }
+        }catch(err){
+            this.error.isError = true;
+            this.error.message = "Unknown error happen";
+            this.isLoading = false;
+        }
     },
   },
 };

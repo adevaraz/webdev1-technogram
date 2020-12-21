@@ -22,30 +22,42 @@
                     :src="require('../../../assets/technogram-creator-b.png')"
                   ></v-img>
                 </div>
-                <form class="mt-10" @submit.prevent="signin">
+                <form class="mt-10" @submit.prevent="resetPassword">
                   <v-row class="jutify-center">
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">
-                        Username
+                        New Password
                       </p>
                       <v-text-field
-                        :rules="[rules.username]"
-                        v-model="username"
+                        v-model="newPassword"
+                        :rules="[rules.emptyPassword, rules.minimumPassword]"
+                        :append-icon="
+                          isNewPasswordShown ? 'mdi-eye' : 'mdi-eye-off'
+                        "
+                        :type="isNewPasswordShown ? 'text' : 'password'"
+                        class="input-group--focused"
+                        @click:append="isNewPasswordShown = !isNewPasswordShown"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">
-                        Password
+                        Confrim New Password
                       </p>
                       <v-text-field
-                        v-model="password"
-                        :rules="[rules.password]"
+                        v-model="confirmNewPassword"
+                        :rules="[
+                          rules.emptyPassword,
+                          rules.minimumPassword,
+                          rules.confirmPassword,
+                        ]"
                         :append-icon="
-                          isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'
+                          isconfirmNewPasswordShown ? 'mdi-eye' : 'mdi-eye-off'
                         "
-                        :type="isPasswordShown ? 'text' : 'password'"
+                        :type="isconfirmNewPasswordShown ? 'text' : 'password'"
                         class="input-group--focused"
-                        @click:append="isPasswordShown = !isPasswordShown"
+                        @click:append="
+                          isconfirmNewPasswordShown = !isconfirmNewPasswordShown
+                        "
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -65,7 +77,7 @@
                         color="#E52B38"
                         class="login_btn"
                         :disabled="!isInputValid"
-                        >Sign in</v-btn
+                        >Reset Password</v-btn
                       >
                     </v-col>
                   </v-row>
@@ -88,32 +100,55 @@
 </template>
 
 <script>
-import Auth from "../../../api/admin/auth";
+import UserAuth from "../../../api/pembaca/auth";
 import { mapActions } from "vuex";
 export default {
+  created() {
+    if (!this.currentToken) {
+      this.$router.push("/");
+    }
+  },
   data() {
     return {
-      isPasswordShown: false,
+      isNewPasswordShown: false,
       isLoading: false,
-      username: "",
-      password: "",
+      isconfirmNewPasswordShown: false,
+      confirmNewPassword: "",
+      newPassword: "",
       error: {
         isError: false,
         message: "",
       },
       rules: {
-        username: (value) => !!value || "Username tidak boleh kosong",
-        password: (value) => !!value || "Password tidak boleh kosong",
+        emptyPassword: (value) => !!value || "Password tidak boleh kosong",
+        minimumPassword: (value) =>
+          value.length > 3 || "Password minimal 3 karakter ",
+        confirmPassword: (value) =>
+          value === this.newPassword || "Password tidak sama",
       },
     };
   },
   computed: {
+    currentToken() {
+      return this.$route.query.ref;
+    },
     errorMessage() {
       return this.error.message;
     },
     isInputValid() {
-      const isEmpty = (this.username === "") | (this.password === "");
-      return !isEmpty;
+        
+    
+        const isNewPasswordEmpty = this.rules.emptyPassword(this.newPassword) !== true;
+        const isNewPasswordMinimumLength = this.rules.minimumPassword(this.newPassword) !== true;
+        const isConfirmPasswordEmpty = this.rules.emptyPassword(this.confirmNewPassword) !== true;
+        const isConfirmPasswordMinimumLength = this.rules.minimumPassword(this.confirmNewPassword) !== true;
+        const isPasswordSame = this.rules.confirmPassword(this.confirmNewPassword) !== true;
+
+
+      if(isNewPasswordEmpty|| isNewPasswordMinimumLength ||isConfirmPasswordEmpty || isConfirmPasswordMinimumLength|| isPasswordSame){
+          return false
+      }
+      return true;
     },
     isMobile() {
       return this.$vuetify.breakpoint.xs ? true : false;
@@ -121,21 +156,35 @@ export default {
   },
   methods: {
     ...mapActions({
-      setToken: "admin/setToken",
+      // loggedIn : 'user/getNewToken',
+      setToken: "user/setToken",
     }),
-    async signin() {
-      console.log(this.isMobile);
-      this.error.isError = false;
-      this.error.message = "";
-      this.isLoading = true;
-      const loginResult = await Auth.signin(this.username, this.password);
-      this.isLoading = false;
-      if (loginResult instanceof Error) {
-        this.error.message = loginResult.cause;
+    async resetPassword() {
+      try {
+        this.error.isError = false;
+        this.error.message = "";
+        this.isLoading = true;
+        const result = await UserAuth.resetpassword(
+          this.currentToken,
+          this.newPassword
+        );
+        this.isLoading = false;
+        if (result instanceof Error) {
+          this.error.message = result.cause;
+          this.error.isError = true;
+        } else {
+          this.setToken({
+            token: result.token,
+            username: result.username,
+            email: result.email,
+            kategori: result.mostLikedCategory,
+          });
+          this.$router.push({ path: "/" });
+        }
+      } catch (err) {
         this.error.isError = true;
-      } else {
-        await this.setToken(loginResult.token);
-        this.$router.push({ path: "/admin/home" });
+        this.error.message = "Unknown error happen";
+        this.isLoading = false;
       }
     },
   },

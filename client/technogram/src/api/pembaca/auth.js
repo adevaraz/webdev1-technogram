@@ -81,9 +81,50 @@ const signOut = async(token) => {
     }
 }
 
+const resetpassword = async (token , newPassword) => {
+    try{
+        const url = USER_URL + '/reset-password-confirm';
+        const result = await axios.put(url , {
+            password : newPassword
+        },
+        {
+            timeout : TIMEOUT,
+            withCredentials : true,
+            params : {
+                ref : token
+            }
+        }
+        );
+        return result.data;
+    }catch(err){
+        return ErrorHandler.errorHandler(err);
+    }
+}
+
+
+
+
+const requestRestPasswordEmail = async (email) => {
+    try{
+        const url = USER_URL + '/reset-password-email';
+        console.log(email);
+        const result = await axios.post(url , {
+            email : email
+        },{
+            timeout : TIMEOUT
+        }
+        );
+        return result.data;
+    }catch(err){
+        return ErrorHandler.errorHandler(err);
+    }
+}
+
 export default{
     signin,
     signup,
     getRefreshToken,
-    signOut
+    signOut,
+    resetpassword,
+    requestRestPasswordEmail
 }

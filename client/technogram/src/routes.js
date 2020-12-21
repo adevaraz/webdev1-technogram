@@ -78,6 +78,11 @@ export default [
         component : () => import("./components/admin/Admin.vue"),
         children: [
         {
+            path: "/admin/home",
+            name: "analytics-home",
+            component: () => import("./components/admin/google-analytics/Analytics.vue"),
+        },
+        {
             path: "/admin/berita/all",
             name: "daftar-berita",
             component: ()=> import("./components/admin/berita/DaftarBerita"),
@@ -114,6 +119,17 @@ export default [
         component : () => import("./components/admin/log-in/LoginAdmin.vue")
     },
     {
+        path : '/resetpassword',
+        name : 'reset-password',
+        component : () => import("./components/user/auth/ResetPassword.vue")
+
+    },
+    {
+        path : '/request-resetpassword',
+        name : 'request-reset-password',
+        component : () => import("./components/user/auth/RequestResetPassword.vue")
+    },
+    {
         path: "/admin/*",
         name: "not-found-admin",
         component: () => import("./components/error/ErrorAdmin.vue")
@@ -122,5 +138,5 @@ export default [
         path: "/*",
         name: "not-found-user",
         component: () => import("./components/error/ErrorUser.vue")
-    }
+    },
 ];

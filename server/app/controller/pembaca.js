@@ -56,16 +56,16 @@ exports.create = async (req, res, next) => {
 exports.verifyEmailConfirm = async (req, res, next) => {
   try {
     const token = req.query.ref;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const decoded = jwt.verify(token, process.env.JWT_EMAIL_VERIFY_KEY)
     const pembacaId = decoded.id;
 
     const account = await Pembaca.findByPk(pembacaId);
     
     if(account != null) {
       if(!account.is_verified) {
-        await account.update({
+        const activateAccount = await account.update({
           is_verified: true
-        });
+        })
 
         let mostLikedCategory;
         if(account.most_liked_category) {
@@ -77,7 +77,7 @@ exports.verifyEmailConfirm = async (req, res, next) => {
   
         res.status(201).json({
           message: `Account with id ${pembacaId} succesfully activated`,
-          data: account,
+          data: activateAccount,
           token: accessToken,
           mostLikedCategory: mostLikedCategory != undefined ? mostLikedCategory.nama_kategori : null
         });
@@ -100,6 +100,119 @@ exports.verifyEmailConfirm = async (req, res, next) => {
       error.cause = "This link is expired.";
       next(error);
     } else {
+      next(err);
+  }
+}
+
+
+
+/**
+ * @author 16 MN
+ *
+ * Meminta email ganti password
+ */
+exports.requestResetPasswordEmail = async (req , res , next)=> {
+  try{
+    const pembacaEmail = req.body.email;
+    const pembaca = await Pembaca.findOne({
+      where : {
+        email : pembacaEmail
+      }
+    });
+    if(!pembaca){
+      const error = new Error("Invalid credential");
+      error.statusCode = 401;
+      error.cause = "Account with such email is not exist";
+      throw error;
+    }
+
+    if(!pembaca.is_verified){
+      const error = new Error("Unverified account");
+      error.statusCode = 403;
+      error.cause = "Account has not been verified, you can resend verification email to sign in";
+      throw error;
+    }
+
+    const resetPasswordToken = jwt.sign(
+      { id: pembaca.id_pembaca },
+      process.env.JWT_RESET_PASSWORD_KEY,
+      { expiresIn: UserAuthConst.USER_RESET_PASSWORD_EXPIRED }
+    );
+  
+    // Send verification email with token
+    await mail.forgetPassorMail(pembaca.email, pembaca.username, resetPasswordToken);
+    
+    res.status(200).send({
+      message : "Reset password mail sent Successfully"
+    })
+
+  }catch(err){
+    next(err);
+  }
+}
+
+/**
+ * @author 16 MN
+ *
+ * Meminta email ganti password
+ */
+exports.resetPassword = async (req,res,next) => {
+  try{
+    const token = req.query.ref;
+    if(!token){
+      const error = new Error("No token provided");
+      error.statusCode = 401;
+      error.cause = "Error ! Please make another reset password request";
+      throw error;  
+    }
+    const decoded = jwt.verify(token, process.env.JWT_RESET_PASSWORD_KEY);
+    const pembacaId = decoded.id;
+
+    const pembaca = await Pembaca.findByPk(pembacaId);
+    if(!pembaca){
+      const error = new Error("Invalid credential");
+      error.statusCode = 401;
+      error.cause = "Account not found , you may sign up";
+      throw error;  
+    }
+
+    const newPassword = req.body.password;
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+    pembaca.password = hash;
+
+    lastPasswordChange = Math.floor(new Date().getTime() / 1000);
+    pembaca.last_changed_pwd = lastPasswordChange;
+    pembaca.save();
+
+    let mostLikeCategory;
+    //Get mostliked category name
+    console.log(pembaca);
+    if(pembaca.most_liked_category){
+       mostLikeCategory = await Kategori.findByPk(pembaca.most_liked_category);
+    }
+
+
+    //generate token
+    accessToken = await createAccessToken(pembaca);
+    await createRefreshToken(pembaca,res)
+
+    res.status(200).json({
+      message: "ChangePassword success",
+      token: accessToken,
+      mostLikedCategory : mostLikeCategory!=undefined? mostLikeCategory.nama_kategori : null,
+      username: pembaca.username,
+      email : pembaca.email
+    });
+
+  }catch(err){
+    if(err.message === 'jwt expired'){
+      const error = new Error("Timeout");
+      error.statusCode = 401;
+      error.cause = "This link is expired , please ask reset password mail again";       
+      next(error)
+    }else{
       next(err);
     }
   }
@@ -914,13 +1027,12 @@ exports.getPersonalize = async (req, res, next) => {
 const sendVerifEmail = async (pembaca) => {
   const verificationToken = jwt.sign(
     { id: pembaca.id_pembaca },
-    process.env.JWT_SECRET_KEY,
+    process.env.JWT_EMAIL_VERIFY_KEY,
     { expiresIn: UserAuthConst.USER_VERIF_EXPIRED }
   );
 
   // Send verification email with token
   mail.verifyMail(pembaca.email, pembaca.username, verificationToken);
-  return verificationToken;
 }
 
 /** 
@@ -935,10 +1047,24 @@ exports.resendVerifEmail = async (req, res, next) => {
       where : { email: email }
     });
 
+    if(!account){
+      const error = new Error("Invalid credential");
+      error.statusCode = 401;
+      error.cause = "Account with such email is not exist";
+      throw error;
+    }
+
+    if(account.is_verified){
+      const error = new Error("Verified account");
+      error.statusCode = 403;
+      error.cause = "Account is exist and verified, please log in";
+      throw error;
+    }    
+
     await sendVerifEmail(account);
 
     res.status(200).json({
-      message: "Success resend verification email"
+      message: "Success resend verification email",
     });
   } catch (err) {
     next(err);
