@@ -101,6 +101,7 @@ exports.verifyEmailConfirm = async (req, res, next) => {
       next(error);
     } else {
       next(err);
+    }
   }
 }
 
