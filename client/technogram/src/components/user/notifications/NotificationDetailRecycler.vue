@@ -41,7 +41,7 @@ export default {
     },
     async getNotificatedBerita() {
       this.isLoading = true;
-      const result = await beritaApi.getUserNotificatedNews(store.getters["user/token"], NEWS_PERCALL, "", this.pageNum);
+      const result = await beritaApi.getUserNotificatedNews(store.getters["user/getToken"], NEWS_PERCALL, "", this.pageNum);
       this.pageNum++;
       this.isLoading = false;
       if (result instanceof Error) {
