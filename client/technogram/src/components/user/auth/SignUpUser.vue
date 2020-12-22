@@ -1,84 +1,110 @@
 <template>
- <v-dialog max-width="600px" v-model="dialog">
-      <v-card :loading="isLoading && !isMobile" height="100%" :elevation="isMobile ? 0 : 2">
-         <img class="item img-btn" @click="onDialogClosed" src="../../../assets/icons/cross.png" />
-          <div :class="isMobile? 'content-mobile' : 'content'">
-            <v-card-title>
-                <h1 :class="isMobile? 'playfair-font-mobile' : 'playfair-font'"> Sign up with email </h1>
-                </v-card-title>
-                    <form class="mt-10">
-                        <v-row class="jutify-center">
-                              <v-col cols="12">
-                                <p class="text-caption font-weight-bold text-center">Your Email</p>
-                                    <v-text-field 
-                                    v-model="email" 
-                                    :rules="[rules.email]"
-                                    single-line
-                                    color="#E52B38"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                  <p class="text-caption font-weight-bold text-center">Your Username</p>                                    
-                                  <v-text-field
-                                  v-model="username" :rules="[rules.username]"
-                                  single-line
-                                  color="#E52B38"
-                                  ></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                  <p class="text-caption font-weight-bold text-center">Your Password</p>                                    
-                                  <v-text-field
-                                  v-model="password"
-                                  :rules="passwordRules" 
-                                  single-line
-                                  type="password" 
-                                  required
-                                  color="#E52B38"
-                                  ></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                <p class="text-caption font-weight-bold text-center">Re-enter Password</p>                                    
-                                <v-text-field
-                                    label="Confirm Password" 
-                                    single-line
-                                    v-model="confirmPassword" 
-                                    :rules="[confirmPasswordRules,passwordConfirmationRule]"
-                                    type="password" 
-                                    required
-                                    color="#E52B38"
-                                ></v-text-field>
-                                </v-col>
-                                </v-row>
-                    
-                            <v-col class="d-flex justify-center">
-                      <v-btn
-                        color="#E52B38"
-                        @click="signup"
-                        class="signup_btn"
-                        :userEmail="this.email"
-                      >Sign up</v-btn>
-                    </v-col>
-                    <v-col>
-                      <v-alert
-                      dense
-                      outlined
-                      type="error"
-                      v-if="error.isError">
-                      {{errorMessage}}
-                      </v-alert>
-                      <v-alert
-                      dense
-                      outlined
-                      type="success"
-                      v-if="error.isNotError">
-                      {{errorMessage}}
-                      </v-alert>
-                      
-                    </v-col>
-                            </form>
-                        </div>
-                    </v-card>
-            
-</v-dialog>
+  <v-dialog max-width="600px" v-model="dialog">
+    <v-card
+      :loading="isLoading && !isMobile"
+      height="100%"
+      :elevation="isMobile ? 0 : 2"
+    >
+      <template slot="progress">
+        <v-progress-linear
+          color="#E52B38"
+          height="10"
+          indeterminate
+        ></v-progress-linear>
+      </template>
+      <img
+        class="item img-btn"
+        @click="onDialogClosed"
+        src="../../../assets/icons/cross.png"
+      />
+      <div :class="isMobile ? 'content-mobile' : 'content'">
+        <v-card-title>
+          <h1 :class="isMobile ? 'playfair-font-mobile' : 'playfair-font'">
+            Sign up with email
+          </h1>
+        </v-card-title>
+        <form class="mt-10">
+          <v-row class="jutify-center">
+            <v-col cols="12">
+              <p class="text-caption font-weight-bold text-center">
+                Your Email
+              </p>
+              <v-text-field
+                v-model="email"
+                :rules="[rules.email]"
+                single-line
+                color="#E52B38"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <p class="text-caption font-weight-bold text-center">
+                Your Username
+              </p>
+              <v-text-field
+                v-model="username"
+                :rules="[rules.username]"
+                single-line
+                color="#E52B38"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <p class="text-caption font-weight-bold text-center">
+                Your Password
+              </p>
+              <v-text-field
+                v-model="password"
+                :rules="passwordRules"
+                single-line
+                type="password"
+                required
+                color="#E52B38"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <p class="text-caption font-weight-bold text-center">
+                Re-enter Password
+              </p>
+              <v-text-field
+                label="Confirm Password"
+                single-line
+                v-model="confirmPassword"
+                :rules="[confirmPasswordRules, passwordConfirmationRule]"
+                type="password"
+                required
+                color="#E52B38"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-col>
+            <v-alert dense outlined type="error" v-if="error.isError">
+              {{ errorMessage }}
+            </v-alert>
+            <v-alert dense outlined type="success" v-if="error.isNotError">
+              {{ errorMessage }}
+            </v-alert>
+          </v-col>
+          <v-col class="d-flex justify-center">
+            <v-btn
+              color="#E52B38"
+              @click="signup"
+              class="signup_btn"
+              :userEmail="this.email"
+              >Sign up</v-btn
+            >
+          </v-col>
+        </form>
+      </div>
+    </v-card>
+    <v-progress-circular
+      class="progressbar"
+      v-if="isLoading && isMobile"
+      color="#E52B38"
+      height="10"
+      indeterminate
+    ></v-progress-circular>
+    <v-overlay :value="isLoading" absolute></v-overlay>
+  </v-dialog>
 </template>
 
 <script>
@@ -86,8 +112,8 @@ import Auth from "../../../api/pembaca/auth";
 import { mapActions } from "vuex";
 
 export default {
-  props : {
-    onDialogClosed : Function
+  props: {
+    onDialogClosed: Function,
   },
   data() {
     return {
@@ -99,7 +125,7 @@ export default {
       password: "",
 
       error: {
-        isNotError : false,
+        isNotError: false,
         isError: false,
         message: "",
         confirmPassword: "",
@@ -133,7 +159,7 @@ export default {
     ...mapActions({
       loggedIn: "user/getNewToken",
       setToken: "user/setToken",
-      setEmail: "user/setEmail"
+      setEmail: "user/setEmail",
     }),
 
     async signup() {
@@ -166,7 +192,7 @@ export default {
 
         this.setEmail(this.email);
         this.$router.push({
-          path: "/verification"
+          path: "/verification",
         });
 
         this.dialog = false;
@@ -197,7 +223,7 @@ col-12 {
 }
 
 .content {
-  padding : 4rem;
+  padding: 4rem;
   display: flex;
   height: 100%;
   width: 100%;
@@ -229,7 +255,14 @@ col-12 {
   color: white;
 }
 
-.img-btn{
+.img-btn {
   cursor: pointer;
+}
+
+.progressbar {
+  position: fixed;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

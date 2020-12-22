@@ -702,10 +702,18 @@ exports.signin = async (req, res, next) => {
       },
     });
 
+    if(!pembaca){
+      const error = new Error("Invalid credential");
+      error.statusCode = 401;
+      error.cause = "No Account with such email";
+      throw error;    
+    }
+
     // Check whether account verified or not
     if(pembaca.is_verified) {
       if (pembaca) {
-        const isPasswordTrue = bcrypt.compare(password, pembaca.password);
+        const isPasswordTrue = await bcrypt.compare(password, pembaca.password);
+        console.log("is Password true : " + isPasswordTrue);
         if (!isPasswordTrue) {
           const error = new Error("Invalid credential");
           error.statusCode = 401;
