@@ -15,7 +15,7 @@
       <v-col class="pt-0" v-for="berita in beritas" :key="berita.id_berita" cols="12">
         <small-berita :berita="berita" timeMode="TIME_MODE_RECENT" class="item"></small-berita>
       </v-col>
-      <v-col cols="12" class="pa-1 text-center more" v-if="!isLoading" style="background:red;">
+      <v-col cols="12" class="pa-1 text-center more" v-if="!isLoading">
         <h3 @click="$router.push({ name: 'notification' })" v-if="isMoreExist">More</h3>
       </v-col>
     </v-row>
