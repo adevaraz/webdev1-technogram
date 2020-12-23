@@ -13,8 +13,7 @@
             <v-btn v-if="!isMobile"
               color="#E52B38"
               class="ma-2 white--text"
-              v-clipboard:copy="url"
-              @click="handleAlert"
+              @click="onClickCopyBtn"
               width="250px">
                 <img class="img-btn mr-2" src="../../../assets/icons/link.png" />
                 Copy Link
@@ -22,8 +21,7 @@
             <v-btn v-else
               color="#E52B38"
               class="ma-2 white--text"
-              v-clipboard:copy="url"
-              @click="handleAlert"
+              @click="onClickCopyBtn"
               width="200px"
               small>
               <img class="img-btn-small mr-2" src="../../../assets/icons/link.png" />
@@ -124,6 +122,7 @@ export default {
     href_tw: "",
     href_fb: "",
     dialog: true,
+    copySucceeded: null,
   }),
 
   methods: {
@@ -134,7 +133,8 @@ export default {
       this.href_tw = "https://twitter.com/intent/tweet?text=" + this.judul_berita + "&url=" + this.url
       this.href_fb = "https://www.facebook.com/sharer.php?u=" + this.url + "&quote=" + this.judul_berita
     },
-    handleAlert() {
+    onClickCopyBtn() {
+      navigator.clipboard.writeText(this.url);
       this.alert = true;
       window.setInterval(() => {
         this.alert = false;
