@@ -10,7 +10,6 @@
   "dependencies": {
     "@mdi/js": "^5.8.55",
     "axios": "^0.21.0",
-    "bootstrap-vue": "^2.19.0",
     "core-js": "^3.6.5",
     "mini-toastr": "^0.8.1",
     "nprogress": "^0.2.0",
@@ -18,7 +17,6 @@
     "socket.io-client": "^3.0.1",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
-    "vue-clipboard2": "^0.3.1",
     "vue-loader": "^15.9.5",
     "vue-notifications": "^1.0.2",
     "vue-router": "^3.4.9",
