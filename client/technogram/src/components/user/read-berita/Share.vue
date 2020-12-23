@@ -122,7 +122,6 @@ export default {
     href_tw: "",
     href_fb: "",
     dialog: true,
-    copySucceeded: null,
   }),
 
   methods: {
