@@ -53,7 +53,7 @@ const LeftImagePreviewBerita = () => import("../berita/LeftImageBeritaPreview.vu
 const RightImagePreviewBerita = () => import("../berita/RightImageBeritaPreview.vue");
 
 
-const beritaApi = () => import("../../../api/berita/berita");
+import beritaApi from "../../../api/berita/berita";
 import { BASE_URL } from "../../../api/const";
 import { store } from '../../../store/index';
 const NEWS_PERCALL = 5;
@@ -170,7 +170,6 @@ export default {
 }
 
 .no-item {
-  border-top: 1px solid rgb(0, 0, 0, 0.6);
   color:  rgb(0, 0, 0, 0.6);
 }
 
