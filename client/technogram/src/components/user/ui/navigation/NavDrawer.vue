@@ -22,6 +22,7 @@
                 <img
                   class="item img-btn"
                   src="../../../../assets/icons/profile.png"
+                  alt="profile icon"
                 />
               </v-col>
               <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
@@ -182,10 +183,6 @@ export default {
 
 .button {
   cursor: pointer;
-}
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-.border-btm {
-  border-bottom: 1px solid #bab4b8;
 }
 
 .button:hover {
