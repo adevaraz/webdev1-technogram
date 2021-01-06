@@ -20,7 +20,7 @@
                     align="center"
                     justify="center"
                 >
-                    <img id="vector" src="../../../assets/verification/login-amico.png" />
+                    <img id="vector" src="../../../assets/verification/login-amico.png" alt="verification succeed illustration"/>
                 </v-row>
                 <v-row
                     align="center"
