@@ -92,7 +92,6 @@ export default {
                 this.isLoading = true;
                 const result = await verifApi.confirmVerification(this.currentToken);
                 this.isLoading = false;
-                console.log(this.currentToken)
 
                 if(result instanceof Error) {
                     this.errorMessage = result.cause;
@@ -115,7 +114,7 @@ export default {
                 this.isError = true;
                 this.isLoading = false;
                 this.isSucceed = false;
-                console.log(err);
+                console.error(err);
             }
         }
     }
