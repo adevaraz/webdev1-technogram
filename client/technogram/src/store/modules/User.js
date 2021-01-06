@@ -106,21 +106,25 @@ const UserModule = {
 
         async getNewToken({ commit, state }) {
             commit("SET_LOADING");
-            console.log("loading");
-            const result = await User.getRefreshToken();
-            console.log(result);
-            if (result instanceof Error) {
-                commit("SET_TOKEN", "");
-                commit("SET_ERROR", result.cause);
+            // console.log("loading");
+            if(state.token !== undefined && state.token !== "") {
+                const result = await User.getRefreshToken();
+                // console.log(result);
+                if (result instanceof Error) {
+                    commit("SET_TOKEN", "");
+                    commit("SET_ERROR", result.cause);
+                    return;
+                }
+                commit("SET_TOKEN", result.token);
+                commit("SET_LOGGEDIN", !state.isLoggedin);
+                commit("SET_USERNAME", result.username);
+                commit("SET_EMAIL", result.email);
+                commit("SET_MOSTLIKED_KATEGORI", result.mostLikedCategory);
+                // console.log(state);
+                commit("SET_SUCCESS", "Success get new Access token");
+            } else {
                 return;
             }
-            commit("SET_TOKEN", result.token);
-            commit("SET_LOGGEDIN", !state.isLoggedin);
-            commit("SET_USERNAME", result.username);
-            commit("SET_EMAIL", result.email);
-            commit("SET_MOSTLIKED_KATEGORI", result.mostLikedCategory);
-            console.log(state);
-            commit("SET_SUCCESS", "Success get new Access token");
         },
 
         setEmail({ commit }, email) {
