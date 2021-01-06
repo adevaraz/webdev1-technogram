@@ -218,8 +218,6 @@ export default {
     mounted() {
         this.getBeritabyId(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
-        this.getLikeState(this.$route.params.id);
-        this.getSaveState(this.$route.params.id);
     },
 
     methods: {
