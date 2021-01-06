@@ -29,8 +29,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" alt="empty heart icon" />
+                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" alt="filled heart icon" />
                                 <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
                             </div>
                             <div
@@ -48,7 +48,7 @@
                         </div>
 
                         <div id="view" class="d-flex flex-row">
-                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" alt="eye icon" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
                         </div>
                         
@@ -57,8 +57,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" />
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" alt="unbookmarked icon" />
+                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" alt="bookmarked icon" />
                             </div>
                             <div
                                 class="d-flex flex-row"
@@ -79,7 +79,7 @@
                                 class="d-flex flex-row ml-3"
                             >
                                 <share v-if="share" :onDialogClosed=" () => { share = false }" :judul_berita="judul"></share>
-                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.png" />
+                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.png" alt="share icon" />
                             </div>
                         </div>
                     </div>
