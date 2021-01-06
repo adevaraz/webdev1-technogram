@@ -152,6 +152,7 @@ export default {
         this.getBeritabyId(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
+        this.retrieveRelatedBerita(this.$route.params.id);
     },
 
     data: () => ({
@@ -215,10 +216,6 @@ export default {
         )
     },
 
-    mounted() {
-        this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.$route.params.id);
-    },
 
     methods: {
         resetData() {
@@ -241,7 +238,6 @@ export default {
         },
     
     async refreshValue() {
-        this.getBeritabyId(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
     },
@@ -249,7 +245,6 @@ export default {
     async getBeritabyId(id) {
         try {
             this.isLoading = true;
-            
             const result = await berita.get(id);
 
             if (result instanceof Error) {
@@ -258,7 +253,7 @@ export default {
             }
 
             this.isLoading = false;
-
+            
             if (result.data.url_gambar) {
                 this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
                 this.urlGambar = await this.getImageObj(this.urlTemp);
@@ -275,6 +270,7 @@ export default {
             this.jumlah_likes = result.data.jumlah_likes;
             this.jurnalis = result.data.jurnalis;
             this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+
             } catch (error) {
                 console.error(error);
             }
@@ -347,24 +343,34 @@ export default {
                 this.refreshValue();
             }
         } catch (error) {
-                console.error(error);
+            console.error(error);
         }
     },
 
     async getLikeState(id) {
         try {
-            const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+            const token = store.getters['user/getToken'];
 
-            if(result instanceof Error) {
-                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-                return;
+            if(token.localeCompare("") != 0) {
+                const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+                
+                const valResult = await berita.get(id);
+
+                if (valResult instanceof Error) {
+                    this.beritaNotExist();
+                    return;
+                }
+
+                this.isLiked = result.data;
+                this.jumlah_likes = valResult.data.jumlah_likes;
             }
-
-            this.isLiked = result.data;
         } catch (error) {
-            if(error.statusCode.localeCompare("401") == 0) {
-                console.log("WEY");
-            }
+            console.error(error);
         }
     },
 
@@ -387,14 +393,18 @@ export default {
 
     async getSaveState(id) {
         try {
-            const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
-            
-            if(result instanceof Error) {
-                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-                return;
-            }
+            const token = store.getters['user/getToken'];
 
-            this.isSaved = result.data;
+            if(token.localeCompare("") != 0) {
+                const result = await pembacaAct.isSaved(token, id);
+            
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                this.isSaved = result.data;
+            }
         } catch (error) {
             console.error(error);
         }
