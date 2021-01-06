@@ -43,7 +43,6 @@ export default {
     NotificationToast,
   },
   async beforeRouteEnter(to, from, next) {
-    console.log("MASUK BEFORE ROUTE");
     //Check if access token ready in vuex
     if (!store.getters["user/isTokenExist"]) {
       //Try to get access token
@@ -79,9 +78,7 @@ export default {
       this.notification.message = `${message}...`;
       this.notification.shouldShowNotification = true;
       this.notification.beritaId = beritaId;
-      console.log(
-        this.notification.shouldShowNotification && this.isFirstToast
-      );
+
       setTimeout(() => {
         this.resetNotificatoin();
       }, NOTIFICATION_TIME);
@@ -89,7 +86,7 @@ export default {
     queueNotification(message, beritaId) {
       if (this.notification.shouldShowNotification) {
         this.notificationQueue.push({ message, beritaId });
-        console.log(this.notificationQueue);
+
       } else {
         this.newNotification(message, beritaId);
       }
@@ -102,7 +99,7 @@ export default {
       this.socket.emit("room", this.mostLikedCategory.toLowerCase());
       this.socket.on("notification", (result) => {
         if (result.action === "publish") {
-          console.log(result);
+
           const newsTitle = result.data.judul.slice(0, 50);
           const beritaId = result.data.id_berita;
           this.queueNotification(newsTitle, beritaId);
@@ -114,7 +111,6 @@ export default {
       this.socket = null;
     },
     onBeritaSelected() {
-      console.log("routerpush");
       this.$router
         .push({
           name: "read-berita",
@@ -137,12 +133,9 @@ export default {
   },
   watch: {
     isLoggedIn(value) {
-      console.log("LOGIN GA  : " + value);
       if (value) {
-        console.log("login");
         this.initSocket();
       } else {
-        console.log("dc socket");
         this.disconnectSocket();
       }
     },

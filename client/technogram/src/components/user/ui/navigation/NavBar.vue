@@ -124,8 +124,6 @@ const getFullRoute = (name, query) => {
 export default {
   created() {
     this.retrieveKategori();
-
-    console.log(this.menus[1].query);
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -246,13 +244,9 @@ export default {
       }
     },
     onChildClick (value) {
-      
-
       this.isLoading = value;
-      console.log("ini is loading......" + this.isLoading)
       setTimeout(function(){
         this.isLoading = false;
-         console.log("ini is loading......" + this.isLoading)
       },3000)
       
       

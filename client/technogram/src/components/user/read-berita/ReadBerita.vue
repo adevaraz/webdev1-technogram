@@ -278,7 +278,7 @@ export default {
             this.jurnalis = result.data.jurnalis;
             this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
     },
 
@@ -295,7 +295,7 @@ export default {
           type: blobObj.type,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
@@ -308,7 +308,7 @@ export default {
                 return;
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 
@@ -330,7 +330,7 @@ export default {
                 this.relatedBerita.push(element);
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
    },
 
@@ -349,7 +349,7 @@ export default {
                 this.refreshValue();
             }
         } catch (error) {
-                console.log(error);
+                console.error(error);
         }
     },
 
@@ -362,11 +362,13 @@ export default {
                 return;
             }
 
-                this.isLiked = result.data;
-            } catch (error) {
-                console.log(error);
+            this.isLiked = result.data;
+        } catch (error) {
+            if(error.statusCode.localeCompare("401") == 0) {
+                console.log("WEY");
             }
-        },
+        }
+    },
 
     async saveBerita() {
         try {
@@ -381,7 +383,7 @@ export default {
                 this.refreshValue();
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 
@@ -396,7 +398,7 @@ export default {
 
             this.isSaved = result.data;
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 
