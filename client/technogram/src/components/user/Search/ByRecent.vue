@@ -55,8 +55,6 @@ export default {
     onScrollToBottom() {
       this.countLoading++;
       if(!this.popularLoading && !this.isEndOfList) {
-        console.log('scrolling..')
-        console.log(this.countLoading)
         if(this.countLoading < 2) {
           this.retrieveRecentBerita();
         } else {
@@ -79,17 +77,12 @@ export default {
         if(this.isEndOfList) {
           return;
         }
-        console.log(result.data.length)
         this.isEndOfList = true;
-        console.log(this.isEndOfList)
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.recentBerita.push(element);
       });
-      console.log("Search by Recent");
-      console.log(this.$route.query.q);
-      console.log(this.recentBerita);
     },
   }
 }
