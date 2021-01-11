@@ -248,10 +248,8 @@ export default {
       
 
       this.isLoading = value;
-      console.log("ini is loading......" + this.isLoading)
       setTimeout(function(){
         this.isLoading = false;
-         console.log("ini is loading......" + this.isLoading)
       },3000)
       
       
@@ -320,8 +318,8 @@ export default {
             this.menus[i].query = this.kategori[i - 1].nama_kategori;
           }
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_) {
+        _;
       }
     },
   },

@@ -91,7 +91,6 @@ export default {
       if (this.src !== "") {
         const lazyImage = new Image();
         lazyImage.onload = () => {
-          console.log("loaded");
           this.isImageLoading = false;
           this.backgroundImage = this.src;
         };

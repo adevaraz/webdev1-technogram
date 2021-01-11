@@ -104,7 +104,6 @@ export default {
         .catch((err) => {
           err;
         });
-        console.log("pushhhhh!!")
     },
   },
 
