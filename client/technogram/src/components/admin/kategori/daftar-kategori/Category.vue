@@ -126,7 +126,6 @@ export default {
       } else if (this.editedIndex === -1) {
         return "New Category";
       } else if (this.editedIndex > -1) {
-        console.log(this.kategori)
         return "Edit Category";
       }
       
@@ -156,13 +155,14 @@ export default {
           for (var i = 0; i < this.kategori.length; i++) {
             lowerArray.push(this.kategori[i]);
           }
-          const lowercasedInput = v.toLowerCase();
-          for (var j = 0; j < lowerArray.length; j++) {
-            if(lowerArray[j].nama_kategori.toLowerCase()===lowercasedInput){
-              return 'Kategori sudah ada'
+          if(v!=null){
+            const lowercasedInput = v.toLowerCase();
+            for (var j = 0; j < lowerArray.length; j++) {
+              if(lowerArray[j].nama_kategori.toLowerCase()===lowercasedInput){
+                return 'Kategori sudah ada'
+              }
             }
           }
-          
          return true
         },
          (v) => (!!v || "") || 'Kategori tidak boleh kosong',
@@ -246,13 +246,6 @@ export default {
       if(this.editedIndex>-1){ //delete one
         this.kategori.splice(this.editedIndex, 1);
         await categoriesData.deleteOneKategori(this.editedItem.id_kategori, store.getters['admin/getToken']);
-      // } else {  // delete all
-      //   const deleteResult = await categoriesData.deleteAllKategori();
-      //    if (deleteResult instanceof Error) {
-      //     throw deleteResult;
-      //   } else {
-      //     console.log(deleteResult);
-      //   }
       }
       
       this.close();

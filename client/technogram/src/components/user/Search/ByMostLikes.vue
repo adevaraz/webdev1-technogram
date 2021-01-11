@@ -59,7 +59,6 @@ export default {
     },
     async retrieveMostLikedBerita() {
       this.popularLoading = true;
-      //benerin perpage sama page nya, parameternya teh (perpage, key, page)
       const result = await beritaApi.popularBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
       this.pageNum++;
       this.popularLoading = false;
@@ -78,8 +77,6 @@ export default {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.mostLikedBerita.push(element);
       });
-      console.log("Search by Most Likes");
-      console.log(this.mostLikedBerita);
     },
   }
 };

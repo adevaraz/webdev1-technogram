@@ -245,12 +245,14 @@ col-12 {
 
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
-  font-size: 25px;
+  font-size: 21px;
 }
 
 .playfair-font {
   font-family: "Playfair Display", serif;
+  font-size: 29px;
 }
+
 .signup_btn {
   color: white;
 }
