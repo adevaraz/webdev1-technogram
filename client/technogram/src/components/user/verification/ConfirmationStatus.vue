@@ -20,7 +20,7 @@
                     align="center"
                     justify="center"
                 >
-                    <img id="vector" src="../../../assets/verification/login-amico.png" alt="verification succeed illustration"/>
+                    <img id="vector" src="../../../assets/verification/login-amico.png" />
                 </v-row>
                 <v-row
                     align="center"
@@ -58,7 +58,7 @@ import verifApi from "../../../api/pembaca/verification";
 export default {
     created() {
         if(!this.currentToken) {
-            setTimeout( () => this.$router.push({ path: '/' }), 2000);
+            setTimeout( () => this.$router.push({ path: '/' }), 3000);
         }
 
         this.checkConfirmation();
@@ -92,6 +92,7 @@ export default {
                 this.isLoading = true;
                 const result = await verifApi.confirmVerification(this.currentToken);
                 this.isLoading = false;
+                console.log(this.currentToken)
 
                 if(result instanceof Error) {
                     this.errorMessage = result.cause;
@@ -114,7 +115,7 @@ export default {
                 this.isError = true;
                 this.isLoading = false;
                 this.isSucceed = false;
-                console.error(err);
+                console.log(err);
             }
         }
     }
