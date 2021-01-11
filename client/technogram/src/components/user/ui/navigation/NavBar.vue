@@ -125,7 +125,6 @@ export default {
   created() {
     this.retrieveKategori();
 
-    console.log(this.menus[1].query);
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
