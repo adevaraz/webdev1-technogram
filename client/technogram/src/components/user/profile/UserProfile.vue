@@ -128,14 +128,6 @@ export default {
   height: 2px;
 }
 
-.item {
-  cursor: pointer;
-}
-
-.top-right-container {
-  position: relative;
-}
-
 .progress-bar {
   position: relative;
   top: 45%;
