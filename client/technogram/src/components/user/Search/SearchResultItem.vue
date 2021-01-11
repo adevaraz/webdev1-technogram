@@ -1,7 +1,7 @@
 <template>
   <div @click="onBeritaSelected(source.id_berita)">
     <left-image-preview-berita v-if="!isMobile" :berita="source"></left-image-preview-berita>
-    <right-image-preview-berita v-else :berita="source"></right-image-preview-berita>
+    <right-image-preview-berita class="pa-5 pt-7" v-else :berita="source"></right-image-preview-berita>
   </div>
 </template>
 
@@ -35,8 +35,6 @@ export default {
 
   methods: {
     onBeritaSelected(id) {
-      console.log("VIRTUAL SCROLL ITEM");
-      console.log(id);
       this.$router
         .push({
           name: "read-berita",
