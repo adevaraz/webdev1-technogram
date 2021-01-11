@@ -113,16 +113,12 @@ export default {
     },
 
     getUserData() {
-      console.log("user token" + store.getters["user/isTokenExist"]);
       this.username = store.getters["user/getUsername"];
-      console.log("uname" + this.username);
       this.email = store.getters["user/getUserEmail"];
     },
 
     async signOut() {
-      const before = await store.getters["user/isTokenExist"];
-      console.log("before: ");
-      console.log(before);
+      await store.getters["user/isTokenExist"];
 
       const signOutRes = await store.dispatch("user/signOut");
 
@@ -130,10 +126,7 @@ export default {
         this.error.message = signOutRes.cause;
         this.error.isError = true;
       } else {
-        const after = await store.getters["user/isTokenExist"];
-        console.log("after: ");
-        console.log(after);
-
+        await store.getters["user/isTokenExist"];
         this.$router.push("/");
       }
     },

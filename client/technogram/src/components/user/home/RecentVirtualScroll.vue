@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     onScrollToBottom() {
-      console.log(this.isEndOfList);
       if (!this.isLoading && !this.isEndOfList) {
         this.getNotificatedBerita();
       }
@@ -67,7 +66,6 @@ export default {
           return;
         }
         this.isEndOfList = true;
-        console.log(this.isEndOfList);
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
