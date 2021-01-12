@@ -78,6 +78,7 @@ export default {
       this.notification.message = `${message}...`;
       this.notification.shouldShowNotification = true;
       this.notification.beritaId = beritaId;
+      
       setTimeout(() => {
         this.resetNotificatoin();
       }, NOTIFICATION_TIME);
@@ -133,7 +134,6 @@ export default {
       if (value) {
         this.initSocket();
       } else {
-
         this.disconnectSocket();
       }
     },

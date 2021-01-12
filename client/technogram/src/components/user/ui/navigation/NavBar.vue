@@ -124,7 +124,6 @@ const getFullRoute = (name, query) => {
 export default {
   created() {
     this.retrieveKategori();
-
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -245,8 +244,6 @@ export default {
       }
     },
     onChildClick (value) {
-      
-
       this.isLoading = value;
       setTimeout(function(){
         this.isLoading = false;

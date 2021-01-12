@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mdi/js": "^5.8.55",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "express": "^4.17.1",
     "mini-toastr": "^0.8.1",
