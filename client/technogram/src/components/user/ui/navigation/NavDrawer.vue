@@ -37,10 +37,10 @@
               small
               class="worksans-font text-none"
               @click="$router.push({ name: 'profile' })"
-              >Saved news</v-btn
+              >Berita Tersimpan</v-btn
             >
             <v-btn text small class="worksans-font text-none" @click="signOut()"
-              >Sign Out</v-btn
+              >Keluar</v-btn
             >
           </v-col>
         </v-row>
@@ -53,7 +53,7 @@
             small
             @click="isLoginDialogShown = !isLoginDialogShown"
           
-            >Sign in</v-btn
+            >Masuk</v-btn
           >
       </v-col>
       <v-col cols="12">

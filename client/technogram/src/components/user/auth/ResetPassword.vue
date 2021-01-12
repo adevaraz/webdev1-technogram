@@ -26,7 +26,7 @@
                   <v-row class="jutify-center">
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">
-                        New Password
+                        Password baru
                       </p>
                       <v-text-field
                         v-model="newPassword"
@@ -41,7 +41,7 @@
                     </v-col>
                     <v-col cols="12">
                       <p class="text-caption font-weight-bold text-center">
-                        Confrim New Password
+                        Masukkan ulang password
                       </p>
                       <v-text-field
                         v-model="confirmNewPassword"

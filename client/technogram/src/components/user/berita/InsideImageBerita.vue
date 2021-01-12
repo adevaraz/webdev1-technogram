@@ -30,7 +30,7 @@
               </v-col>
               <v-col cols="8" class="pb-0 pt-0">
                 <h3 class="news-writer clickable-text">
-                  by {{ berita.jurnalis || "" }}
+                  oleh {{ berita.jurnalis || "" }}
                 </h3>
               </v-col>
             </v-row>

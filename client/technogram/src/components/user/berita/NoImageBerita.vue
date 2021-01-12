@@ -26,7 +26,7 @@
           <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
             <v-col cols="12" class="pa-0 ma-0">
               <h3 class="worksans-font news-writer" :class="onHoverClass">
-                by {{ berita.jurnalis || "" }}
+                oleh {{ berita.jurnalis || "" }}
               </h3>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">

@@ -21,7 +21,7 @@
       <div :class="isMobile ? 'content-mobile' : 'content'">
 
           <h1 :class="isMobile ? 'playfair-font-mobile' : 'playfair-font'">
-            Sign in with email
+            Masuk dengan Email
           </h1>
     
         <form class="mt-10">
@@ -30,6 +30,7 @@
               <p class="text-caption font-weight-bold text-center">Email</p>
               <v-text-field
                 v-model="email"
+                label="email@domain.com"
                 color="#E52B38"
                 single-line
               ></v-text-field>
@@ -38,6 +39,7 @@
               <p class="text-caption font-weight-bold text-center">Password</p>
               <v-text-field
                 v-model="password"
+                label="Password"
                 :rules="[rules.password]"
                 :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
                 single-line
@@ -49,17 +51,17 @@
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <p class="text-caption pr-1">Have no account?</p>
+            <p class="text-caption pr-1">Tidak punya akun?</p>
             <p
               class="text-caption font-weight-bold"
               style="cursor: pointer"
               @click="onHaveNoAccountClicked"
             >
-              Create one
+              Buat baru
             </p>
           </v-row>
           <v-row align="center" justify="center">
-            <p class="text-caption pr-1">Forget Password?</p>
+            <p class="text-caption pr-1">Lupa password?</p>
             <p
               class="text-caption font-weight-bold"
               style="cursor: pointer"
@@ -81,7 +83,7 @@
           </v-row>
           <v-col class="d-flex justify-center">
             <v-btn class="login_btn" color="#E52B38" small @click="signin"
-              >Sign in</v-btn
+              >Masuk</v-btn
             >
           </v-col>
         </form>

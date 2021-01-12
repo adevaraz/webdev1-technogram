@@ -4,7 +4,7 @@
       <h1
         class= "playfair-font text-start"
       >
-        Popular News
+        Berita Populer
       </h1>
     </v-col>
     <v-col

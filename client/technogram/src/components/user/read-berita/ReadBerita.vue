@@ -21,7 +21,7 @@
                     flat
                     tile
                 >
-                    <h4 class="mr-auto">by {{ jurnalis }}</h4>
+                    <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
 
                     <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
                         <div id="like">
@@ -31,7 +31,7 @@
                             >
                                 <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" alt="empty heart icon" />
                                 <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" alt="filled heart icon" />
-                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
                             </div>
                             <div
                                 class="d-flex flex-row"
@@ -43,13 +43,13 @@
                                     src="../../../assets/icons/heart-empty.png"
                                     @click="isLoginDialogShown = !isLoginDialogShown"
                                 />
-                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} likes</p>
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
                             </div>
                         </div>
 
                         <div id="view" class="d-flex flex-row">
                             <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" alt="eye icon" />
-                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} viewers</p>
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} pembaca</p>
                         </div>
                         
                         <div id="save">
@@ -98,14 +98,14 @@
 
                     <div :class="isMobile? 'article responsive-img break-words' : 'article responsive-img'" v-html=artikel></div>
 
-                    <p class="grey--text text--darken-2">Written by</p>
+                    <h3 class="grey--text text--darken-2">Ditulis oleh</h3>
                     <h4>{{ jurnalis }}</h4>
                     <p>{{ deskripsi_jurnalis }}</p>
                 </div>
             </v-sheet>
 
             <div class="px-2 mx-2 my-16">
-                <h3 class="worksans-font red-text">Recommendations</h3>
+                <h3 class="worksans-font red-text">Rekomendasi</h3>
                 <v-progress-circular
                     class="small-progressbar"
                     v-if="relatedBeritaLoading"
