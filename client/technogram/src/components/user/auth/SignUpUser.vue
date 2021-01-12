@@ -32,6 +32,7 @@
               <v-text-field
                 v-model="email"
                 :rules="[rules.email]"
+                label="email@domain.com"
                 single-line
                 color="#E52B38"
               ></v-text-field>
@@ -43,6 +44,7 @@
               <v-text-field
                 v-model="username"
                 :rules="[rules.username]"
+                label="Username"
                 single-line
                 color="#E52B38"
               ></v-text-field>
@@ -54,6 +56,7 @@
               <v-text-field
                 v-model="password"
                 :rules="passwordRules"
+                label="Password"
                 single-line
                 type="password"
                 required
@@ -65,7 +68,7 @@
                 Masukkan Ulang Password
               </p>
               <v-text-field
-                label="Confirm Password"
+                label="Masukkan ulang password"
                 single-line
                 v-model="confirmPassword"
                 :rules="[confirmPasswordRules, passwordConfirmationRule]"

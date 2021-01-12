@@ -30,6 +30,7 @@
               <p class="text-caption font-weight-bold text-center">Email</p>
               <v-text-field
                 v-model="email"
+                label="email@domain.com"
                 color="#E52B38"
                 single-line
               ></v-text-field>
@@ -38,6 +39,7 @@
               <p class="text-caption font-weight-bold text-center">Password</p>
               <v-text-field
                 v-model="password"
+                label="Password"
                 :rules="[rules.password]"
                 :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
                 single-line
