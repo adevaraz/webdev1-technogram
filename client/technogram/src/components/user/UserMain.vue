@@ -47,7 +47,7 @@ export default {
       await store.dispatch("user/getNewToken");
       const isTokenExist = store.getters["user/isTokenExist"];
       if (!isTokenExist) {
-        console.log("not authorized");
+        // console.log("not authorized");
       }
     }
     next();
