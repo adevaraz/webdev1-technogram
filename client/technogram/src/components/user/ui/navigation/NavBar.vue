@@ -20,7 +20,7 @@
         
         <div class="middle">
           <div ref="logo" class="logo">
-            <img src="../../../../assets/technogram-logo.png" alt="technogram logo" />
+            <img src="../../../../assets/technogram-logo.svg" alt="technogram logo" />
           </div>
         </div>
 
@@ -31,7 +31,7 @@
               <img
                 class="navbar-item img-btn"
                 @click="isSearchDialogShown = !isSearchDialogShown"
-                src="../../../../assets/icons/search-icon.png"
+                src="../../../../assets/icons/search-icon.svg"
                 alt="magnifier icon"
               />
             </div>
@@ -41,13 +41,13 @@
                 <img
                   class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
-                  src="../../../../assets/icons/bell.png"
+                  src="../../../../assets/icons/bell.svg"
                   alt="notification bell icon"
                 />
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" alt="profile icon" />
+                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.svg" alt="profile icon" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -68,7 +68,7 @@
           <div class="navigation" v-if="isMobile && isLoggedIn">
             <img
               class="navbar-item img-btn"
-              src="../../../../assets/icons/bell.png"
+              src="../../../../assets/icons/bell.svg"
               @click="$router.push({ name: 'notification' })"
               alt="notification bell icon"
             />

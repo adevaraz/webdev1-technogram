@@ -21,7 +21,7 @@
               >
                 <img
                   class="item img-btn"
-                  src="../../../../assets/icons/profile.png"
+                  src="../../../../assets/icons/profile.svg"
                   alt="profile icon"
                 />
               </v-col>

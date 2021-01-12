@@ -13,7 +13,7 @@
     >
       <template v-slot:prepend>
         <v-list-item two-line>
-          <img src="../../../assets/technogram-creator-w.png">
+          <img src="../../../assets/technogram-creator-w.svg">
         </v-list-item>
       </template>
 
