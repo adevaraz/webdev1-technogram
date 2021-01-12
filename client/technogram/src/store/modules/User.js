@@ -1,5 +1,6 @@
 import User from "../../api/pembaca/auth";
 import StatusType from "../StatusTypeConst";
+
 const UserModule = {
     namespaced: true,
     state: () => ({
@@ -105,11 +106,8 @@ const UserModule = {
         },
 
         async getNewToken({ commit, state }) {
-            commit("SET_LOADING");
-            // console.log("loading");
-            if(state.token !== undefined && state.token !== "") {
+                commit("SET_LOADING");
                 const result = await User.getRefreshToken();
-                // console.log(result);
                 if (result instanceof Error) {
                     commit("SET_TOKEN", "");
                     commit("SET_ERROR", result.cause);
@@ -120,11 +118,7 @@ const UserModule = {
                 commit("SET_USERNAME", result.username);
                 commit("SET_EMAIL", result.email);
                 commit("SET_MOSTLIKED_KATEGORI", result.mostLikedCategory);
-                // console.log(state);
                 commit("SET_SUCCESS", "Success get new Access token");
-            } else {
-                return;
-            }
         },
 
         setEmail({ commit }, email) {

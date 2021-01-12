@@ -20,11 +20,9 @@
 </template>
 
 <script>
-
-
 const NavBar = () => import("./ui/navigation/NavBar.vue");
 const NotificationToast = () => import("./ui/modals/NotificationToast.vue");
-import openSocket from "socket.io-client"
+import openSocket from "socket.io-client";
 import { mapGetters } from "vuex";
 import { BASE_URL } from "../../api/const.js";
 import { store } from "../../store/index";
@@ -43,7 +41,6 @@ export default {
     NotificationToast,
   },
   async beforeRouteEnter(to, from, next) {
-    console.log("MASUK BEFORE ROUTE");
     //Check if access token ready in vuex
     if (!store.getters["user/isTokenExist"]) {
       //Try to get access token
