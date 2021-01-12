@@ -315,8 +315,8 @@ export default {
             this.menus[i].query = this.kategori[i - 1].nama_kategori;
           }
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_) {
+        _;
       }
     },
   },

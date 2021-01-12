@@ -174,8 +174,6 @@ const savedBeritaList = async ( perPage , key , page, token ) => {
                 "Authorization" : token
             }
         });
-        
-        console.log("PERPAGE "+perPage);
         return result.data;
     }catch(err){
         const errorResult = await ErrorHandler.errorHandler(err, USER_ROLE, async (newToken) => {
