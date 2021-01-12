@@ -71,7 +71,7 @@
             v-model="url_gambar"
             placeholder="Pilih Gambar"
             prepend-icon="mdi-camera"
-            accept="image/png, image/jpeg, image/jpg"
+            accept=".webp"
             :rules="imgRules"
           >
           </v-file-input>
@@ -118,13 +118,16 @@
 
 <script>
 import { BASE_URL } from "../../../api/const";
-import berita from "../../../api/berita/berita"
+import berita from "../../../api/berita/berita";
 import { store } from "../../../store/index";
 export default {
   name: "add-berita",
-  components: { VueEditor : () => import("vue2-editor").then(result => {
-    return result.VueEditor
-  }) },
+  components: {
+    VueEditor: () =>
+      import("vue2-editor").then((result) => {
+        return result.VueEditor;
+      }),
+  },
   data() {
     return {
       isReset: false,
@@ -174,11 +177,7 @@ export default {
     Preview_image() {
       if (this.url_gambar) {
         this.imgRules = [
-          (v) =>
-            v.type === "image/png" ||
-            v.type === "image/jpg" ||
-            v.type === "image/jpeg" ||
-            "Gambar harus bertipe *.jpg, *.jpeg, atau *.png",
+          (v) => v.type === "image/webp" || "Gambar harus bertipe *.webp",
         ];
         this.urlTemp = URL.createObjectURL(this.url_gambar);
       }
@@ -321,11 +320,7 @@ export default {
     url_gambar: function (val) {
       if (val) {
         this.imgRules = [
-          (v) =>
-            v.type === "image/png" ||
-            v.type === "image/jpg" ||
-            v.type === "image/jpeg" ||
-            "Gambar harus bertipe *.jpg, *.jpeg, atau *.png",
+          (v) => v.type === "image/webp" || "Gambar harus bertipe *.webp",
         ];
       } else {
         this.imgRules = [];
