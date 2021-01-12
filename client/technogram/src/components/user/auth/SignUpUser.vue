@@ -123,6 +123,10 @@ export default {
       email: "",
       username: "",
       password: "",
+      passwordRules: undefined,
+      confirmPasswordRules: "",
+      confirmPassword: "",
+
 
       error: {
         isNotError: false,
