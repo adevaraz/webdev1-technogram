@@ -16,7 +16,7 @@
         class="item img-btn"
         style="cursor: pointer"
         @click="onDialogClosed"
-        src="../../../assets/icons/cross.png"
+        src="../../../assets/icons/cross.svg"
       />
       <div :class="isMobile ? 'content-mobile' : 'content'">
 

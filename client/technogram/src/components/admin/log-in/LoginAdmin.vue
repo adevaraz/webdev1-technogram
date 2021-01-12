@@ -19,7 +19,7 @@
               <div class="content">
                 <div class="logo">
                   <v-img
-                    :src="require('../../../assets/technogram-creator-b.png')"
+                    :src="require('../../../assets/technogram-creator-b.svg')"
                   ></v-img>
                 </div>
                 <form class="mt-10" @submit.prevent="signin">

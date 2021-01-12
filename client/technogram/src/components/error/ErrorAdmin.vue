@@ -10,7 +10,7 @@
       </v-row>
       <v-row>
         <v-col align="center" justify="center">
-          <img id="vector" src="../../assets/error/404_Error.gif" />
+          <img id="vector" src="../../assets/error/404_Error.svg" />
         </v-col>
       </v-row>
       <v-row>
