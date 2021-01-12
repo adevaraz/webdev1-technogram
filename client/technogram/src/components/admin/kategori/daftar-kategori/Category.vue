@@ -187,7 +187,7 @@ export default {
           this.loadingItem=false;
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
@@ -227,14 +227,14 @@ export default {
         if (updateResult instanceof Error) {
           throw updateResult;
         } else {
-          console.log(updateResult);
+          console.error(updateResult);
         }     
       } else {  // New save     
         const addResult = await categoriesData.addKategori(this.editedItem.nama_kategori, store.getters['admin/getToken']);
          if (addResult instanceof Error) {
           throw addResult;
         } else {
-          console.log(addResult);
+          console.error(addResult);
         }
       }
       this.close();
