@@ -36,7 +36,7 @@ const newsValidationRules = () => {
                     let objPath = path.parse(value);
                     let extType = objPath.ext.toLowerCase();
                     let checkDirName = (objPath.dir === "app/public/images") ? true : false;
-                    let checkExtType = (extType === ".jpg" || extType === ".jpeg" || extType === ".png") ? true : false;
+                    let checkExtType = (extType === ".webp") ? true : false;
                     return (checkDirName && checkExtType);
                 }
             }).withMessage("Invalid image url.")
