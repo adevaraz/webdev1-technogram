@@ -43,7 +43,7 @@
           <v-col cols="9" class=" ma-0 mt-3">
             <v-row class="justify">
               <v-col cols="6" class="pa-0 ma-0">
-                <h3 class="work-sans news-writer text-start">by {{berita.jurnalis || ''}}</h3>
+                <h3 class="work-sans news-writer text-start">oleh {{berita.jurnalis || ''}}</h3>
               </v-col>
               <v-col cols="6" class="pa-0 mx-auto">
                 <h3 class="work-sans news-category">| {{berita.kategori_berita || ''}}</h3>

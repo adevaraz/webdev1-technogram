@@ -42,7 +42,7 @@
       </v-col>
       <v-col cols="8" class="pa-0 mt-3">
         <h3 class="news-writer clickable-text" :class="onHoverClass">
-          by {{ berita.jurnalis || "" }}
+          oleh {{ berita.jurnalis || "" }}
         </h3>
       </v-col>
     </v-row>

@@ -14,7 +14,7 @@
                 <div class="d-flex flex-row search" align-center>
                     <v-text-field
                         v-model="key"
-                        placeholder="Enter keyword here..."
+                        placeholder="Masukkan kata kunci..."
                         prepend-inner-icon="mdi-magnify"
                         v-on:keydown.enter="
                             $router.push({

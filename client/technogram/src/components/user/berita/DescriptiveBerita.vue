@@ -28,7 +28,7 @@
       </v-col>
       <v-col cols="12" class="pa-0 mt-3">
         <h6 class="date-text" :class="onHoverClass">
-          {{ date }} | by {{ berita.jurnalis }}
+          {{ date }} | oleh {{ berita.jurnalis }}
         </h6>
       </v-col>
     </v-row>

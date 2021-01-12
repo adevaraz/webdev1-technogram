@@ -5,7 +5,7 @@
     md="12"
     offset-md="12"
     align="center">
-     <h1 class="playfair-font">Which categories do you like to read?</h1>
+     <h1 class="playfair-font">Kategori mana yang suka Anda baca?</h1>
      </v-col>
      
       <v-btn-toggle
@@ -40,7 +40,7 @@
         class ="submit"
         rounded
         @click="AddPersonalize">
-        Done
+        Selesai
         </v-btn>
         </v-col>
     </v-row>

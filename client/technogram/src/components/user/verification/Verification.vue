@@ -18,7 +18,7 @@
                 align="center" 
                 justify="center"
             >
-                <h1>Account Created!</h1>
+                <h1>Akun Berhasil Dibuat!</h1>
             </v-row>
             <v-row
                 align="center"
@@ -30,22 +30,22 @@
                 align="center"
                 justify="center"
             >
-                <a href="https://storyset.com/marketing">Illustration by Freepik Storyset</a>
+                <a href="https://storyset.com/marketing">Ilustrasi oleh Freepik Storyset</a>
             </v-row>
             <v-row
                 class="pa-4"
                 align="center"
                 justify="center"
             >
-                Please check your email to activate your account.
+                Silahkan periksa email Anda untuk mengaktivasi akun.
             </v-row>
             <v-row
                 class="pt-2"
                 align="center"
                 justify="center"
             >
-                <p class="text-caption pr-1">Haven't received the email yet?</p>
-                <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="resendVerifEmail">Resend Email</p>
+                <p class="text-caption pr-1">Belum menerima email?</p>
+                <p class="text-caption font-weight-bold" style="cursor:pointer;" @click="resendVerifEmail">Kirim Ulang</p>
             </v-row>
         </v-col>
     </v-container>

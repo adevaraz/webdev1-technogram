@@ -6,7 +6,7 @@
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
         <div class="no-item text-center" v-if="isEndOfList">
-          <h3>No more item</h3>
+          <h3>Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
     </virtual-list>

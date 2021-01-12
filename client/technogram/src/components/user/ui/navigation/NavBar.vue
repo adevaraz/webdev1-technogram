@@ -59,7 +59,7 @@
                 small
                 @click="isLoginDialogShown = !isLoginDialogShown"
               
-                >Sign in</v-btn
+                >Masuk</v-btn
               >
             </div>
           </div>
@@ -168,26 +168,26 @@ export default {
       isLoading: '',
       isLoginDialogShown : false,
       menus: [
-        { name: "Home", routeName: "home", route: "", query: null },
+        { name: "Beranda", routeName: "home", route: "", query: null },
         {
-          name: "Software",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "software",
         },
         {
-          name: "Brainware",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "brainware",
         },
         {
-          name: "Hardware",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "hardware",
         },
-        { name: "More", routeName: "more-categories", route: "categories" },
+        { name: "Lebih banyak", routeName: "more-categories", route: "categories" },
       ],
       kategori: [],
       selectedMenu: this.$router.currentRoute.name,
@@ -203,15 +203,15 @@ export default {
       const AFTERNOON = this.currentTime > 14 && this.currentTime < 18;
 
       if (MORNING) {
-        return "Good Morning!";
+        return "Selamat Pagi !";
       }
       if (NOON) {
-        return "Good Day !";
+        return "Selamat Siang !";
       }
       if (AFTERNOON) {
-        return "Good Afternoon !";
+        return "Selamat Sore !";
       }
-      return "Good Evening !";
+      return "Selamat Malam !";
     },
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {

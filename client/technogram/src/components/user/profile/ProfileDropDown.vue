@@ -12,10 +12,10 @@
         <v-list-item-title
           class="profile-item"
           @click="$router.push({ name: 'profile' })"
-        >Saved News</v-list-item-title>
+        >Berita Tersimpan</v-list-item-title>
 
         <v-list-item-content>
-          <v-list-item-title class="profile-item" @click="signOut()">Sign Out</v-list-item-title>
+          <v-list-item-title class="profile-item" @click="signOut()">Keluar</v-list-item-title>
         </v-list-item-content>
       </v-list-item-content>
     </v-list>
