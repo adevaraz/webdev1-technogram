@@ -114,11 +114,11 @@ export default {
       isPasswordShown: false,
       isLoading: false,
       dialog: true,
-      email: "",
-      password: "",
+      email: undefined,
+      password: undefined,
       error: {
         isError: false,
-        message: "",
+        message: undefined,
       },
       rules: {
         email: (value) => !!value || "Email cannot be null or empty",

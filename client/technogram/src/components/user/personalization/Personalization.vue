@@ -66,12 +66,6 @@ export default {
   },
   methods :{
 
-  async addKategoriFix(){
-        this.kategoriSelected.forEach((element)=>{
-            this.kategoriSelectedFix.push(element);
-        })
-
-  },
   async AddPersonalize() {
       var i = 0;
       var result = true;
