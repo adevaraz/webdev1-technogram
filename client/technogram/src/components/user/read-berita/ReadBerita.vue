@@ -29,8 +29,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" />
-                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" />
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.png" alt="empty heart icon" />
+                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.png" alt="filled heart icon" />
                                 <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
                             </div>
                             <div
@@ -48,7 +48,7 @@
                         </div>
 
                         <div id="view" class="d-flex flex-row">
-                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" />
+                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.png" alt="eye icon" />
                             <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} pembaca</p>
                         </div>
                         
@@ -57,8 +57,8 @@
                                 class="d-flex flex-row"
                                 v-if="isLoggedIn"
                             >
-                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" />
-                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" />
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.png" alt="unbookmarked icon" />
+                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.png" alt="bookmarked icon" />
                             </div>
                             <div
                                 class="d-flex flex-row"
@@ -79,7 +79,7 @@
                                 class="d-flex flex-row ml-3"
                             >
                                 <share v-if="share" :onDialogClosed=" () => { share = false }" :judul_berita="judul"></share>
-                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.png" />
+                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.png" alt="share icon" />
                             </div>
                         </div>
                     </div>
@@ -152,6 +152,7 @@ export default {
         this.getBeritabyId(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
+        this.retrieveRelatedBerita(this.$route.params.id);
     },
 
     data: () => ({
@@ -215,12 +216,6 @@ export default {
         )
     },
 
-    mounted() {
-        this.getBeritabyId(this.$route.params.id);
-        this.retrieveRelatedBerita(this.$route.params.id);
-        this.getLikeState(this.$route.params.id);
-        this.getSaveState(this.$route.params.id);
-    },
 
     methods: {
         resetData() {
@@ -243,7 +238,6 @@ export default {
         },
     
     async refreshValue() {
-        this.getBeritabyId(this.$route.params.id);
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
     },
@@ -251,7 +245,6 @@ export default {
     async getBeritabyId(id) {
         try {
             this.isLoading = true;
-            
             const result = await berita.get(id);
 
             if (result instanceof Error) {
@@ -260,7 +253,7 @@ export default {
             }
 
             this.isLoading = false;
-
+            
             if (result.data.url_gambar) {
                 this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
                 this.urlGambar = await this.getImageObj(this.urlTemp);
@@ -277,8 +270,9 @@ export default {
             this.jumlah_likes = result.data.jumlah_likes;
             this.jurnalis = result.data.jurnalis;
             this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
     },
 
@@ -295,7 +289,7 @@ export default {
           type: blobObj.type,
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
@@ -308,7 +302,7 @@ export default {
                 return;
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 
@@ -330,7 +324,7 @@ export default {
                 this.relatedBerita.push(element);
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
    },
 
@@ -349,24 +343,36 @@ export default {
                 this.refreshValue();
             }
         } catch (error) {
-                console.log(error);
+            console.error(error);
         }
     },
 
     async getLikeState(id) {
         try {
-            const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+            const token = store.getters['user/getToken'];
 
-            if(result instanceof Error) {
-                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-                return;
-            }
+            if(token.localeCompare("") != 0) {
+                const result = await pembacaAct.isLiked(store.getters['user/getToken'], id);
+
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+                
+                const valResult = await berita.get(id);
+
+                if (valResult instanceof Error) {
+                    this.beritaNotExist();
+                    return;
+                }
 
                 this.isLiked = result.data;
-            } catch (error) {
-                console.log(error);
+                this.jumlah_likes = valResult.data.jumlah_likes;
             }
-        },
+        } catch (error) {
+            console.error(error);
+        }
+    },
 
     async saveBerita() {
         try {
@@ -381,22 +387,26 @@ export default {
                 this.refreshValue();
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 
     async getSaveState(id) {
         try {
-            const result = await pembacaAct.isSaved(store.getters['user/getToken'], id);
-            
-            if(result instanceof Error) {
-                this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-                return;
-            }
+            const token = store.getters['user/getToken'];
 
-            this.isSaved = result.data;
+            if(token.localeCompare("") != 0) {
+                const result = await pembacaAct.isSaved(token, id);
+            
+                if(result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                this.isSaved = result.data;
+            }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
 

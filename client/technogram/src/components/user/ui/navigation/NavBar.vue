@@ -20,7 +20,7 @@
         
         <div class="middle">
           <div ref="logo" class="logo">
-            <img src="../../../../assets/technogram-logo.png" />
+            <img src="../../../../assets/technogram-logo.png" alt="technogram logo" />
           </div>
         </div>
 
@@ -32,6 +32,7 @@
                 class="navbar-item img-btn"
                 @click="isSearchDialogShown = !isSearchDialogShown"
                 src="../../../../assets/icons/search-icon.png"
+                alt="magnifier icon"
               />
             </div>
 
@@ -41,11 +42,12 @@
                   class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
                   src="../../../../assets/icons/bell.png"
+                  alt="notification bell icon"
                 />
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" alt="profile icon" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -68,6 +70,7 @@
               class="navbar-item img-btn"
               src="../../../../assets/icons/bell.png"
               @click="$router.push({ name: 'notification' })"
+              alt="notification bell icon"
             />
           </div>
         </div>
@@ -124,7 +127,6 @@ const getFullRoute = (name, query) => {
 export default {
   created() {
     this.retrieveKategori();
-
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -245,8 +247,6 @@ export default {
       }
     },
     onChildClick (value) {
-      
-
       this.isLoading = value;
       setTimeout(function(){
         this.isLoading = false;

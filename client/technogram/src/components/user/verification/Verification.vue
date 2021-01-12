@@ -24,7 +24,7 @@
                 align="center"
                 justify="center"
             >
-                <img id="vector" src="../../../assets/verification/email-amico.png" />
+                <img id="vector" src="../../../assets/verification/email-amico.png" alt="verification email sent illustration" />
             </v-row>
             <v-row
                 align="center"

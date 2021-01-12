@@ -58,6 +58,9 @@ const getRefreshToken = async() => {
         })
         return result.data;
     }catch(err){
+        if(err.response && err.response.status === 403) {
+            console.clear();
+        }
         return ErrorHandler.errorHandler(err);
     }
 }
