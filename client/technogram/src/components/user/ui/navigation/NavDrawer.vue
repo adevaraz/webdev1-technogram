@@ -22,6 +22,7 @@
                 <img
                   class="item img-btn"
                   src="../../../../assets/icons/profile.png"
+                  alt="profile icon"
                 />
               </v-col>
               <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
@@ -113,16 +114,12 @@ export default {
     },
 
     getUserData() {
-      console.log("user token" + store.getters["user/isTokenExist"]);
       this.username = store.getters["user/getUsername"];
-      console.log("uname" + this.username);
       this.email = store.getters["user/getUserEmail"];
     },
 
     async signOut() {
-      const before = await store.getters["user/isTokenExist"];
-      console.log("before: ");
-      console.log(before);
+      await store.getters["user/isTokenExist"];
 
       const signOutRes = await store.dispatch("user/signOut");
 
@@ -130,10 +127,7 @@ export default {
         this.error.message = signOutRes.cause;
         this.error.isError = true;
       } else {
-        const after = await store.getters["user/isTokenExist"];
-        console.log("after: ");
-        console.log(after);
-
+        await store.getters["user/isTokenExist"];
         this.$router.push("/");
       }
     },
@@ -182,10 +176,6 @@ export default {
 
 .button {
   cursor: pointer;
-}
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-.border-btm {
-  border-bottom: 1px solid #bab4b8;
 }
 
 .button:hover {

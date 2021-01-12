@@ -79,7 +79,6 @@ const getTimeDifference = (fullDate) => {
       timeNumber = Math.floor(secondDifference / (60 * 60 * 24 * 7 * 30));
       break;
   }
-  console.log(timeNumber);
   const finalString = `${timeNumber} ${timeType} ago`;
   return finalString;
 };
