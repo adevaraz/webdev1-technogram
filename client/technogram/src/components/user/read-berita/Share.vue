@@ -7,7 +7,7 @@
             <img
               :class="!isMobile? 'cross-icon': 'img-btn'"
               @click="onDialogClosed"
-              src="../../../assets/icons/cross.png"/>
+              src="../../../assets/icons/cross.svg"/>
           </div>
           <v-list>
             <v-btn v-if="!isMobile"
@@ -15,7 +15,7 @@
               class="ma-2 white--text"
               @click="onClickCopyBtn"
               width="250px">
-                <img class="img-btn mr-2" src="../../../assets/icons/link.png" />
+                <img class="img-btn mr-2" src="../../../assets/icons/link.svg" />
                 Salin Tautan
             </v-btn>
             <v-btn v-else
@@ -24,7 +24,7 @@
               @click="onClickCopyBtn"
               width="200px"
               small>
-              <img class="img-btn-small mr-2" src="../../../assets/icons/link.png" />
+              <img class="img-btn-small mr-2" src="../../../assets/icons/link.svg" />
                 Salin Tautan
             </v-btn>
             <v-btn
@@ -37,7 +37,7 @@
               target="_blank"
               charset="utf-8"
               width="250px">
-                <img class="img-btn mr-2" src="../../../assets/icons/twitter.png" />
+                <img class="img-btn mr-2" src="../../../assets/icons/twitter.svg" />
                 Bagikan di Twitter
             </v-btn>
             <v-btn
@@ -51,7 +51,7 @@
               charset="utf-8"
               width="200px"
               small>
-                <img class="img-btn-small mr-2" src="../../../assets/icons/twitter.png" />
+                <img class="img-btn-small mr-2" src="../../../assets/icons/twitter.svg" />
                 Bagikan di Twitter
             </v-btn>
             <v-btn
@@ -63,7 +63,7 @@
               target="_blank" 
               :href="href_fb"
               width="250px">
-                <img class="img-btn mr-2" src="../../../assets/icons/facebook.png" />
+                <img class="img-btn mr-2" src="../../../assets/icons/facebook.svg" />
                 Bagikan di Facebook 
             </v-btn>
             <v-btn
@@ -76,7 +76,7 @@
               :href="href_fb"
               width="200px"
               small>
-                <img class="img-btn-small mr-2" src="../../../assets/icons/facebook.png" />
+                <img class="img-btn-small mr-2" src="../../../assets/icons/facebook.svg" />
                 Bagikan di Facebook 
             </v-btn>
             <v-list-item-content :class="!isMobile? 'pt-2 pb-0 ml-15': 'pt-2 pb-0 ml-1'" align="center">

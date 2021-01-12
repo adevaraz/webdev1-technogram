@@ -13,7 +13,7 @@
                     <v-col cols="3" class="pa-0 ma-0 ">
                         <div class="like-container">
                           <v-col cols="1" class="pa-0 ma-0 mr-4">
-                              <img src="../../../assets/icons/heart-filled.png" />
+                              <img src="../../../assets/icons/heart-filled.svg" />
                           </v-col>
                           <v-col cols="2" class="pa-0 ma-0">
                               <h3 class="work-sans news-likes text-start">{{berita.jumlah_likes}}</h3>

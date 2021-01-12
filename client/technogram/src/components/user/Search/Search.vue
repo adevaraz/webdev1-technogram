@@ -8,7 +8,7 @@
                     <img
                         class="cross-icon"
                         @click="onDialogClosed"
-                        src="../../../assets/icons/cross.png"
+                        src="../../../assets/icons/cross.svg"
                     />
                 </div>
                 <div class="d-flex flex-row search" align-center>

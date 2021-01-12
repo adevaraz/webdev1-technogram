@@ -133,13 +133,16 @@
 
 <script>
 import { BASE_URL } from "../../../api/const";
-import  berita from "../../../api/berita/berita";
+import berita from "../../../api/berita/berita";
 import { store } from "../../../store/index";
 export default {
   name: "edit-berita",
-  components: {  VueEditor : () => import("vue2-editor").then(result => {
-    return result.VueEditor
-  })},
+  components: {
+    VueEditor: () =>
+      import("vue2-editor").then((result) => {
+        return result.VueEditor;
+      }),
+  },
   data() {
     return {
       isReset: false,
@@ -394,14 +397,10 @@ export default {
             if (v == null) {
               return true;
             } else {
-              if (
-                v.type === "image/png" ||
-                v.type === "image/jpg" ||
-                v.type === "image/jpeg"
-              ) {
+              if (v.type === "image/webp") {
                 return true;
               } else {
-                return "Gambar harus bertipe *.jpg, *.jpeg, atau *.png";
+                return "Gambar harus bertipe *.webp";
               }
             }
           },
