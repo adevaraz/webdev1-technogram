@@ -22,7 +22,7 @@
             isMobile ? 'playfair-font text-start' : 'playfair-font text-center'
           "
         >
-          Recent News
+          Berita Terbaru
         </h1>
       </v-col>
       <v-col cols="12" v-if="isMobile">
@@ -104,7 +104,6 @@ export default {
         .catch((err) => {
           err;
         });
-        console.log("pushhhhh!!")
     },
   },
 

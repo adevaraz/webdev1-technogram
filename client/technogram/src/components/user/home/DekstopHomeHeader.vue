@@ -15,7 +15,7 @@
         </v-carousel>
       </v-col>
       <v-col cols="12" class="mt-10">
-        <h3 class="text-capitalize">Most popular news</h3>
+        <h3 class="text-capitalize">Berita Terpopuler</h3>
       </v-col>
       <v-col
         cols="4"
@@ -82,7 +82,6 @@ export default {
       try {
         const result = await categoryApi.retrieveAll();
         const categories = result.data;
-        console.log(categories);
         for (let i = 0; i < 3; i++) {
           const pickedCategoriesIndex = Math.floor(
             Math.random() * categories.length
@@ -90,8 +89,8 @@ export default {
           const pickedCategories = categories.splice(pickedCategoriesIndex, 1);
           this.categories.push(pickedCategories[0]);
         }
-      } catch (err) {
-        console.log(err);
+      } catch (_) {
+        _;
       }
     },
   },

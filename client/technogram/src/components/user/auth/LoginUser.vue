@@ -19,17 +19,18 @@
         src="../../../assets/icons/cross.png"
       />
       <div :class="isMobile ? 'content-mobile' : 'content'">
-        <v-card-title>
+
           <h1 :class="isMobile ? 'playfair-font-mobile' : 'playfair-font'">
-            Sign in with email
+            Masuk dengan Email
           </h1>
-        </v-card-title>
+    
         <form class="mt-10">
           <v-row class="jutify-center">
             <v-col cols="12">
               <p class="text-caption font-weight-bold text-center">Email</p>
               <v-text-field
                 v-model="email"
+                label="email@domain.com"
                 color="#E52B38"
                 single-line
               ></v-text-field>
@@ -38,6 +39,7 @@
               <p class="text-caption font-weight-bold text-center">Password</p>
               <v-text-field
                 v-model="password"
+                label="Password"
                 :rules="[rules.password]"
                 :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
                 single-line
@@ -49,17 +51,17 @@
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <p class="text-caption pr-1">Have no account?</p>
+            <p class="text-caption pr-1">Tidak punya akun?</p>
             <p
               class="text-caption font-weight-bold"
               style="cursor: pointer"
               @click="onHaveNoAccountClicked"
             >
-              Create one
+              Buat baru
             </p>
           </v-row>
           <v-row align="center" justify="center">
-            <p class="text-caption pr-1">Forget Password?</p>
+            <p class="text-caption pr-1">Lupa password?</p>
             <p
               class="text-caption font-weight-bold"
               style="cursor: pointer"
@@ -81,7 +83,7 @@
           </v-row>
           <v-col class="d-flex justify-center">
             <v-btn class="login_btn" color="#E52B38" small @click="signin"
-              >Sign in</v-btn
+              >Masuk</v-btn
             >
           </v-col>
         </form>
@@ -114,11 +116,11 @@ export default {
       isPasswordShown: false,
       isLoading: false,
       dialog: true,
-      email: "",
-      password: "",
+      email: undefined,
+      password: undefined,
       error: {
         isError: false,
-        message: "",
+        message: undefined,
       },
       rules: {
         email: (value) => !!value || "Email cannot be null or empty",
@@ -226,11 +228,12 @@ col-12 {
 }
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
-  font-size: 25px;
+  font-size: 21px;
 }
 
 .playfair-font {
   font-family: "Playfair Display", serif;
+  font-size: 29px;
 }
 
 .progressbar {

@@ -16,7 +16,7 @@
               @click="onClickCopyBtn"
               width="250px">
                 <img class="img-btn mr-2" src="../../../assets/icons/link.png" />
-                Copy Link
+                Salin Tautan
             </v-btn>
             <v-btn v-else
               color="#E52B38"
@@ -25,7 +25,7 @@
               width="200px"
               small>
               <img class="img-btn-small mr-2" src="../../../assets/icons/link.png" />
-                Copy Link
+                Salin Tautan
             </v-btn>
             <v-btn
               v-if="!isMobile"
@@ -38,7 +38,7 @@
               charset="utf-8"
               width="250px">
                 <img class="img-btn mr-2" src="../../../assets/icons/twitter.png" />
-                Share on Twitter
+                Bagikan di Twitter
             </v-btn>
             <v-btn
               v-else
@@ -52,7 +52,7 @@
               width="200px"
               small>
                 <img class="img-btn-small mr-2" src="../../../assets/icons/twitter.png" />
-                Share on Twitter
+                Bagikan di Twitter
             </v-btn>
             <v-btn
               v-if="!isMobile"
@@ -64,7 +64,7 @@
               :href="href_fb"
               width="250px">
                 <img class="img-btn mr-2" src="../../../assets/icons/facebook.png" />
-                Share on Facebook 
+                Bagikan di Facebook 
             </v-btn>
             <v-btn
               v-else
@@ -77,7 +77,7 @@
               width="200px"
               small>
                 <img class="img-btn-small mr-2" src="../../../assets/icons/facebook.png" />
-                Share on Facebook 
+                Bagikan di Facebook 
             </v-btn>
             <v-list-item-content :class="!isMobile? 'pt-2 pb-0 ml-15': 'pt-2 pb-0 ml-1'" align="center">
               <v-alert
@@ -89,7 +89,7 @@
                 max-width="250px"
                 small
               >
-                Link copied to clipboard
+                Tautan disalin ke papan klip
               </v-alert>
             </v-list-item-content>
           </v-list>

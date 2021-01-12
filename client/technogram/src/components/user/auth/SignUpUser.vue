@@ -20,40 +20,43 @@
       <div :class="isMobile ? 'content-mobile' : 'content'">
         <v-card-title>
           <h1 :class="isMobile ? 'playfair-font-mobile' : 'playfair-font'">
-            Sign up with email
+            Daftar menggunakan Email
           </h1>
         </v-card-title>
         <form class="mt-10">
           <v-row class="jutify-center">
             <v-col cols="12">
               <p class="text-caption font-weight-bold text-center">
-                Your Email
+                Email
               </p>
               <v-text-field
                 v-model="email"
                 :rules="[rules.email]"
+                label="email@domain.com"
                 single-line
                 color="#E52B38"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
               <p class="text-caption font-weight-bold text-center">
-                Your Username
+                Username
               </p>
               <v-text-field
                 v-model="username"
                 :rules="[rules.username]"
+                label="Username"
                 single-line
                 color="#E52B38"
               ></v-text-field>
             </v-col>
             <v-col cols="12">
               <p class="text-caption font-weight-bold text-center">
-                Your Password
+                Password
               </p>
               <v-text-field
                 v-model="password"
                 :rules="passwordRules"
+                label="Password"
                 single-line
                 type="password"
                 required
@@ -62,10 +65,10 @@
             </v-col>
             <v-col cols="12">
               <p class="text-caption font-weight-bold text-center">
-                Re-enter Password
+                Masukkan Ulang Password
               </p>
               <v-text-field
-                label="Confirm Password"
+                label="Masukkan ulang password"
                 single-line
                 v-model="confirmPassword"
                 :rules="[confirmPasswordRules, passwordConfirmationRule]"
@@ -90,7 +93,7 @@
               @click="signup"
               class="signup_btn"
               :userEmail="this.email"
-              >Sign up</v-btn
+              >Daftar</v-btn
             >
           </v-col>
         </form>
@@ -123,6 +126,10 @@ export default {
       email: "",
       username: "",
       password: "",
+      passwordRules: undefined,
+      confirmPasswordRules: "",
+      confirmPassword: "",
+
 
       error: {
         isNotError: false,
@@ -245,12 +252,14 @@ col-12 {
 
 .playfair-font-mobile {
   font-family: "Playfair Display", serif;
-  font-size: 25px;
+  font-size: 21px;
 }
 
 .playfair-font {
   font-family: "Playfair Display", serif;
+  font-size: 29px;
 }
+
 .signup_btn {
   color: white;
 }

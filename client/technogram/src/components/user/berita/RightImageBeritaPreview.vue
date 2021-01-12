@@ -16,7 +16,7 @@
           <v-col cols="11" class="pa-0 ma-0 mt-4">
             <v-row class="justify-center">
               <v-col cols="5" class="pa-0 ma-0">
-                <h4 class="work-sans news-writer text-start">by {{berita.jurnalis || ''}}</h4>
+                <h4 class="work-sans news-writer text-start">oleh {{berita.jurnalis || ''}}</h4>
               </v-col>
               <v-col cols="6" class="pa-0 ma-0">
                 <h4 class="work-sans news-category text-capitalize">| {{berita.kategori_berita || ''}}</h4>

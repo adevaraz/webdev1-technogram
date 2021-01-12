@@ -2,30 +2,37 @@
 <v-container>
    <v-row :class="isMobile? 'content-mobile' : 'content'">
     <v-col
-    md="6"
+    md="12"
     offset-md="12"
     align="center">
-     <h1 class="playfair-font">Which categories do you like to read?</h1>
+     <h1 class="playfair-font">Kategori mana yang suka Anda baca?</h1>
      </v-col>
-     <v-col
-      class="category"
-      md="6"
-      offset-md="12"
-      align="center">
+     
+      <v-btn-toggle
+          align="center"
+          v-model="toggleButton"
+          multiple
+          class="toggle"
+        >
+        <v-col
+        class = "column"
+        md="6"
+    offset-md="3"
+       >
         <v-btn
             class="button"
             color="secondary"
-            :class="categoryClass(index)"
-            v-for="(item,index) in kategori"
+            v-for="(item) in kategori"
             :key="item.nama_kategori"
             elevation="4"
-            @click="addKategori(item);"
             rounded >
             {{ item.nama_kategori }}  
             </v-btn>
-     </v-col>
+            </v-col>
+        </v-btn-toggle>
+     
      <v-col
-      md="6"
+      md="12"
       offset-md="12"
       align="center">
       <v-btn
@@ -33,7 +40,7 @@
         class ="submit"
         rounded
         @click="AddPersonalize">
-        Done
+        Selesai
         </v-btn>
         </v-col>
     </v-row>
@@ -49,9 +56,8 @@ export default {
   data: () => ({
       isLoading: false,
       kategori: [],
-      isButtonClicked:[],
-      kategoriSelected:[],
-      kategoriSelectedFix:[]
+      toggleButton: undefined,
+      kategoriFix: []
   }),
   computed :{
       isMobile() {
@@ -59,36 +65,21 @@ export default {
     },
   },
   methods :{
-  addKategori(value, index){
 
-      this.kategoriSelected.push(value)
-      if(this.isButtonClicked[index]==true){
-        this.isButtonClicked[index] = false;
-      }else {
-        this.isButtonClicked[index] = true;
-      } 
-  },
-  async addKategoriFix(){
-        this.kategoriSelected.forEach((element)=>{
-            this.kategoriSelectedFix.push(element);
-        })
-    for(var i=0; i < this.kategoriSelectedFix.length; i++){
-              console.log(this.kategoriSelectedFix[i].nama_kategori);
-          }
-  },
-  categoryClass(index){
-      this.isButtonClicked[index]==true ? "button text-decoration-underline text-none"
-        : "button  text-none";
-  },
   async AddPersonalize() {
-    var result;
-    this.kategoriSelected.forEach((element)=>{
-      result = personalize.addPersonalize(
-        element,
-        store.getters["user/getToken"]
-      )
-    })
-        if (result instanceof Error) {
+      var i = 0;
+      var result = true;
+
+      while(i < this.toggleButton.length && result){
+              this.kategoriFix[i] = this.kategori[this.toggleButton[i]].id_kategori;
+              result = personalize.addPersonalize(
+              this.kategoriFix[i],
+              store.getters["user/getToken"]
+              )
+              i++;
+          }
+      
+      if (result instanceof Error) {
         this.error.message = result.cause;
       } else {
         this.$router.push({ path: "/" });
@@ -105,10 +96,7 @@ export default {
               this.kategori.push(element);
             });
           }
-          for(var i=0; i < kategoriResult.data.length; i++){
-              console.log(this.kategori[i].nama_kategori);
-              this.isButtonClicked[i]=false;
-          }
+
         }
       } catch (error) {
         console.log(error);
@@ -118,6 +106,7 @@ export default {
   mounted() {
       
       this.retrieveKategori();
+
   }
 }
 </script>
@@ -131,9 +120,11 @@ export default {
 
 .content {
     padding-top : 5rem;
+
 }
 .content-mobile {
-  padding : 3rem;
+
+  justify-content: center;
 }
 .progress-bar {
   z-index : 500;
@@ -145,13 +136,21 @@ export default {
 .button {
   margin: 20px;
 }
-
+.toggle {
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
 .category {
     margin-top: 2rem;
 }
 
 .submit {
   color: white;
+}
+
+.column{
+  margin:0px;
 }
 
 .container{

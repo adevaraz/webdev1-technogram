@@ -52,7 +52,7 @@
                         color="#E52B38"
                         class="login_btn"
                         :disabled="!isInputValid"
-                        >Send Reset Password Email</v-btn
+                        >Kirim Permintaan</v-btn
                       >
                     </v-col>
                   </v-row>

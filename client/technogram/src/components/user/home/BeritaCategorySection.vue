@@ -7,7 +7,7 @@
         </h2>
       </v-col>
       <v-col cols="6" class="pa-0 pb-3" align-self="end">
-        <h2 class="text-end"><a class="more-text " @click="onMoreSelected(categoryTitle)" href="">More From This Category</a></h2>
+        <h2 class="text-end"><a class="more-text " @click="onMoreSelected(categoryTitle)" href="">Lihat lebih banyak dari kategori ini</a></h2>
       </v-col>
       <v-col cols="12" class="floating">
         <v-row>

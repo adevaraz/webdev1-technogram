@@ -4,7 +4,7 @@
             <v-col>
                 <v-row>
                     <h1>
-                        Category
+                        Kategori Berita
                     </h1>
                 </v-row>
                 <v-row>

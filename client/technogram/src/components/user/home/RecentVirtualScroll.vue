@@ -14,7 +14,7 @@
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
         <div class="no-item text-center mt-5" v-if="isEndOfList">
-          <h3>No more item &#128512;</h3>
+          <h3>Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
     </virtual-list>
@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     onScrollToBottom() {
-      console.log(this.isEndOfList);
       if (!this.isLoading && !this.isEndOfList) {
         this.getNotificatedBerita();
       }
@@ -67,7 +66,6 @@ export default {
           return;
         }
         this.isEndOfList = true;
-        console.log(this.isEndOfList);
       }
       result.data.forEach((element) => {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;

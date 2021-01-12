@@ -4,7 +4,6 @@ import ErrorHandler from '../errorHandler'
 
 const confirmVerification = async (verificationToken) => {
     try {
-        console.log(verificationToken)
         const currentUrl = USER_URL + `/confirm`;
         const result = await axios.put(currentUrl, {}, {
             params: {

@@ -14,7 +14,7 @@
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
         <div class="text-center" v-if="isEndOfList">
-          <h3>No more item</h3>
+          <h3>Tidak ada item lagi &#128512;</h3>
          </div>
       </div>
     </virtual-list>
@@ -59,7 +59,6 @@ export default {
     },
     async retrieveMostLikedBerita() {
       this.popularLoading = true;
-      //benerin perpage sama page nya, parameternya teh (perpage, key, page)
       const result = await beritaApi.popularBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
       this.pageNum++;
       this.popularLoading = false;
@@ -78,8 +77,6 @@ export default {
         element.url_gambar = BASE_URL + "/" + element.url_gambar;
         this.mostLikedBerita.push(element);
       });
-      console.log("Search by Most Likes");
-      console.log(this.mostLikedBerita);
     },
   }
 };

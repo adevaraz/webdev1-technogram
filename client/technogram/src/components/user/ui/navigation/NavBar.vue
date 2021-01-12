@@ -20,7 +20,7 @@
         
         <div class="middle">
           <div ref="logo" class="logo">
-            <img src="../../../../assets/technogram-logo.png" />
+            <img src="../../../../assets/technogram-logo.png" alt="technogram logo" />
           </div>
         </div>
 
@@ -32,6 +32,7 @@
                 class="navbar-item img-btn"
                 @click="isSearchDialogShown = !isSearchDialogShown"
                 src="../../../../assets/icons/search-icon.png"
+                alt="magnifier icon"
               />
             </div>
 
@@ -41,11 +42,12 @@
                   class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
                   src="../../../../assets/icons/bell.png"
+                  alt="notification bell icon"
                 />
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" />
+                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.png" alt="profile icon" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -59,7 +61,7 @@
                 small
                 @click="isLoginDialogShown = !isLoginDialogShown"
               
-                >Sign in</v-btn
+                >Masuk</v-btn
               >
             </div>
           </div>
@@ -68,6 +70,7 @@
               class="navbar-item img-btn"
               src="../../../../assets/icons/bell.png"
               @click="$router.push({ name: 'notification' })"
+              alt="notification bell icon"
             />
           </div>
         </div>
@@ -124,8 +127,6 @@ const getFullRoute = (name, query) => {
 export default {
   created() {
     this.retrieveKategori();
-
-    console.log(this.menus[1].query);
     this.menus.forEach((item, index) => {
       if (
         this.$router.currentRoute.fullPath ===
@@ -169,26 +170,26 @@ export default {
       isLoading: '',
       isLoginDialogShown : false,
       menus: [
-        { name: "Home", routeName: "home", route: "", query: null },
+        { name: "Beranda", routeName: "home", route: "", query: null },
         {
-          name: "Software",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "software",
         },
         {
-          name: "Brainware",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "brainware",
         },
         {
-          name: "Hardware",
+          name: "",
           routeName: "recent-result",
           route: "search-result/recent",
           query: "hardware",
         },
-        { name: "More", routeName: "more-categories", route: "categories" },
+        { name: "Lebih banyak", routeName: "more-categories", route: "categories" },
       ],
       kategori: [],
       selectedMenu: this.$router.currentRoute.name,
@@ -204,15 +205,15 @@ export default {
       const AFTERNOON = this.currentTime > 14 && this.currentTime < 18;
 
       if (MORNING) {
-        return "Good Morning!";
+        return "Selamat Pagi !";
       }
       if (NOON) {
-        return "Good Day !";
+        return "Selamat Siang !";
       }
       if (AFTERNOON) {
-        return "Good Afternoon !";
+        return "Selamat Sore !";
       }
-      return "Good Evening !";
+      return "Selamat Malam !";
     },
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
@@ -246,13 +247,9 @@ export default {
       }
     },
     onChildClick (value) {
-      
-
       this.isLoading = value;
-      console.log("ini is loading......" + this.isLoading)
       setTimeout(function(){
         this.isLoading = false;
-         console.log("ini is loading......" + this.isLoading)
       },3000)
       
       
@@ -321,8 +318,8 @@ export default {
             this.menus[i].query = this.kategori[i - 1].nama_kategori;
           }
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_) {
+        _;
       }
     },
   },

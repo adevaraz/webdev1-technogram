@@ -17,7 +17,7 @@
           <v-row class="align-center" align-self="end">
             <v-col cols="6" class="cols-container">
               <p class="worksans-font news-writer clickable-text" :class="onHoverClass">
-                by {{ berita.jurnalis || "" }}
+                oleh {{ berita.jurnalis || "" }}
               </p>
             </v-col>
             <v-col cols="6" class="cols-container pt-1">

@@ -1,5 +1,6 @@
 import User from "../../api/pembaca/auth";
 import StatusType from "../StatusTypeConst";
+
 const UserModule = {
     namespaced: true,
     state: () => ({
@@ -76,7 +77,6 @@ const UserModule = {
     },
     actions: {
         setToken({ commit, state }, { token, username, email, kategori }) {
-            console.log("di USER " + username);
             commit("SET_TOKEN", token);
             commit("SET_LOGGEDIN", !state.isLoggedin);
             commit("SET_USERNAME", username);
@@ -86,8 +86,6 @@ const UserModule = {
 
         async loginToogle({ commit }) {
             commit("SET_LOADING");
-            console.log("loading");
-            // commit('SET_LOGGEDIN' , !state.isLoggedIn)
             commit("SET_SUCCESS", "Success get new Access token");
         },
 
@@ -95,7 +93,6 @@ const UserModule = {
             commit("SET_LOADING");
             if (state.token !== "") {
                 await User.signOut(state.token);
-                console.log("SET TOKEN NULL COY");
                 commit("SET_TOKEN", "");
                 commit("SET_LOGGEDIN", !state.isLoggedIn);
                 commit("SET_USERNAME", "");
@@ -106,9 +103,7 @@ const UserModule = {
 
         async getNewToken({ commit, state }) {
             commit("SET_LOADING");
-            console.log("loading");
             const result = await User.getRefreshToken();
-            console.log(result);
             if (result instanceof Error) {
                 commit("SET_TOKEN", "");
                 commit("SET_ERROR", result.cause);
@@ -119,7 +114,6 @@ const UserModule = {
             commit("SET_USERNAME", result.username);
             commit("SET_EMAIL", result.email);
             commit("SET_MOSTLIKED_KATEGORI", result.mostLikedCategory);
-            console.log(state);
             commit("SET_SUCCESS", "Success get new Access token");
         },
 

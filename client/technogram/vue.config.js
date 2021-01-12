@@ -1,5 +1,6 @@
 module.exports = {
-  devServer: {
-    host: '0.0.0.0'
+  chainWebpack: config => {
+    // remove the prefetch plugin
+    config.plugins.delete('prefetch')
   }
 }

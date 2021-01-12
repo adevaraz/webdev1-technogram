@@ -14,7 +14,7 @@
                     align="center" 
                     justify="center"
                 >
-                    <h1>Verification Success!</h1>
+                    <h1>Verifikasi Berhasil!</h1>
                 </v-row>
                 <v-row
                     align="center"
@@ -26,7 +26,7 @@
                     align="center"
                     justify="center"
                 >
-                    <a href="https://storyset.com/mobile">Illustration by Freepik Storyset</a>
+                    <a href="https://storyset.com/mobile">Ilustrasi oleh Freepik Storyset</a>
                 </v-row>
             </v-col>
         </div>
@@ -37,14 +37,14 @@
                     align="center" 
                     justify="center"
                 >
-                    <h1>Verification Failed.</h1>
+                    <h1>Verifikasi Gagal.</h1>
                 </v-row>
                 <v-row
                     class="pa-4"
                     align="center"
                     justify="center"
                 >
-                    Click <span class="text-decoration-underline px-1" style="cursor:pointer;"> here </span> to resend the verification email.
+                    Tekan <span class="text-decoration-underline px-1" style="cursor:pointer;"> di sini </span> untuk mengirim ulang email verifikasi.
                 </v-row>
             </v-col>
         </div>
@@ -58,7 +58,7 @@ import verifApi from "../../../api/pembaca/verification";
 export default {
     created() {
         if(!this.currentToken) {
-            setTimeout( () => this.$router.push({ path: '/' }), 2000);
+            setTimeout( () => this.$router.push({ path: '/' }), 3000);
         }
 
         this.checkConfirmation();

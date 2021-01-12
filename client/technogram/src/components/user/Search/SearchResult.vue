@@ -3,8 +3,8 @@
         <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
             <v-row align-center :class="!isMobile? 'justify-center mx-auto': 'd-flex justify-left mx-1' ">
                 <v-col :class="isMobile? 'link-mobile' : 'link'">
-                <a class="link-color mt-n2" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Recent</a>
-                <a @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link link-color mt-n2">Most likes</a>
+                <a class="link-color mt-n2" @click="$router.push({ name: 'recent-result', query: {q: key} }); currentView='ByRecent'">Terbaru</a>
+                <a @click="currentView='ByMostLikes'; $router.push({ name: 'mostlikes-result', query: {q: key} })" class="mx-4 link link-color mt-n2">Paling Disukai</a>
                 </v-col>
                 <v-col cols="12">
                    <component :is="currentView" keep-alive></component>

@@ -18,7 +18,7 @@
           </v-col>
           <v-col cols="11" class="pa-0 ma-0 mt-2">
             <h4 class="work-sans news-writer">
-              by {{ berita.jurnalis || "" }}
+              oleh {{ berita.jurnalis || "" }}
             </h4>
           </v-col>
           <v-col cols="11" class="pa-0 ma-0" v-if="!showTime">
@@ -79,7 +79,6 @@ const getTimeDifference = (fullDate) => {
       timeNumber = Math.floor(secondDifference / (60 * 60 * 24 * 7 * 30));
       break;
   }
-  console.log(timeNumber);
   const finalString = `${timeNumber} ${timeType} ago`;
   return finalString;
 };

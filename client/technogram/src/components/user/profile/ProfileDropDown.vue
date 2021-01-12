@@ -12,10 +12,10 @@
         <v-list-item-title
           class="profile-item"
           @click="$router.push({ name: 'profile' })"
-        >Saved News</v-list-item-title>
+        >Berita Tersimpan</v-list-item-title>
 
         <v-list-item-content>
-          <v-list-item-title class="profile-item" @click="signOut()">Sign Out</v-list-item-title>
+          <v-list-item-title class="profile-item" @click="signOut()">Keluar</v-list-item-title>
         </v-list-item-content>
       </v-list-item-content>
     </v-list>
@@ -52,7 +52,6 @@ export default {
     getUserData() {
       this.username = store.getters["user/getUsername"];
       this.userEmail = store.getters["user/getUserEmail"];
-      console.log(this.username + " -- " + this.userEmail);
     },
 
     async signOut() {
@@ -73,7 +72,8 @@ export default {
         console.log(after);
         this.$router.push("/");
       }
-    },
+    }
+  },
     computed: {
       ...mapGetters({
         getUsername: "user/getUsername",
@@ -92,7 +92,7 @@ export default {
     mounted() {
       this.getUserData();
     },
-  },
+  
 };
 </script>
 
