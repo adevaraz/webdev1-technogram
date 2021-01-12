@@ -1,5 +1,6 @@
 import User from "../../api/pembaca/auth";
 import StatusType from "../StatusTypeConst";
+
 const UserModule = {
     namespaced: true,
     state: () => ({

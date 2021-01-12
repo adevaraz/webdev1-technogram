@@ -20,11 +20,9 @@
 </template>
 
 <script>
-
-
 const NavBar = () => import("./ui/navigation/NavBar.vue");
 const NotificationToast = () => import("./ui/modals/NotificationToast.vue");
-import openSocket from "socket.io-client"
+import openSocket from "socket.io-client";
 import { mapGetters } from "vuex";
 import { BASE_URL } from "../../api/const.js";
 import { store } from "../../store/index";
@@ -49,7 +47,7 @@ export default {
       await store.dispatch("user/getNewToken");
       const isTokenExist = store.getters["user/isTokenExist"];
       if (!isTokenExist) {
-        //Log out
+        // Log out
       }
     }
     next();
