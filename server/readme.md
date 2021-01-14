@@ -1,7 +1,7 @@
 
 <h1 align="center">Technogram</h1></br>
 <p align="center">  
-This is the web service/REST API  that used by <a href="https://technogram.tech">Technogram.tech</a>.This web service can be accesed here  <a href="https://technogram-api.technogram.tech/">technogram-api.technogram.tech</a> This Web service build with Express JS
+This is the web service/REST API  that used by <a href="https://technogram.tech">Technogram.tech</a>.This web service can be accesed here  <a href="https://technogram-api.technogram.tech/">technogram-api.technogram.tech</a>.This Web service build with Express JS 
 </p>
 
 ## ER-Diagram
@@ -18,7 +18,7 @@ This is the web service/REST API  that used by <a href="https://technogram.tech"
 - [pg](https://github.com/brianc/node-postgres) - Postgres DB for Node JS
 - [sequelize](https://github.com/sequelize/sequelize) - ORM for Postgres 
 - [redis](https://github.com/NodeRedis/node-redis) - Redis Module for Node JS
-- [socket.io] (https://github.com/socketio/socket.io) - Socket.IO module for Node JS , Used for real time notification for user
+- [socket.io](https://github.com/socketio/socket.io) - Socket.IO module for Node JS , Used for real time notification for user
 
 
 
