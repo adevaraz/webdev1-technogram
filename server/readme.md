@@ -5,7 +5,7 @@ This is the web service/REST API  that used by <a href="https://technogram.tech"
 </p>
 
 ## ER-Diagram
-<img src="#" alt="This is ER DIAGRAM"></img>
+<img src="/preview/erd.png" alt="This is ER DIAGRAM"></img>
 
 ## Tech stack & Open-source libraries
 - [BycptJS](https://github.com/kelektiv/node.bcrypt.js/) - Forpassword-hashing
