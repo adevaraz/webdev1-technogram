@@ -1,6 +1,6 @@
 <h1 align="center">Technogram</h1></br>
 <p align="center">  
-This is the front end of<a href="https://technogram.tech">Technogram.tech</a>.This app using web service that can be accesed at<a href="https://technogram-api.technogram.tech/">technogram-api.technogram.tech</a>.This Front End build with Vue JS
+This is the front end of <a href="https://technogram.tech">Technogram.tech</a>.This app using web service that can be accesed at <a href="https://technogram-api.technogram.tech/">technogram-api.technogram.tech</a>.This Front End build with Vue JS
 </p>
 
 ## ScreenShoot
