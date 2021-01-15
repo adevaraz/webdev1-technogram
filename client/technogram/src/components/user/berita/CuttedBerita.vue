@@ -21,9 +21,9 @@
         <div class="content-inside-image">
           <slot name="content">
             <v-row>
-              <v-col cols="4" class="content px-4 pt-0" align-self="end">
+              <v-col cols="3" class="content px-4 py-1" align-self="end">
                 <h3
-                  class="news-kategori clickable-text text-center text-capitalize"
+                  class="news-kategori clickable-text text-center"
                 >
                   {{ berita.kategori_berita || "" }}
                 </h3>
@@ -156,7 +156,7 @@ export default {
 }
 
 .news-tittle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 900;
   color: black;
 }
@@ -201,7 +201,7 @@ export default {
 }
 
 .news-kategori {
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   color: rgb(229, 43, 56, 0.9);
 }
 </style>
