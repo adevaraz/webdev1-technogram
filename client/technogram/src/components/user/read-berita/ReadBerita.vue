@@ -153,6 +153,8 @@ export default {
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
+
+        this.window.document.title = this.judul;
     },
 
     data: () => ({
@@ -415,7 +417,7 @@ export default {
                 path: `/berita/${id}/${judul_berita}`
             })
             .catch((err) => {
-                console.error(err);
+                err;
             });
 
         this.incrementViewer(id);
