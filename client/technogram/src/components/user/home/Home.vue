@@ -95,15 +95,15 @@ export default {
       });
     },
 
-    onBeritaSelected(id) {
+    onBeritaSelected(id, judul) {
+      const routeJudul = judul.toLowerCase().split(' ').join('-');
       this.$router
         .push({
-          name: "read-berita",
-          params: { id: `${id}` },
+          path: `/berita/${id}/${routeJudul}`
         })
         .catch((err) => {
           err;
-        });
+        })
     },
   },
 

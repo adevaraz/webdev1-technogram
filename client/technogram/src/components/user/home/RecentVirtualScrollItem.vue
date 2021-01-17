@@ -1,5 +1,5 @@
 <template>
-  <div @click="onBeritaSelected(source.id_berita)" class="pa-1">
+  <div @click="onBeritaSelected(source.id_berita, source.judul)" class="pa-1">
     <no-image-berita v-if="!isMobile" :berita="source"></no-image-berita>
     <right-image-preview-berita v-else :berita="source" :previewMaxWord="maxWord"></right-image-preview-berita>
   </div>
@@ -40,11 +40,11 @@ export default {
   },
 
   methods: {
-    onBeritaSelected(id) {
+    onBeritaSelected(id, judul) {
+      const routeJudul = judul.toLowerCase().split(' ').join('-');
       this.$router
         .push({
-          name: "read-berita",
-          params: { id: `${id}` },
+          path: `/berita/${id}/${routeJudul}`
         })
         .catch((err) => {
           err;

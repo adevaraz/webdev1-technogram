@@ -16,7 +16,7 @@
               :berita="headlineBerita"
               :isLoading="isLoading"
               imageHeight="22rem"
-              @click="onBeritaSelected(headlineBerita.id_berita)"
+              @click="onBeritaSelected(headlineBerita.id_berita, headlineBerita.judul)"
             ></inside-image-berita>
           </v-col>
           <!-- <v-col cols="1" class="grow pt-5" align="center">
@@ -33,7 +33,7 @@
                 <text-only-berita
                   :berita="berita"
                   :showTime="true"
-                  @click="onBeritaSelected(berita.id_berita)"
+                  @click="onBeritaSelected(berita.id_berita, berita.judul)"
                   class="underline"
                 ></text-only-berita>
               </v-col>

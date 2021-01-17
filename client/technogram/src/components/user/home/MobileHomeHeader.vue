@@ -42,7 +42,7 @@
           xl="6"
           v-for="berita in beritas"
           :key="berita.id_berita"
-          @click="onBeritaSelected(berita.id_berita)"
+          @click="onBeritaSelected(berita.id_berita, berita.judul)"
           class="pt-0"
         >
           <small-berita
