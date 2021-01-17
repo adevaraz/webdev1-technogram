@@ -5,9 +5,9 @@
         class="list-infinite scroll-touch" 
         :page-mode="true" :data-key="'id'" 
         :data-sources="items" 
-        :data-component="itemComponent" 
+        :data-component="itemComponent"
         :estimate-size="70"
-      v-on:tobottom="onScrollToBottom" :keeps="20"
+        v-on:tobottom="onScrollToBottom" :keeps="20"
       >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
@@ -30,6 +30,7 @@ export default {
   created() {
     this.getNotificatedBerita();
   },
+
   data() {
     return {
       itemComponent: RecentHomeItem,
