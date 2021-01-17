@@ -152,8 +152,6 @@ export default {
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
-
-        this.window.document.title = this.judul;
     },
 
     data: () => ({
