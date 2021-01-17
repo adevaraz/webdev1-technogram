@@ -87,13 +87,12 @@
 
                 <div id="content" class="worksans-font">
                     <div id="header">
-                        <img
+                        <v-img
                             v-if="this.urlTemp != null"
                             :src="urlTemp"
                             :aspect-ratio="16 / 9"
                             contain
                             class="grey darken-4"
-                            :alt="this.judul"
                         />
                     </div>
 
@@ -154,8 +153,6 @@ export default {
         this.getLikeState(this.$route.params.id);
         this.getSaveState(this.$route.params.id);
         this.retrieveRelatedBerita(this.$route.params.id);
-
-        this.window.document.title = this.judul;
     },
 
     data: () => ({
@@ -495,7 +492,6 @@ export default {
 
 .responsive-img ::v-deep img {
     width: 100%;
-    height: auto;
 }
 
 .article ::v-deep br {
@@ -503,12 +499,5 @@ export default {
     display: block;
     margin: 10px 10;
     line-height: 20px;
-}
-
-@media screen and (max-width: 600px) {
-    #header img {
-        width: 100%;
-        height: auto;
-    }
 }
 </style>

@@ -50,10 +50,7 @@ export default [
         {
             path : '/berita/:id/:judul',
             component : () => import("./components/user/read-berita/ReadBerita"),
-            name : 'read-berita',
-            children : [
-                { path : '/' }
-            ]
+            name : 'read-berita'
         },
         {
             path : '/notifcation',

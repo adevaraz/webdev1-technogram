@@ -1,6 +1,6 @@
 <template>
   <v-container @mouseover="onHover" @mouseleave="onLeave">
-    <v-row @click="onBeritaSelected(berita.id_berita)">
+    <v-row @click="onBeritaSelected(berita.id_berita, berita.judul)">
       <v-col class="pa-0" cols="4">
         <div class="img-container">
           <lazy-image
@@ -114,6 +114,8 @@ export default {
       type: String,
       default: "",
     },
+
+    onBeritaSelected: Function
   },
   data() {
     return {
@@ -126,17 +128,7 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
-    },
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          name: "read-berita",
-          params: { id: `${id}` },
-        })
-        .catch((err) => {
-          err;
-        });
-    },
+    }
   },
   computed: {
     date() {

@@ -2,7 +2,7 @@
   <v-container
     @mouseover="onHover"
     @mouseleave="onLeave"
-    @click="onBeritaSelected(berita.id_berita)"
+    @click="onBeritaSelected(berita.id_berita, berita.judul)"
     class="parent"
   >
     <v-row align="start" class="fill-height">
@@ -47,6 +47,7 @@ export default {
   components: {
     LazyImage,
   },
+
   data() {
     return {
       isOnHover: false,
@@ -56,22 +57,12 @@ export default {
     onHover() {
       this.isOnHover = true;
     },
+
     onLeave() {
       this.isOnHover = false;
-    },
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      this.incrementViewer(id);
-      this.refreshValue();
-    },
+    }
   },
+
   props: {
     isLeftOrientation: {
       type: Boolean,
@@ -95,6 +86,8 @@ export default {
         return "18rem";
       },
     },
+    
+    onBeritaSelected: Function
   },
   computed: {
     onHoverClass() {
