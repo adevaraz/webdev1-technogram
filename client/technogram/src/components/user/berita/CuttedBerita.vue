@@ -16,6 +16,7 @@
           :src="berita.url_gambar"
           :isLoading="isLoading"
           :zoomEffect="true"
+          :title="berita.judul"
         ></lazy-image>
 
         <div class="content-inside-image">

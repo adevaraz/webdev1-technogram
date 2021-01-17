@@ -28,7 +28,7 @@
       <v-col class="pa-2" cols="4">
         <v-row>
           <v-col cols="12" >
-            <div class="img-container" :style="backgroundImg"></div>
+            <div class="img-container" :style="backgroundImg" :title="berita.judul"></div>
           </v-col>
           <v-col cols="12" class="pa-0 ma-0 mr-2">
             <v-row class="justify-center right-col" align="center">

@@ -93,6 +93,7 @@
                             :aspect-ratio="16 / 9"
                             contain
                             class="grey darken-4"
+                            :title="judul"
                         />
                     </div>
 

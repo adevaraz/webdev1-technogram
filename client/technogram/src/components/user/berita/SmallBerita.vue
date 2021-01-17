@@ -8,6 +8,7 @@
             :src="berita.url_gambar"
             :zoomEffect="true"
             :shouldZoom="isOnHover"
+            :title="berita.judul"
           ></lazy-image>
         </div>
       </v-col>

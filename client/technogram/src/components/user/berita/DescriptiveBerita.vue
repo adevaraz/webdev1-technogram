@@ -13,6 +13,7 @@
             class="img-content"
             :src="berita.url_gambar"
             :zoomEffect="true"
+            :title="berita.judul"
           ></lazy-image>
         </div>
       </v-col>
