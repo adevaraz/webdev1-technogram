@@ -18,6 +18,12 @@
 const ByRecent = () => import("./ByRecent");
 const ByMostLikes = () => import("./ByMostLikes");
 export default {
+    metaInfo : {
+        title : "Hasil Pencarian - Technogram",
+        htmlAttrs : {
+        lang : "id"
+        } 
+    },
     components: { 
         ByRecent, ByMostLikes 
     },

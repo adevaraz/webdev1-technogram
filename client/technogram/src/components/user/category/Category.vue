@@ -32,6 +32,12 @@
 import categoryApi from "../../../api/kategori/daftarKategori"
 
 export default {
+metaInfo : {
+    title : "Daftar Kategori - Technogram",
+    htmlAttrs : {
+      lang : "id"
+    } 
+  },
     data() {
         return {
             kategori: [],

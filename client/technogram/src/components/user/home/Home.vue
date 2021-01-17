@@ -46,6 +46,12 @@ const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
 const DekstopHomeHeader = () => import("./DekstopHomeHeader");
 import { BASE_URL } from "../../../api/const";
 export default {
+  metaInfo : {
+    title : "Beranda - Technogram",
+    htmlAttrs : {
+      lang : "id"
+    } 
+  },
   created() {
     this.retrievePopularBerita();
     this.retrieveRecentBerita();
