@@ -12,12 +12,10 @@ const retrieveAll = async() => {
     }
 
 }
-const addKategori = async(namakategori, token) => {
+const addKategori = async(data, token) => {
     try{
         const addKategoriURL = KATEGORI_URL + '/create' 
-        const result = await axios.post(addKategoriURL , {
-            namakategori
-        }, {
+        const result = await axios.post(addKategoriURL , data, {
             timeout : TIMEOUT,
             headers: {
                 'Authorization' : `${token}`
@@ -27,18 +25,18 @@ const addKategori = async(namakategori, token) => {
         return result.data;
     }catch(err){
         const errorResult = await errorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
-            return await addKategori(namakategori, newToken);
+            return await addKategori(data, newToken);
         })
         return errorResult;
     }
 }
 
-const updateKategori = async(namakategori, id, token) => {
+const updateKategori = async(idKategori, data, token) => {
     try{
-        const updateKategoriURL = KATEGORI_URL + '/update/' +id; 
-        const result = await axios.put(updateKategoriURL , {
-            namakategori
-        }, {
+        console.log(data);
+        const updateKategoriURL = KATEGORI_URL + `/update/${idKategori}`; 
+        const result = await axios.put(updateKategoriURL , data,
+        {
             timeout : TIMEOUT,
             headers: {
                 'Authorization' : `${token}`
@@ -48,7 +46,7 @@ const updateKategori = async(namakategori, id, token) => {
         return result.data;
     }catch(err){
         const errorResult = await errorHandler.errorHandler(err, ADMIN_ROLE, async(newToken) => {
-            return await updateKategori(namakategori, id, newToken);
+            return await updateKategori(data, newToken);
         })
         return errorResult;
     }

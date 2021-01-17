@@ -12,6 +12,10 @@ const Kategori = sequelize.define("kategori", {
       type: Sequelize.STRING(32),
       allowNull: false,
     },
+    url_gambar_kategori: {
+      type: Sequelize.STRING,
+      allowNull: true
+    }
   });
   
   module.exports = Kategori;
