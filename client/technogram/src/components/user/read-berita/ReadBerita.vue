@@ -202,7 +202,7 @@ const Share = () => import("./Share");
 
 export default {
   metaInfo: {
-    title: `Baca Berita - Technogram` + this.computedJudul,
+    title: `Baca Berita - Technogram`,
     htmlAttrs: {
       lang: "id",
     },
