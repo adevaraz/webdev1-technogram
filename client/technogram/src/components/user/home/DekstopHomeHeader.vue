@@ -10,7 +10,7 @@
           show-arrows-on-hover
         >
           <v-carousel-item v-for="(berita) in popularBeritas" :key="berita.id_berita">
-              <cutted-berita :berita="berita"></cutted-berita>
+              <cutted-berita :onBeritaSelected="onBeritaSelected" :berita="berita"></cutted-berita>
           </v-carousel-item>
         </v-carousel>
       </v-col>
@@ -27,7 +27,7 @@
             <h3 class="text-center number-text">0{{ index + 1 }}</h3>
           </v-col>
           <v-col cols="10" class="pt-4">
-            <descriptive-berita :berita="berita"></descriptive-berita>
+            <descriptive-berita :onBeritaSelected="onBeritaSelected" :berita="berita"></descriptive-berita>
           </v-col>
         </v-row>
       </v-col>
