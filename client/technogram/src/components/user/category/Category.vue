@@ -15,17 +15,19 @@
                         height="10"
                         indeterminate
                     ></v-progress-circular>
-                    <v-col class="text-center" v-for="category in kategori" :key="category.id_kategori" lg="3" md="6" sm="12" xs="12" >
-                        <v-card width="300px" v-on:click="onCategorySelected(category)">
-                            <v-img
-                                :src="category.url_gambar_kategori"
-                                class="white--text align-end"
-                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                height="300px"
-                            >
-                            <v-card-title v-text="category.nama_kategori"></v-card-title>
-                            </v-img>
-                        </v-card>
+                    <v-col class="justify-center" v-for="category in kategori" :key="category.id_kategori" lg="3" md="4" sm="6" xs="12" >
+                        <v-container class="justify-center">
+                            <v-card class="text-center" height="300px" min-width="250px" max-width="300px" v-on:click="onCategorySelected(category)">
+                                <v-img
+                                    :src="category.url_gambar_kategori"
+                                    class="white--text align-end"
+                                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                    height="300px"
+                                >
+                                <v-card-title v-text="category.nama_kategori"></v-card-title>
+                                </v-img>
+                            </v-card>
+                        </v-container>
                     </v-col>
                 </v-row>
             </v-col>
