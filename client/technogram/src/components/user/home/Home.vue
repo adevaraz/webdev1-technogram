@@ -11,7 +11,11 @@
           :recentLoading="recentLoading"
           v-if="isMobile"
         ></mobile-home-header>
-        <dekstop-home-header :popularBeritas="popularBerita" :onBeritaSelected="onBeritaSelected" v-else></dekstop-home-header>
+        <dekstop-home-header
+          :popularBeritas="popularBerita"
+          :onBeritaSelected="onBeritaSelected"
+          v-else
+        ></dekstop-home-header>
       </v-col>
       <v-col cols="12" v-if="!isMobile">
         <div class="middle-border"></div>
@@ -30,8 +34,8 @@
       </v-col>
       <v-col cols="12">
         <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
-          <v-col :cols="isMobile? '12' : '10'">
-             <recent-virtual-scroll></recent-virtual-scroll>
+          <v-col :cols="isMobile ? '12' : '10'">
+            <recent-virtual-scroll></recent-virtual-scroll>
           </v-col>
         </v-row>
       </v-col>
@@ -46,11 +50,11 @@ const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
 const DekstopHomeHeader = () => import("./DekstopHomeHeader");
 import { BASE_URL } from "../../../api/const";
 export default {
-  metaInfo : {
-    title : "Beranda - Technogram",
-    htmlAttrs : {
-      lang : "id"
-    } 
+  metaInfo: {
+    title: "Beranda",
+    htmlAttrs: {
+      lang: "id",
+    },
   },
   created() {
     this.retrievePopularBerita();

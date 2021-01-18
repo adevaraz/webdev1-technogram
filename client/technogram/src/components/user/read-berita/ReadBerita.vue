@@ -201,12 +201,12 @@ const AuthUser = () => import("../auth/AuthUser");
 const Share = () => import("./Share");
 
 export default {
-  metaInfo: {
-    title: `Baca Berita - Technogram`,
-    htmlAttrs: {
-      lang: "id",
-    },
-  },
+  // metaInfo: {
+  //   title: `Baca Berita - Technogram`,
+  //   htmlAttrs: {
+  //     lang: "id",
+  //   },
+  // },
   components: {
     SmallBerita,
     AuthUser,
@@ -243,6 +243,20 @@ export default {
       errorMessage: "",
       isLoginDialogShown: false,
       share: false,
+      contentDesc: "",
+    };
+  },
+  metaInfo() {
+    return {
+      title: this.judul,
+      meta: [
+        { charset: "utf-8" },
+        {
+          vmid: "description",
+          name: "description",
+          content: this.contentDesc,
+        },
+      ],
     };
   },
   watch: {
@@ -257,8 +271,8 @@ export default {
   },
 
   computed: {
-    computedJudul(){
-        return this.judul
+    computedJudul() {
+      return this.judul;
     },
     date() {
       // Format : DayName, DD/MM/YYYY HH:MM
@@ -301,6 +315,7 @@ export default {
       this.isLiked = false;
       this.isSaved = false;
       this.relatedBeritaLoading = false;
+      this.contentDesc = "";
     },
 
     async refreshValue() {
@@ -329,6 +344,7 @@ export default {
         this.id = result.data.id_berita;
         this.judul = result.data.judul;
         this.artikel = result.data.artikel;
+        this.contentDesc = this.clearTags(this.artikel);
         this.waktu_publikasi = result.data.waktu_publikasi;
         this.url_gambar = result.data.url_gambar;
         this.kategori_berita = result.data.kategori_berita;
@@ -514,6 +530,14 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+
+    clearTags(str) {
+      let html = str;
+      let div = document.createElement("div");
+      div.innerHTML = html;
+      let text = div.textContent || div.innerText || "";
+      return text;
     },
   },
 };

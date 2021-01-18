@@ -1,91 +1,81 @@
 <template>
-<v-container>
-   <v-row :class="isMobile? 'content-mobile' : 'content'">
-    <v-col
-    md="12"
-    offset-md="12"
-    align="center">
-     <h1 class="playfair-font">Kategori mana yang suka Anda baca?</h1>
-     </v-col>
-     
+  <v-container>
+    <v-row :class="isMobile ? 'content-mobile' : 'content'">
+      <v-col md="12" offset-md="12" align="center">
+        <h1 class="playfair-font">Kategori mana yang suka Anda baca?</h1>
+      </v-col>
+
       <v-btn-toggle
-          align="center"
-          v-model="toggleButton"
-          multiple
-          class="toggle"
-        >
-        <v-col
-        class = "column"
-        md="6"
-    offset-md="3"
-       >
-        <v-btn
+        align="center"
+        v-model="toggleButton"
+        multiple
+        class="toggle"
+      >
+        <v-col class="column" md="6" offset-md="3">
+          <v-btn
             class="button"
             color="secondary"
-            v-for="(item) in kategori"
+            v-for="item in kategori"
             :key="item.nama_kategori"
             elevation="4"
-            rounded >
-            {{ item.nama_kategori }}  
-            </v-btn>
-            </v-col>
-        </v-btn-toggle>
-     
-     <v-col
-      md="12"
-      offset-md="12"
-      align="center">
-      <v-btn
-        color ="#E52B38"
-        class ="submit"
-        rounded
-        @click="AddPersonalize">
-        Selesai
-        </v-btn>
+            rounded
+          >
+            {{ item.nama_kategori }}
+          </v-btn>
         </v-col>
+      </v-btn-toggle>
+
+      <v-col md="12" offset-md="12" align="center">
+        <v-btn color="#E52B38" class="submit" rounded @click="AddPersonalize">
+          Selesai
+        </v-btn>
+      </v-col>
     </v-row>
- 
-    
-</v-container>
+  </v-container>
 </template>
 
 <script>
 import { store } from "../../../store/index";
 import personalize from "../../../api/personalization/personalization.js";
 export default {
+  metaInfo: {
+    title: "Personalisasi",
+    htmlAttrs: {
+      lang: "id",
+    },
+  },
   data: () => ({
-      isLoading: false,
-      kategori: [],
-      toggleButton: undefined,
-      kategoriFix: []
+    isLoading: false,
+    kategori: [],
+    toggleButton: undefined,
+    kategoriFix: [],
   }),
-  computed :{
-      isMobile() {
+  computed: {
+    isMobile() {
       return this.$vuetify.breakpoint.xs ? true : false;
     },
   },
-  methods :{
-
-  async AddPersonalize() {
+  methods: {
+    async AddPersonalize() {
       var i = 0;
       var result = true;
 
-      while(i < this.toggleButton.length && result){
-              this.kategoriFix[i] = this.kategori[this.toggleButton[i]].id_kategori;
-              result = personalize.addPersonalize(
-              this.kategoriFix[i],
-              store.getters["user/getToken"]
-              )
-              i++;
-          }
-      
+      while (i < this.toggleButton.length && result) {
+        this.kategoriFix[i] = this.kategori[this.toggleButton[i]].id_kategori;
+        result = personalize.addPersonalize(
+          this.kategoriFix[i],
+          store.getters["user/getToken"]
+        );
+        i++;
+      }
+
       if (result instanceof Error) {
         this.error.message = result.cause;
       } else {
         this.$router.push({ path: "/" });
       }
-  },
-  async retrieveKategori() {
+    },
+    async retrieveKategori() {
       try {
         const kategoriResult = await personalize.retrieveAll();
         if (kategoriResult instanceof Error) {
@@ -96,42 +86,36 @@ export default {
               this.kategori.push(element);
             });
           }
-
         }
       } catch (error) {
         console.log(error);
       }
-  }
-  }, 
+    },
+  },
   mounted() {
-      
-      this.retrieveKategori();
-
-  }
-}
+    this.retrieveKategori();
+  },
+};
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 
 .playfair-font {
   font-family: "Playfair Display", serif;
-
 }
 
 .content {
-    padding-top : 5rem;
-
+  padding-top: 5rem;
 }
 .content-mobile {
-
   justify-content: center;
 }
 .progress-bar {
-  z-index : 500;
-  position : fixed;
-  left : 50%;
+  z-index: 500;
+  position: fixed;
+  left: 50%;
   top: 50%;
-  transform : transform(-50%,-50%) 
+  transform: transform(-50%, -50%);
 }
 .button {
   margin: 20px;
@@ -142,18 +126,18 @@ export default {
   justify-content: center;
 }
 .category {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .submit {
   color: white;
 }
 
-.column{
-  margin:0px;
+.column {
+  margin: 0px;
 }
 
-.container{
-  padding : 5 rem;
+.container {
+  padding: 5 rem;
 }
 </style>
