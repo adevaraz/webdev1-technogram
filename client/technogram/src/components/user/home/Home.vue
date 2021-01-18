@@ -95,11 +95,11 @@ export default {
       });
     },
 
-    onBeritaSelected(id) {
+    onBeritaSelected(id, judul) {
+      const judul_berita = judul.toLowerCase().split(' ').join('-');
       this.$router
         .push({
-          name: "read-berita",
-          params: { id: `${id}` },
+          path: `/berita/${id}/${judul_berita}`
         })
         .catch((err) => {
           err;

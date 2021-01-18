@@ -2,7 +2,7 @@
   <div
     @mouseover="onHover"
     @mouseleave="onLeave"
-    @click="onBeritaSelected(berita.id_berita)"
+    @click="onBeritaSelected(berita.id_berita, berita.judul)"
     class="clickable-text"
   >
     <v-row>
@@ -50,6 +50,9 @@ export default {
         };
       },
     },
+    onBeritaSelected : {
+            type : Function,
+        },
   },
   computed: {
     date() {
@@ -78,18 +81,6 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
-    },
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      this.incrementViewer(id);
-      this.refreshValue();
     },
   },
 };

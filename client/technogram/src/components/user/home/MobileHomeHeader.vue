@@ -8,7 +8,7 @@
       </h1>
     </v-col>
     <v-col
-      @click="onBeritaSelected(headlineBerita.id_berita)"
+      @click="onBeritaSelected(headlineBerita.id_berita, headlineBerita.judul)"
       cols="12"
       lg="5"
       md="12"
@@ -42,7 +42,7 @@
           xl="6"
           v-for="berita in beritas"
           :key="berita.id_berita"
-          @click="onBeritaSelected(berita.id_berita)"
+          @click="onBeritaSelected(berita.id_berita, berita.judul)"
           class="pt-0"
         >
           <small-berita
