@@ -1,7 +1,7 @@
 <template>
     <v-container pa-10 pt-0>
-        <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
-            <v-col :cols="isMobile? '12' : '12'">
+        <v-row>
+            <v-col>
                 <v-row>
                     <h1>
                         Kategori Berita
@@ -15,8 +15,8 @@
                         height="10"
                         indeterminate
                     ></v-progress-circular>
-                    <v-col class="text-center" v-for="category in kategori" :key="category.id_kategori" lg="4" md="6" sm="12" xs="12" >
-                        <v-card v-on:click="onCategorySelected(category)">
+                    <v-col class="text-center" v-for="category in kategori" :key="category.id_kategori" lg="3" md="6" sm="12" xs="12" >
+                        <v-card width="300px" v-on:click="onCategorySelected(category)">
                             <v-img
                                 :src="category.url_gambar_kategori"
                                 class="white--text align-end"
