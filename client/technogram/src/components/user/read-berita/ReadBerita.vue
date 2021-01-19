@@ -171,21 +171,120 @@
           color="#E52B38"
           indeterminate
         ></v-progress-circular>
-        <div
-          v-for="berita in relatedBerita"
-          :key="berita.id_berita"
-          class="d-flex flex-col"
-          @click="onBeritaSelected(berita.id_berita)"
-        >
-          <small-berita
-            v-if="berita.id_berita != id"
-            class="act-item"
-            :berita="berita"
-          ></small-berita>
-        </div>
-      </div>
-    </v-container>
-  </div>
+        <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
+            <v-sheet
+                :class="isMobile? 'mx-3' : 'mx-10 px-12'"
+            >
+                <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
+                <p class="worksans-font">{{ date }}</p>
+                <!-- Information section -->
+                <v-card
+                    :class="isMobile? 'd-flex flex-wrap mb-3 max-width-50' : 'd-flex flex-row mb-3'"
+                    flat
+                    tile
+                >
+                    <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
+
+                    <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
+                        <div id="like">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.svg" alt="empty heart icon" />
+                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.svg" alt="filled heart icon" />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="act-item img-btn mr-1"
+                                    src="../../../assets/icons/heart-empty.svg"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                />
+                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
+                            </div>
+                        </div>
+
+                        <div id="view" class="d-flex flex-row">
+                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.svg" alt="eye icon" />
+                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} pembaca</p>
+                        </div>
+                        
+                        <div id="save">
+                            <div
+                                class="d-flex flex-row"
+                                v-if="isLoggedIn"
+                            >
+                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.svg" alt="unbookmarked icon" />
+                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.svg" alt="bookmarked icon" />
+                            </div>
+                            <div
+                                class="d-flex flex-row"
+                                v-else
+                            >
+                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
+                                <img
+                                    class="act-item img-btn"
+                                    src="../../../assets/icons/unsaved-icon.svg"
+                                    @click="isLoginDialogShown = !isLoginDialogShown"
+                                
+                                >
+                            </div>
+                        </div>
+
+                        <div id="share">
+                            <div
+                                class="d-flex flex-row ml-3"
+                            >
+                                <share v-if="share" :onDialogClosed=" () => { share = false }" :judul_berita="judul"></share>
+                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.svg" alt="share icon" />
+                            </div>
+                        </div>
+                    </div>
+                </v-card>
+
+                <div id="content" class="worksans-font">
+                    <div id="header">
+                        <v-img
+                            v-if="this.urlTemp != null"
+                            :src="urlTemp"
+                            :aspect-ratio="16 / 9"
+                            contain
+                            class="grey darken-4"
+                        />
+                    </div>
+
+                    <div :class="isMobile? 'article responsive-img break-words' : 'article responsive-img'" v-html=artikel></div>
+
+                    <h3 class="grey--text text--darken-2">Ditulis oleh</h3>
+                    <h4>{{ jurnalis }}</h4>
+                    <p>{{ deskripsi_jurnalis }}</p>
+                </div>
+            </v-sheet>
+
+            <div class="px-2 mx-2 my-16">
+                <h3 class="worksans-font red-text">Rekomendasi</h3>
+                <v-progress-circular
+                    class="small-progressbar"
+                    v-if="relatedBeritaLoading"
+                    color="#E52B38"
+                    indeterminate
+                ></v-progress-circular>
+                <div
+                    v-for="berita in relatedBerita"
+                    :key="berita.id_berita"
+                    class="d-flex flex-col"
+                    @click="onBeritaSelected(berita.id_berita, berita.judul)"
+                >
+                    <small-berita v-if="berita.id_berita != id" class="act-item" :berita="berita"></small-berita>
+                </div>
+            </div>
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -207,6 +306,7 @@ export default {
   //     lang: "id",
   //   },
   // },
+  
   components: {
     SmallBerita,
     AuthUser,
@@ -220,6 +320,7 @@ export default {
     this.getSaveState(this.$route.params.id);
     this.retrieveRelatedBerita(this.$route.params.id);
   },
+  
   data() {
     return {
       id: 0,
@@ -246,6 +347,7 @@ export default {
       contentDesc: "",
     };
   },
+  
   metaInfo() {
     return {
       title: this.judul,
@@ -259,6 +361,7 @@ export default {
       ],
     };
   },
+  
   watch: {
     $route: function () {
       this.resetData();
@@ -274,6 +377,7 @@ export default {
     computedJudul() {
       return this.judul;
     },
+    
     date() {
       // Format : DayName, DD/MM/YYYY HH:MM
       const fullDate = new Date(this.waktu_publikasi);
@@ -294,67 +398,66 @@ export default {
 
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn",
-    }),
-  },
-
-  methods: {
+    })
+    }
+    
+    methods: {
     resetData() {
-      this.id = 0;
-      this.judul = "";
-      this.artikel = "";
-      this.waktu_publikasi = "";
-      (this.url_gambar = ""), (this.kategori_berita = "");
-      this.jumlah_reader = 0;
-      this.jumlah_likes = 0;
-      this.jurnalis = "";
-      this.deskripsi_jurnalis = "";
-      this.relatedBerita = [];
-      this.urlTemp = null;
-      this.urlGambar = null;
-      this.isLoading = false;
-      this.isLiked = false;
-      this.isSaved = false;
-      this.relatedBeritaLoading = false;
-      this.contentDesc = "";
+        this.id = 0;
+        this.judul = "";
+        this.artikel = "";
+        this.waktu_publikasi = "";
+        (this.url_gambar = ""), (this.kategori_berita = "");
+        this.jumlah_reader = 0;
+        this.jumlah_likes = 0;
+        this.jurnalis = "";
+        this.deskripsi_jurnalis = "";
+        this.relatedBerita = [];
+        this.urlTemp = null;
+        this.urlGambar = null;
+        this.isLoading = false;
+        this.isLiked = false;
+        this.isSaved = false;
+        this.relatedBeritaLoading = false;
+        this.contentDesc = "";
     },
-
+    
     async refreshValue() {
       this.getLikeState(this.$route.params.id);
       this.getSaveState(this.$route.params.id);
     },
 
     async getBeritabyId(id) {
-      try {
-        this.isLoading = true;
-        const result = await berita.get(id);
+        try {
+            this.isLoading = true;
+            const result = await berita.get(id);
 
-        if (result instanceof Error) {
-          this.beritaNotExist();
-          throw result;
+            if (result instanceof Error) {
+                this.beritaNotExist();
+                throw result;
+            }
+
+            this.isLoading = false;
+            
+            if (result.data.url_gambar) {
+                this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
+                this.urlGambar = await this.getImageObj(this.urlTemp);
+            }
+
+            this.isExist = true;
+            this.id = result.data.id_berita;
+            this.judul = result.data.judul;
+            this.artikel = result.data.artikel;
+            this.waktu_publikasi = result.data.waktu_publikasi;
+            this.url_gambar = result.data.url_gambar;
+            this.kategori_berita = result.data.kategori_berita;
+            this.jumlah_reader = result.data.jumlah_reader;
+            this.jumlah_likes = result.data.jumlah_likes;
+            this.jurnalis = result.data.jurnalis;
+            this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+        } catch (error) {
+            console.error(error);
         }
-
-        this.isLoading = false;
-
-        if (result.data.url_gambar) {
-          this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
-          this.urlGambar = await this.getImageObj(this.urlTemp);
-        }
-
-        this.isExist = true;
-        this.id = result.data.id_berita;
-        this.judul = result.data.judul;
-        this.artikel = result.data.artikel;
-        this.contentDesc = this.clearTags(this.artikel);
-        this.waktu_publikasi = result.data.waktu_publikasi;
-        this.url_gambar = result.data.url_gambar;
-        this.kategori_berita = result.data.kategori_berita;
-        this.jumlah_reader = result.data.jumlah_reader;
-        this.jumlah_likes = result.data.jumlah_likes;
-        this.jurnalis = result.data.jurnalis;
-        this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
-      } catch (error) {
-        console.error(error);
-      }
     },
 
     async getImageObj(ImageUrl) {
@@ -508,18 +611,13 @@ export default {
         console.error(error);
       }
     },
+    
+    onBeritaSelected(id, judul) {
+        const judul_berita = judul.toLowerCase().split(' ').join('-');
+        window.open(`/berita/${id}/${judul_berita}`, "_blank");
 
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      this.incrementViewer(id);
-      this.refreshValue();
+        this.incrementViewer(id);
+        this.refreshValue();
     },
 
     beritaNotExist() {

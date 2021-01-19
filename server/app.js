@@ -48,6 +48,10 @@ app.use(
   "/app/public/images",
   express.static(path.join(__dirname, "app", "public", "images"))
 );
+app.use(
+  "/app/public/categories",
+  express.static(path.join(__dirname, "app", "public", "categories"))
+);
 
 
 //nanti disini app.use route

@@ -42,6 +42,20 @@ export default {
     htmlAttrs: {
       lang: "id",
     },
+
+    props: {
+        onBeritaSelected: Function
+    },
+
+    data() {
+        return {
+            isError: false,
+            errorMessage: "",
+            recentLoading: false,
+            mostLikedLoading: false,
+            currentView: 'ByRecent',
+            key: this.$route.query.q,
+        }
   },
   components: {
     ByRecent,

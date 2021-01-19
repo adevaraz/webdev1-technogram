@@ -6,7 +6,7 @@ export default [
         {
             path : '/',
             component : () => import("./components/user/home/Home.vue"),
-            name : 'home'
+            name : 'home',
         },
         {
             path : '/categories',
@@ -48,7 +48,7 @@ export default [
             ]
         },
         {
-            path : '/berita/:id',
+            path : '/berita/:id/:judul',
             component : () => import("./components/user/read-berita/ReadBerita"),
             name : 'read-berita'
         },
@@ -58,7 +58,7 @@ export default [
             name : 'notification'
         },
         {       
-            path : '/account/get-save',
+            path : '/get-save',
             component : ()=> import("./components/user/profile/UserProfile.vue"),
             name : 'profile'
         },

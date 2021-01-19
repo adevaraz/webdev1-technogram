@@ -2,7 +2,7 @@
   <v-container
     @mouseover="onHover"
     @mouseleave="onLeave"
-    @click="onBeritaSelected(berita.id_berita)"
+    @click="onBeritaSelected(berita.id_berita, berita.judul)"
     class="parent"
   >
     <v-row align="start" class="fill-height">
@@ -16,14 +16,15 @@
           :src="berita.url_gambar"
           :isLoading="isLoading"
           :zoomEffect="true"
+          :title="berita.judul"
         ></lazy-image>
 
         <div class="content-inside-image">
           <slot name="content">
             <v-row>
-              <v-col cols="4" class="content px-4 pt-0" align-self="end">
+              <v-col cols="3" class="content px-4 py-1" align-self="end">
                 <h3
-                  class="news-kategori clickable-text text-center text-capitalize"
+                  class="news-kategori clickable-text text-center"
                 >
                   {{ berita.kategori_berita || "" }}
                 </h3>
@@ -67,19 +68,6 @@ export default {
     onLeave() {
       this.isOnHover = false;
     },
-
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      this.incrementViewer(id);
-      this.refreshValue();
-    },
   },
   props: {
     isLeftOrientation: {
@@ -104,6 +92,9 @@ export default {
         return "18rem";
       },
     },
+    onBeritaSelected : {
+            type : Function,
+        },
   },
   computed: {
     onHoverClass() {
@@ -156,7 +147,7 @@ export default {
 }
 
 .news-tittle {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 900;
   color: black;
 }
@@ -201,7 +192,7 @@ export default {
 }
 
 .news-kategori {
-  font-size: 0.7rem;
+  font-size: 1.1rem;
   color: rgb(229, 43, 56, 0.9);
 }
 </style>
