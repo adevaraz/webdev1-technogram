@@ -14,7 +14,6 @@
             >
                 <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
                 <p class="worksans-font">{{ date }}</p>
-
                 <!-- Information section -->
                 <v-card
                     :class="isMobile? 'd-flex flex-wrap mb-3 max-width-50' : 'd-flex flex-row mb-3'"
@@ -70,7 +69,7 @@
                                     src="../../../assets/icons/unsaved-icon.svg"
                                     @click="isLoginDialogShown = !isLoginDialogShown"
                                 
-                                />
+                                >
                             </div>
                         </div>
 
@@ -87,13 +86,12 @@
 
                 <div id="content" class="worksans-font">
                     <div id="header">
-                        <img
+                        <v-img
                             v-if="this.urlTemp != null"
                             :src="urlTemp"
                             :aspect-ratio="16 / 9"
                             contain
                             class="grey darken-4"
-                            :alt="this.judul"
                         />
                     </div>
 
@@ -117,7 +115,7 @@
                     v-for="berita in relatedBerita"
                     :key="berita.id_berita"
                     class="d-flex flex-col"
-                    @click="onBeritaSelected(berita.id_berita)"
+                    @click="onBeritaSelected(berita.id_berita, berita.judul)"
                 >
                     <small-berita v-if="berita.id_berita != id" class="act-item" :berita="berita"></small-berita>
                 </div>
@@ -217,7 +215,6 @@ export default {
         )
     },
 
-
     methods: {
         resetData() {
             this.id = 0;
@@ -271,7 +268,6 @@ export default {
             this.jumlah_likes = result.data.jumlah_likes;
             this.jurnalis = result.data.jurnalis;
             this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
-
             } catch (error) {
                 console.error(error);
             }
@@ -411,13 +407,14 @@ export default {
         }
     },
 
-    onBeritaSelected(id) {
+    onBeritaSelected(id, judul) {
+        const judul_berita = judul.toLowerCase().split(' ').join('-');
         this.$router
             .push({
-                path: `/berita/${id}`
+                path: `/berita/${id}/${judul_berita}`
             })
             .catch((err) => {
-                console.error(err);
+                err;
             });
 
         this.incrementViewer(id);
@@ -493,7 +490,6 @@ export default {
 
 .responsive-img ::v-deep img {
     width: 100%;
-    height: auto;
 }
 
 .article ::v-deep br {
@@ -501,12 +497,5 @@ export default {
     display: block;
     margin: 10px 10;
     line-height: 20px;
-}
-
-@media screen and (max-width: 600px) {
-    #header img {
-        width: 100%;
-        height: auto;
-    }
 }
 </style>

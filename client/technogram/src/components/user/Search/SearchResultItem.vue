@@ -1,5 +1,5 @@
 <template>
-  <div @click="onBeritaSelected(source.id_berita)">
+  <div @click="onBeritaSelected(source.id_berita, source.judul)">
     <left-image-preview-berita v-if="!isMobile" :berita="source"></left-image-preview-berita>
     <right-image-preview-berita class="pa-5 pt-7" v-else :berita="source"></right-image-preview-berita>
   </div>
@@ -34,16 +34,9 @@ export default {
   },
 
   methods: {
-    onBeritaSelected(id) {
-      // this.$router
-      //   .push({
-      //     name: "read-berita",
-      //     params: { id: `${id}` },
-      //   })
-      //   .catch((err) => {
-      //     err;
-      //   });
-      window.open(`/berita/${id}`, "_blank");
+    onBeritaSelected(id, judul) {
+      const routeJudul = judul.toLowerCase().split(' ').join('-');
+      window.open(`/berita/${id}/${routeJudul}`, "_blank");
     }
   }
 };

@@ -31,7 +31,7 @@
       <v-col cols="12">
         <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
           <v-col :cols="isMobile? '12' : '10'">
-             <recent-virtual-scroll></recent-virtual-scroll>
+             <recent-virtual-scroll :onBeritaSelected="onBeritaSelected"></recent-virtual-scroll>
           </v-col>
         </v-row>
       </v-col>
@@ -95,16 +95,9 @@ export default {
       });
     },
 
-    onBeritaSelected(id) {
-      // this.$router
-      //   .push({
-      //     name: "read-berita",
-      //     params: { id: `${id}` },
-      //   })
-      //   .catch((err) => {
-      //     err;
-      //   });
-      window.open(`/berita/${id}`, "_blank"); 
+    onBeritaSelected(id, judul) {
+      const judul_berita = judul.toLowerCase().split(' ').join('-');
+      window.open(`/berita/${id}/${judul_berita}`, "_blank"); 
     },
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <div @click="onBeritaSelected(source.id_berita)" class="pa-1">
+  <div class="pa-1" @click="onBeritaSelected(source.id_berita, source.judul)">
     <no-image-berita v-if="!isMobile" :berita="source"></no-image-berita>
     <right-image-preview-berita v-else :berita="source" :previewMaxWord="maxWord"></right-image-preview-berita>
   </div>
@@ -22,7 +22,7 @@ export default {
       default() {
         return {};
       },
-    },
+    }
   },
   computed: {
     isMobile() {
@@ -40,16 +40,9 @@ export default {
   },
 
   methods: {
-    onBeritaSelected(id) {
-      // this.$router
-      //   .push({
-      //     name: "read-berita",
-      //     params: { id: `${id}` },
-      //   })
-      //   .catch((err) => {
-      //     err;
-      //   });
-      window.open(`/berita/${id}`, "_blank"); 
+    onBeritaSelected(id, judul) {
+      const judul_berita = judul.toLowerCase().split(' ').join('-');
+      window.open(`berita/${id}/${judul_berita}`, "_blank"); 
     }
   }
 };
