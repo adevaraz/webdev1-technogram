@@ -21,6 +21,11 @@ export default {
     components: { 
         ByRecent, ByMostLikes 
     },
+
+    props: {
+        onBeritaSelected: Function
+    },
+
     data() {
         return {
             isError: false,

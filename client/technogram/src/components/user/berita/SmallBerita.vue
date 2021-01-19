@@ -1,6 +1,6 @@
 <template>
   <v-container @mouseover="onHover" @mouseleave="onLeave">
-    <v-row>
+    <v-row @click="onBeritaSelected(berita.id_berita, berita.judul)">
       <v-col class="pa-0" cols="4">
         <div class="img-container">
           <lazy-image
@@ -14,7 +14,10 @@
       <v-col class="pa-0" cols="7" offset="1" align-self="start">
         <v-row class="justify-start">
           <v-col cols="11" class="pa-0 ma-0">
-            <h2 class="playfair-font news-title clickable-text" :class="onHoverClass">
+            <h2
+              class="playfair-font news-title clickable-text"
+              :class="onHoverClass"
+            >
               {{ berita.judul || "" }}
             </h2>
           </v-col>
@@ -111,11 +114,13 @@ export default {
       type: String,
       default: "",
     },
+
+    onBeritaSelected: Function
   },
-  data(){
+  data() {
     return {
-      isOnHover: false
-    }
+      isOnHover: false,
+    };
   },
   methods: {
     onHover() {
@@ -123,7 +128,7 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
-    },
+    }
   },
   computed: {
     date() {
@@ -134,7 +139,7 @@ export default {
         return "hover";
       }
       return "";
-    }
+    },
   },
 };
 </script>

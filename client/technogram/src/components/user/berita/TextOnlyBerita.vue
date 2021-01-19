@@ -3,7 +3,7 @@
     class="pl-3"
     @mouseover="onHover"
     @mouseleave="onLeave"
-    @click="onBeritaSelected(berita.id_berita)"
+    @click="onBeritaSelected(berita.id_berita, berita.judul)"
   >
     <v-row>
       <v-col class="pl-3 pt-0" cols="12" align-self="start">
@@ -107,6 +107,8 @@ export default {
       type: String,
       default: "",
     },
+
+    onBeritaSelected: Function
   },
   data() {
     return {
@@ -119,19 +121,7 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
-    },
-    onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      this.incrementViewer(id);
-      this.refreshValue();
-    },
+    }
   },
   computed: {
     date() {

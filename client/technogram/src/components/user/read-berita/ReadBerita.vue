@@ -414,7 +414,7 @@ export default {
                 path: `/berita/${id}/${judul_berita}`
             })
             .catch((err) => {
-                console.error(err);
+                err;
             });
 
         this.incrementViewer(id);
