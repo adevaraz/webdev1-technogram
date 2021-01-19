@@ -121,14 +121,14 @@ export default {
       this.isOnHover = false;
     },
     onBeritaSelected(id) {
-      this.$router
-        .push({
-          path: `/berita/${id}`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
+      // this.$router
+      //   .push({
+      //     path: `/berita/${id}`,
+      //   })
+      //   .catch((err) => {
+      //     console.error(err);
+      //   });
+     window.open(`/berita/${id}`, "_blank"); 
       this.incrementViewer(id);
       this.refreshValue();
     },

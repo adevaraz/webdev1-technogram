@@ -35,14 +35,15 @@ export default {
 
   methods: {
     onBeritaSelected(id) {
-      this.$router
-        .push({
-          name: "read-berita",
-          params: { id: `${id}` },
-        })
-        .catch((err) => {
-          err;
-        });
+      // this.$router
+      //   .push({
+      //     name: "read-berita",
+      //     params: { id: `${id}` },
+      //   })
+      //   .catch((err) => {
+      //     err;
+      //   });
+      window.open(`/berita/${id}`, "_blank");
     }
   }
 };
