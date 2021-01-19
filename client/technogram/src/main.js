@@ -6,6 +6,12 @@ import {store} from './store/index'
 import 'nprogress/nprogress.css'
 import VirtualList from 'vue-virtual-scroll-list'
 import VueAnalytics from 'vue-analytics';
+import VueMeta from 'vue-meta'
+ 
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+})
 
 Vue.use(VueAnalytics, {
     id: 'UA-183633936-2',
