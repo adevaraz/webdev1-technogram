@@ -1,5 +1,7 @@
 <template>
-    <v-container pa-10 pt-0>
+  <v-container pa-10 pt-0>
+    <v-row>
+      <v-col>
         <v-row>
             <v-col>
                 <v-row>
@@ -32,7 +34,38 @@
                 </v-row>
             </v-col>
         </v-row>
-    </v-container>
+        <v-row>
+          <v-progress-circular
+            class="progressbar"
+            v-if="isLoading"
+            color="#E52B38"
+            height="10"
+            indeterminate
+          ></v-progress-circular>
+          <v-col
+            class="text-center"
+            v-for="category in kategori"
+            :key="category.id_kategori"
+            lg="2"
+            md="4"
+            sm="6"
+            xs="12"
+          >
+            <!-- <v-card flat outlined tile> -->
+            <v-chip
+              v-on:click="onCategorySelected(category)"
+              color="#101010"
+              text-color="white"
+              style="text-transform: capitalize"
+            >
+              {{ category.nama_kategori }}
+            </v-chip>
+            <!-- </v-card> -->
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -40,13 +73,10 @@ import categoryApi from "../../../api/kategori/daftarKategori"
 import { BASE_URL } from "../../../api/const";
 
 export default {
-    data() {
-        return {
-            kategori: [],
-            isError: false,
-            errorMessage: "",
-            isLoading: false,
-        };
+  metaInfo: {
+    title: "Daftar Kategori",
+    htmlAttrs: {
+      lang: "id",
     },
     methods: {
         retrieveCategory(){

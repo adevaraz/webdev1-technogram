@@ -21,6 +21,7 @@
     "vue-analytics": "^5.22.1",
     "vue-cookies": "^1.7.4",
     "vue-loader": "^15.9.5",
+    "vue-meta": "^2.4.0",
     "vue-notifications": "^1.0.2",
     "vue-router": "^3.4.9",
     "vue-sweetalert2": "^4.1.1",
