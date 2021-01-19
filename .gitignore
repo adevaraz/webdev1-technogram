@@ -1,5 +1,6 @@
 # Images
 server/app/public/images
+server/app/public/categories
 
 # Logs
 logs

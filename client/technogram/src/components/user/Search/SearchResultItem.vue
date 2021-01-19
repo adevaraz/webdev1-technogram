@@ -36,13 +36,7 @@ export default {
   methods: {
     onBeritaSelected(id, judul) {
       const routeJudul = judul.toLowerCase().split(' ').join('-');
-      this.$router
-        .push({
-          path: `/berita/${id}/${routeJudul}`
-        })
-        .catch((err) => {
-          err;
-        });
+      window.open(`/berita/${id}/${routeJudul}`, "_blank");
     }
   }
 };

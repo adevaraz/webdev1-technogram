@@ -41,14 +41,8 @@ export default {
 
   methods: {
     onBeritaSelected(id, judul) {
-      const judul_berita = judul.toLowerCase().split(' ').join('-')
-      this.$router
-        .push({
-          path: `berita/${id}/${judul_berita}`
-        })
-        .catch((err) => {
-          err;
-        });
+      const judul_berita = judul.toLowerCase().split(' ').join('-');
+      window.open(`berita/${id}/${judul_berita}`, "_blank"); 
     }
   }
 };

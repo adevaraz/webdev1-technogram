@@ -1,6 +1,9 @@
 const Kategori = require("../model/kategori");
 const Berita = require('../model/berita');
 const sequelize = require("../util/database");
+const fs = require("fs");
+const path = require("path");
+const fsExtra = require("fs-extra");
 
 //GENERAL CATEGORY
 const GENERAL_CATEGORY = 'general'
@@ -12,7 +15,11 @@ const GENERAL_CATEGORY = 'general'
 */
 
 exports.createKategori = async (req , res , next) => {
+    let filePath=null;
     try{
+        if (req.file) {
+            filePath = req.file.path.replace(/\\/gi, "/");
+        }
         const namaKategori = req.body.namakategori;
         const searchResult = await Kategori.findOne({
             where : {
@@ -26,16 +33,29 @@ exports.createKategori = async (req , res , next) => {
             throw error
         }
         const insertResult = await Kategori.create({
-            nama_kategori : namaKategori
+            nama_kategori : namaKategori,
+            url_gambar_kategori: filePath,
         })
         res.status(201).json({
             message : 'Success create new Kategori',
             data : insertResult
         })
     }catch(err){
+        if(filePath!=null){
+            deleteImage(filePath)
+        }
         next(err)
     }
 }
+
+/*
+@author 17 MU
+delete gambar kategori
+*/
+const deleteImage = (filePath) => {
+    filePath = path.join(__dirname, "..", "..", filePath);
+    fs.unlink(filePath, (err) => console.log(err));
+};
 
 /*
  @author 16 MN
@@ -163,20 +183,21 @@ exports.updateKategoriById = async(req,res,next)=> {
         }
          
         const newName = req.body.namakategori;
-
-        const searchResult = await Kategori.findOne({
-            where : {
-                nama_kategori : newName
-            }
-        })
-
-        if(searchResult){
-            const error = new Error('Kategori with such name is exist');
-            error.statusCode = 409;
-            throw error
+        
+        let url_gambar_kategori = req.body.url_gambar_kategori;
+        if(url_gambar_kategori === 'null' || url_gambar_kategori === 'undefined') url_gambar_kategori = null;
+        if (req.file) {
+            const plainImageUrl = req.file.path;
+            url_gambar_kategori = plainImageUrl.replace(/\\/gi, "/");
+            console.log(url_gambar_kategori);
+        }
+        if (url_gambar_kategori !== kategori.url_gambar_kategori && kategori.url_gambar_kategori!= null) {
+            deleteImage(kategori.url_gambar_kategori);
+            kategori.url_gambar_kategori = null;
         }
 
         kategori.nama_kategori = newName;
+        kategori.url_gambar_kategori = url_gambar_kategori;
         await kategori.save()
         res.status(201).json({
             message : 'Success update new Kategori',
