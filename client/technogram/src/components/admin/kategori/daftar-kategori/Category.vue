@@ -28,14 +28,34 @@
               ></v-progress-linear>
             </template>
             <v-card-title>
-              <span style="margin-bottom: 10px;" class="headline">{{formTitle}}</span>
+              <div class="headline">{{formTitle}}</div>
             </v-card-title>
             <v-form ref="form" v-model="isFormValid" lazy-validation>
             <v-card-text>
                 <v-row>
                   <div v-if="dialogDelete === false">                 
-                    <v-col cols="20" sm="10" md="10">
-                      <v-text-field :rules='rules()' style="max-width: 200px; margin-top=20px; margin-left:5px" v-model="editedItem.nama_kategori" label="Nama kategori" ></v-text-field>
+                    <v-col class="pa-6">
+                      <v-text-field :rules='rules()' style="max-width: 300px;" v-model="editedItem.nama_kategori" label="Nama kategori" ></v-text-field>
+                      <div class="text-h8">Pilih Foto Header</div>
+                      <v-file-input
+                        class="text-h8"
+                        @change="Preview_image"
+                        @click:clear="close_image"
+                        v-model="url_gambar"
+                        placeholder="Pilih Gambar"
+                        prepend-icon="mdi-camera"
+                        accept=".webp"
+                        :rules="imgRules"
+                      >
+                      </v-file-input>
+                      <div v-if="urlTemp != null">
+                        <v-img
+                          :src="urlTemp"
+                          :aspect-ratio="16 / 9"
+                          contain
+                          class="grey darken-4"
+                        ></v-img>
+                      </div>
                     </v-col>
                   </div>                 
                 </v-row>
@@ -93,6 +113,7 @@
 </template>
 
 <script>
+import { BASE_URL } from "../../../../api/const";
 import categoriesData from "../../../../api/kategori/daftarKategori"
 import { store } from '../../../../store/index'
 export default {
@@ -102,6 +123,7 @@ export default {
     loading: false,
     loadingItem: false,
     isFormValid: false,
+    isNewAdd: false,
     progressBar: false,
     headers: [
       { text: "Id", value: "id_kategori"},
@@ -111,11 +133,18 @@ export default {
     kategori: [],
     editedIndex: -1,
     editedItem: {
-      nama_kategori: ""
+      nama_kategori: "",
+      url_gambar_kategori: null
     },
     defaultItem: {
-      nama_kategori: ""
-    }
+      id_kategori: "",
+      nama_kategori: "",
+      url_gambar_kategori: null
+    },
+    imgRules: [],
+    url_gambar: null,
+    urlTemp: null,
+    url_gambar_ori: null,
   }),
 
 
@@ -138,16 +167,50 @@ export default {
     dialog(val) {
       val || this.close();
     },
+    url_gambar: function (val) {
+      if (val instanceof File) {
+        this.imgRules = [
+          (v) => {
+            if (v == null) {
+              return true;
+            } else {
+              if (v.type === "image/webp") {
+                return true;
+              } else {
+                return "Gambar harus bertipe *.webp";
+              }
+            }
+          },
+        ];
+      } else {
+        this.imgRules = [];
+      }
+    },
   },
 
   methods: {
+    Preview_image() {
+      if (this.url_gambar instanceof File) {
+        this.urlTemp = URL.createObjectURL(this.url_gambar);
+        console.log(this.url_gambar);
+        console.log(this.urlTemp);
+        console.log(this.editedItem.url_gambar_kategori);
+      }
+    },
+    close_image() {
+      this.urlTemp = null;
+      this.url_gambar = null;
+      if (!this.isFormValid) {
+        this.imgRules = [];
+      }
+    },
     refreshList() {
-        this.kategori = [],
-        this.retrieveKategori()
+      this.kategori = [],
+      this.retrieveKategori()
     },
     reset () {
-        this.$refs.form.reset()
-      },
+      this.$refs.form.reset()
+    },
     rules() {
      const rules = [
        (v) => {
@@ -155,7 +218,7 @@ export default {
           for (var i = 0; i < this.kategori.length; i++) {
             lowerArray.push(this.kategori[i]);
           }
-          if(v!=null){
+          if(v!=null && this.isNewAdd){
             const lowercasedInput = v.toLowerCase();
             for (var j = 0; j < lowerArray.length; j++) {
               if(lowerArray[j].nama_kategori.toLowerCase()===lowercasedInput){
@@ -163,9 +226,9 @@ export default {
               }
             }
           }
-         return true
+          return true
         },
-         (v) => (!!v || "") || 'Kategori tidak boleh kosong',
+        (v) => (!!v || "") || 'Kategori tidak boleh kosong',
         
       ]
       return rules;
@@ -192,14 +255,24 @@ export default {
     },
 
     newItem(){
+      this.isNewAdd = true;
+      this.urlTemp = null;
+      this.url_gambar = null;
+      this.url_gambar_ori = null;
       this.dialog = true;
       this.dialogDelete= false;
     },
     
-    editItem(item) {
+    async editItem(item) {
+      if (item.url_gambar_kategori) {
+        this.urlTemp = BASE_URL + `/` + item.url_gambar_kategori;
+        this.url_gambar = await this.getImageObj(this.urlTemp);
+        this.url_gambar_ori = item.url_gambar_kategori;
+      }
       this.dialogDelete = false;
       this.editedIndex = this.kategori.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      console.log(this.editedItem.id_kategori);
       this.dialog = true;
     },
 
@@ -210,6 +283,7 @@ export default {
     },
 
     close() {
+      this.isNewAdd = false;
       this.dialog = false;
       this.loading=false;
       setTimeout(() => {
@@ -223,14 +297,20 @@ export default {
     async save() {
       this.loading=true;
       if (this.editedIndex > -1) {  // Edited save
-       const updateResult = await categoriesData.updateKategori(this.editedItem.nama_kategori, this.editedItem.id_kategori, store.getters['admin/getToken']);
+        let data = new FormData();
+        data.append("namakategori", this.editedItem.nama_kategori);
+        data.append("url_gambar_kategori", this.url_gambar);
+        const updateResult = await categoriesData.updateKategori(this.editedItem.id_kategori, data, store.getters['admin/getToken']);
         if (updateResult instanceof Error) {
           throw updateResult;
         } else {
           console.error(updateResult);
         }     
-      } else {  // New save     
-        const addResult = await categoriesData.addKategori(this.editedItem.nama_kategori, store.getters['admin/getToken']);
+      } else {  // New save 
+        let data = new FormData();
+        data.append("namakategori", this.editedItem.nama_kategori);
+        data.append("url_gambar_kategori", this.url_gambar);  
+        const addResult = await categoriesData.addKategori(data, store.getters['admin/getToken']);
          if (addResult instanceof Error) {
           throw addResult;
         } else {
@@ -251,6 +331,21 @@ export default {
       this.close();
       this.refreshList();
       
+    },
+
+    async getImageObj(ImageUrl) {
+      try {
+        const path = require("path");
+        const result = await fetch(ImageUrl);
+        if (result instanceof Error) throw result;
+        const blobObj = await result.blob();
+        if (blobObj instanceof Error) throw blobObj;
+        return new File([blobObj], path.basename(ImageUrl), {
+          type: blobObj.type,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     
   },  mounted() {
