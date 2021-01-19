@@ -15,7 +15,7 @@
         </v-carousel>
       </v-col>
       <v-col cols="12" class="mt-10">
-        <h3 class="text-capitalize">Berita Terpopuler</h3>
+        <h3 class="playfair-font text-capitalize">Berita Terpopuler</h3>
       </v-col>
       <v-col
         cols="4"
@@ -98,6 +98,12 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
+
+.playfair-font {
+  font-family: "Playfair Display", serif;
+}
+
 .outer-top-line {
   width: 100%;
   height: 1px;
