@@ -402,11 +402,11 @@ nav .header .left {
 
 .greeting-text {
   font-size: 1.2rem;
-  transition: width 0.15s ease-in;
+  transition: font-size 0.15s ease-in;
 }
 
 .left .toogle {
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 /* Middle section */
 nav .header .middle {
@@ -423,7 +423,7 @@ nav .header .middle .logo img {
 }
 
 nav .header .middle .toogle img {
-  width: 2.5rem;
+  width: 6.5rem;
 }
 
 /* Right section */
