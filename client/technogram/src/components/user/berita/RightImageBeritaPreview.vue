@@ -4,7 +4,7 @@
       <v-col class="pa-0" cols="8" align-self="center">
         <v-row class="justify-center">
           <v-col cols="11" class="pa-0 ma-0">
-            <h2 class="playfair-font news-title">
+            <h2 class="news-title">
               {{berita.judul || ''}}
             </h2>
           </v-col>

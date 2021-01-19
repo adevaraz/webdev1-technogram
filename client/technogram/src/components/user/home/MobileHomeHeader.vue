@@ -91,6 +91,12 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
+
+.playfair-font {
+  font-family: "Playfair Display", serif;
+}
+
 .popular-container{
   position: relative;
 }

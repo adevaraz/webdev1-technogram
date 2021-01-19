@@ -34,35 +34,6 @@
                 </v-row>
             </v-col>
         </v-row>
-        <v-row>
-          <v-progress-circular
-            class="progressbar"
-            v-if="isLoading"
-            color="#E52B38"
-            height="10"
-            indeterminate
-          ></v-progress-circular>
-          <v-col
-            class="text-center"
-            v-for="category in kategori"
-            :key="category.id_kategori"
-            lg="2"
-            md="4"
-            sm="6"
-            xs="12"
-          >
-            <!-- <v-card flat outlined tile> -->
-            <v-chip
-              v-on:click="onCategorySelected(category)"
-              color="#101010"
-              text-color="white"
-              style="text-transform: capitalize"
-            >
-              {{ category.nama_kategori }}
-            </v-chip>
-            <!-- </v-card> -->
-          </v-col>
-        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -78,39 +49,53 @@ export default {
     htmlAttrs: {
       lang: "id",
     },
-    methods: {
-        retrieveCategory(){
-            this.isLoading = true;
-            categoryApi.retrieveAll()
-                .then(response => {
-                    response.data.forEach((element) => {
-                        element.url_gambar_kategori = BASE_URL + "/" + element.url_gambar_kategori;
-                        this.kategori.push(element);
-                    });
-                    this.isLoading = false;
-                })
-                .catch(e => {
-                    console.log(e);
-                    this.isLoading = false;
-                });
-        },
-        onCategorySelected(cat) {
-            this.$router
-                .push({
-                    name: "search-result",
-                    query: {
-                        q: cat.nama_kategori,
-                    }
-                })
-                .catch((err) => {
-                    err;
-                });
-        },
+  },
+
+  data() {
+    return {
+        kategori: [],
+        isError: false,
+        errorMessage: "",
+        isLoading: false,
+    };
+  },
+
+  methods: {
+    retrieveCategory(){
+      this.isLoading = true;
+      categoryApi.retrieveAll()
+        .then(response => {
+            response.data.forEach((element) => {
+                element.url_gambar_kategori = BASE_URL + "/" + element.url_gambar_kategori;
+                this.kategori.push(element);
+            });
+            this.isLoading = false;
+        })
+        .catch(e => {
+            console.log(e);
+            this.isLoading = false;
+        });
     },
-    mounted(){
-        this.retrieveCategory();
+
+    onCategorySelected(cat) {
+      this.$router
+        .push({
+            name: "search-result",
+            query: {
+                q: cat.nama_kategori,
+            }
+        })
+        .catch((err) => {
+            err;
+        });
     },
-    computed: {
+  },
+
+  mounted(){
+      this.retrieveCategory();
+  },
+
+  computed: {
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
         return true;
@@ -118,7 +103,7 @@ export default {
       return false;
     },
   },
-}
+};
 </script>
 
 <style scoped>

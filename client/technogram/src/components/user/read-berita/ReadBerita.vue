@@ -1,264 +1,161 @@
 <template>
-  <div>
-    <v-progress-circular
-      v-if="isLoading"
-      class="progressbar"
-      color="#E52B38"
-      :size="50"
-      :width="7"
-      indeterminate
-    ></v-progress-circular>
-    <v-container
-      v-else-if="isExist"
-      :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
-    >
-      <v-sheet :class="isMobile ? 'mx-3' : 'mx-10 px-12'">
-        <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
-        <p class="worksans-font">{{ date }}</p>
-
-        <!-- Information section -->
-        <v-card
-          :class="
-            isMobile
-              ? 'd-flex flex-wrap mb-3 max-width-50'
-              : 'd-flex flex-row mb-3'
-          "
-          flat
-          tile
-        >
-          <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
-
-          <div :class="isMobile ? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-            <div id="like">
-              <div class="d-flex flex-row" v-if="isLoggedIn">
-                <img
-                  v-if="!isLiked"
-                  v-on:click="likeBerita()"
-                  class="act-item img-btn mr-1"
-                  src="../../../assets/icons/heart-empty.svg"
-                  alt="empty heart icon"
-                />
-                <img
-                  v-else
-                  v-on:click="likeBerita()"
-                  class="act-item img-btn mr-1"
-                  src="../../../assets/icons/heart-filled.svg"
-                  alt="filled heart icon"
-                />
-                <p class="text-caption text-left mr-3 worksans-font">
-                  {{ jumlah_likes }} suka
-                </p>
-              </div>
-              <div class="d-flex flex-row" v-else>
-                <auth-user
-                  v-if="isLoginDialogShown"
-                  :onDialogClosed="
-                    () => {
-                      isLoginDialogShown = false;
-                    }
-                  "
-                ></auth-user>
-                <img
-                  class="act-item img-btn mr-1"
-                  src="../../../assets/icons/heart-empty.svg"
-                  @click="isLoginDialogShown = !isLoginDialogShown"
-                />
-                <p class="text-caption text-left mr-3 worksans-font">
-                  {{ jumlah_likes }} suka
-                </p>
-              </div>
-            </div>
-
-            <div id="view" class="d-flex flex-row">
-              <img
-                class="act-item mr-1"
-                style="height: 13px"
-                src="../../../assets/icons/view.svg"
-                alt="eye icon"
-              />
-              <p class="text-caption text-left mr-3 worksans-font">
-                {{ jumlah_reader }} pembaca
-              </p>
-            </div>
-
-            <div id="save">
-              <div class="d-flex flex-row" v-if="isLoggedIn">
-                <img
-                  v-if="!isSaved"
-                  v-on:click="saveBerita()"
-                  class="act-item img-btn"
-                  src="../../../assets/icons/unsaved-icon.svg"
-                  alt="unbookmarked icon"
-                />
-                <img
-                  v-else
-                  v-on:click="saveBerita()"
-                  class="act-item img-btn"
-                  src="../../../assets/icons/saved-icon.svg"
-                  alt="bookmarked icon"
-                />
-              </div>
-              <div class="d-flex flex-row" v-else>
-                <auth-user
-                  v-if="isLoginDialogShown"
-                  :onDialogClosed="
-                    () => {
-                      isLoginDialogShown = false;
-                    }
-                  "
-                ></auth-user>
-                <img
-                  class="act-item img-btn"
-                  src="../../../assets/icons/unsaved-icon.svg"
-                  @click="isLoginDialogShown = !isLoginDialogShown"
-                />
-              </div>
-            </div>
-
-            <div id="share">
-              <div class="d-flex flex-row ml-3">
-                <share
-                  v-if="share"
-                  :onDialogClosed="
-                    () => {
-                      share = false;
-                    }
-                  "
-                  :judul_berita="judul"
-                ></share>
-                <img
-                  class="act-item img-btn"
-                  @click="share = !share"
-                  src="../../../assets/icons/share.svg"
-                  alt="share icon"
-                />
-              </div>
-            </div>
-          </div>
-        </v-card>
-
-        <div id="content" class="worksans-font">
-          <div id="header">
-            <v-img
-              v-if="this.urlTemp != null"
-              :src="urlTemp"
-              :aspect-ratio="16 / 9"
-              contain
-              class="grey darken-4"
-            />
-          </div>
-
-          <div
-            :class="
-              isMobile
-                ? 'article responsive-img break-words'
-                : 'article responsive-img'
-            "
-            v-html="artikel"
-          ></div>
-
-          <h3 class="grey--text text--darken-2">Ditulis oleh</h3>
-          <h4>{{ jurnalis }}</h4>
-          <p>{{ deskripsi_jurnalis }}</p>
-        </div>
-      </v-sheet>
-
-      <div class="px-2 mx-2 my-16">
-        <h3 class="worksans-font red-text">Rekomendasi</h3>
+    <div>
         <v-progress-circular
-          class="small-progressbar"
-          v-if="relatedBeritaLoading"
-          color="#E52B38"
-          indeterminate
+            v-if="isLoading"
+            class="progressbar"
+            color="#E52B38"
+            :size="50"
+            :width="7"
+            indeterminate
         ></v-progress-circular>
-        <v-container v-else-if="isExist" :class="isMobile? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'">
-            <v-sheet
-                :class="isMobile? 'mx-3' : 'mx-10 px-12'"
-            >
+        <v-container
+            v-else-if="isExist"
+            :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
+        >
+            <v-sheet :class="isMobile ? 'mx-3' : 'mx-10 px-12'">
                 <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
                 <p class="worksans-font">{{ date }}</p>
+
                 <!-- Information section -->
                 <v-card
-                    :class="isMobile? 'd-flex flex-wrap mb-3 max-width-50' : 'd-flex flex-row mb-3'"
+                    :class="
+                        isMobile
+                        ? 'd-flex flex-wrap mb-3 max-width-50'
+                        : 'd-flex flex-row mb-3'
+                    "
                     flat
                     tile
                 >
-                    <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
+                <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
 
-                    <div :class="isMobile? 'd-flex flex-row my-3' : 'd-flex flex-row'">
-                        <div id="like">
-                            <div
-                                class="d-flex flex-row"
-                                v-if="isLoggedIn"
-                            >
-                                <img v-if="!isLiked" v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-empty.svg" alt="empty heart icon" />
-                                <img v-else v-on:click="likeBerita()" class="act-item img-btn mr-1" src="../../../assets/icons/heart-filled.svg" alt="filled heart icon" />
-                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
-                            </div>
-                            <div
-                                class="d-flex flex-row"
+                <div :class="isMobile ? 'd-flex flex-row my-3' : 'd-flex flex-row'">
+                    <div id="like">
+                        <div class="d-flex flex-row" v-if="isLoggedIn">
+                            <img
+                                v-if="!isLiked"
+                                v-on:click="likeBerita()"
+                                class="act-item img-btn mr-1"
+                                src="../../../assets/icons/heart-empty.svg"
+                                alt="empty heart icon"
+                            />
+                            <img
                                 v-else
-                            >
-                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
-                                <img
-                                    class="act-item img-btn mr-1"
-                                    src="../../../assets/icons/heart-empty.svg"
-                                    @click="isLoginDialogShown = !isLoginDialogShown"
-                                />
-                                <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_likes }} suka</p>
-                            </div>
+                                v-on:click="likeBerita()"
+                                class="act-item img-btn mr-1"
+                                src="../../../assets/icons/heart-filled.svg"
+                                alt="filled heart icon"
+                            />
+                            <p class="text-caption text-left mr-3 worksans-font">
+                                {{ jumlah_likes }} suka
+                            </p>
                         </div>
-
-                        <div id="view" class="d-flex flex-row">
-                            <img class="act-item mr-1" style="height: 13px;" src="../../../assets/icons/view.svg" alt="eye icon" />
-                            <p class="text-caption text-left mr-3 worksans-font">{{ jumlah_reader }} pembaca</p>
-                        </div>
-                        
-                        <div id="save">
-                            <div
-                                class="d-flex flex-row"
-                                v-if="isLoggedIn"
-                            >
-                                <img v-if="!isSaved" v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/unsaved-icon.svg" alt="unbookmarked icon" />
-                                <img v-else v-on:click="saveBerita()" class="act-item img-btn" src="../../../assets/icons/saved-icon.svg" alt="bookmarked icon" />
-                            </div>
-                            <div
-                                class="d-flex flex-row"
-                                v-else
-                            >
-                                <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{ isLoginDialogShown = false }"></auth-user>
-                                <img
-                                    class="act-item img-btn"
-                                    src="../../../assets/icons/unsaved-icon.svg"
-                                    @click="isLoginDialogShown = !isLoginDialogShown"
-                                
-                                >
-                            </div>
-                        </div>
-
-                        <div id="share">
-                            <div
-                                class="d-flex flex-row ml-3"
-                            >
-                                <share v-if="share" :onDialogClosed=" () => { share = false }" :judul_berita="judul"></share>
-                                <img class="act-item img-btn" @click="share = !share" src="../../../assets/icons/share.svg" alt="share icon" />
-                            </div>
+                        <div class="d-flex flex-row" v-else>
+                            <auth-user
+                                v-if="isLoginDialogShown"
+                                :onDialogClosed="
+                                    () => {
+                                    isLoginDialogShown = false;
+                                    }
+                                "
+                            ></auth-user>
+                            <img
+                                class="act-item img-btn mr-1"
+                                src="../../../assets/icons/heart-empty.svg"
+                                @click="isLoginDialogShown = !isLoginDialogShown"
+                            />
+                            <p class="text-caption text-left mr-3 worksans-font">
+                                {{ jumlah_likes }} suka
+                            </p>
                         </div>
                     </div>
+
+                    <div id="view" class="d-flex flex-row">
+                        <img
+                            class="act-item mr-1"
+                            style="height: 13px"
+                            src="../../../assets/icons/view.svg"
+                            alt="eye icon"
+                        />
+                        <p class="text-caption text-left mr-3 worksans-font">
+                            {{ jumlah_reader }} pembaca
+                        </p>
+                    </div>
+
+                    <div id="save">
+                        <div class="d-flex flex-row" v-if="isLoggedIn">
+                            <img
+                                v-if="!isSaved"
+                                v-on:click="saveBerita()"
+                                class="act-item img-btn"
+                                src="../../../assets/icons/unsaved-icon.svg"
+                                alt="unbookmarked icon"
+                            />
+                            <img
+                                v-else
+                                v-on:click="saveBerita()"
+                                class="act-item img-btn"
+                                src="../../../assets/icons/saved-icon.svg"
+                                alt="bookmarked icon"
+                            />
+                        </div>
+                        <div class="d-flex flex-row" v-else>
+                            <auth-user
+                                v-if="isLoginDialogShown"
+                                :onDialogClosed="
+                                    () => {
+                                    isLoginDialogShown = false;
+                                    }
+                                "
+                            ></auth-user>
+                            <img
+                                class="act-item img-btn"
+                                src="../../../assets/icons/unsaved-icon.svg"
+                                @click="isLoginDialogShown = !isLoginDialogShown"
+                            />
+                        </div>
+                    </div>
+
+                    <div id="share">
+                        <div class="d-flex flex-row ml-3">
+                            <share
+                                v-if="share"
+                                :onDialogClosed="
+                                    () => {
+                                    share = false;
+                                    }
+                                "
+                                :judul_berita="judul"
+                            ></share>
+                            <img
+                                class="act-item img-btn"
+                                @click="share = !share"
+                                src="../../../assets/icons/share.svg"
+                                alt="share icon"
+                            />
+                        </div>
+                    </div>
+                </div>
                 </v-card>
 
                 <div id="content" class="worksans-font">
                     <div id="header">
                         <v-img
-                            v-if="this.urlTemp != null"
-                            :src="urlTemp"
-                            :aspect-ratio="16 / 9"
-                            contain
-                            class="grey darken-4"
+                        v-if="this.urlTemp != null"
+                        :src="urlTemp"
+                        :aspect-ratio="16 / 9"
+                        contain
+                        class="grey darken-4"
                         />
                     </div>
 
-                    <div :class="isMobile? 'article responsive-img break-words' : 'article responsive-img'" v-html=artikel></div>
+                    <div
+                        :class="
+                        isMobile
+                            ? 'article responsive-img break-words'
+                            : 'article responsive-img'
+                        "
+                        v-html="artikel"
+                    ></div>
 
                     <h3 class="grey--text text--darken-2">Ditulis oleh</h3>
                     <h4>{{ jurnalis }}</h4>
@@ -396,248 +293,248 @@ export default {
       }
     },
 
-    ...mapGetters({
-      isLoggedIn: "user/isLoggedIn",
-    })
-    }
+        ...mapGetters({
+        isLoggedIn: "user/isLoggedIn",
+        })
+    },
     
     methods: {
-    resetData() {
-        this.id = 0;
-        this.judul = "";
-        this.artikel = "";
-        this.waktu_publikasi = "";
-        (this.url_gambar = ""), (this.kategori_berita = "");
-        this.jumlah_reader = 0;
-        this.jumlah_likes = 0;
-        this.jurnalis = "";
-        this.deskripsi_jurnalis = "";
-        this.relatedBerita = [];
-        this.urlTemp = null;
-        this.urlGambar = null;
-        this.isLoading = false;
-        this.isLiked = false;
-        this.isSaved = false;
-        this.relatedBeritaLoading = false;
-        this.contentDesc = "";
-    },
-    
-    async refreshValue() {
-      this.getLikeState(this.$route.params.id);
-      this.getSaveState(this.$route.params.id);
-    },
-
-    async getBeritabyId(id) {
-        try {
-            this.isLoading = true;
-            const result = await berita.get(id);
-
-            if (result instanceof Error) {
-                this.beritaNotExist();
-                throw result;
-            }
-
+        resetData() {
+            this.id = 0;
+            this.judul = "";
+            this.artikel = "";
+            this.waktu_publikasi = "";
+            (this.url_gambar = ""), (this.kategori_berita = "");
+            this.jumlah_reader = 0;
+            this.jumlah_likes = 0;
+            this.jurnalis = "";
+            this.deskripsi_jurnalis = "";
+            this.relatedBerita = [];
+            this.urlTemp = null;
+            this.urlGambar = null;
             this.isLoading = false;
-            
-            if (result.data.url_gambar) {
-                this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
-                this.urlGambar = await this.getImageObj(this.urlTemp);
-            }
-
-            this.isExist = true;
-            this.id = result.data.id_berita;
-            this.judul = result.data.judul;
-            this.artikel = result.data.artikel;
-            this.waktu_publikasi = result.data.waktu_publikasi;
-            this.url_gambar = result.data.url_gambar;
-            this.kategori_berita = result.data.kategori_berita;
-            this.jumlah_reader = result.data.jumlah_reader;
-            this.jumlah_likes = result.data.jumlah_likes;
-            this.jurnalis = result.data.jurnalis;
-            this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
-        } catch (error) {
-            console.error(error);
-        }
-    },
-
-    async getImageObj(ImageUrl) {
-      try {
-        const path = require("path");
-        const result = await fetch(ImageUrl);
-
-        if (result instanceof Error) throw result;
-        const blobObj = await result.blob();
-
-        if (blobObj instanceof Error) throw blobObj;
-        return new File([blobObj], path.basename(ImageUrl), {
-          type: blobObj.type,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async incrementViewer(id) {
-      try {
-        const result = await berita.incrementViewer(id);
-
-        if (result instanceof Error) {
-          this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
-          return;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async retrieveRelatedBerita(id) {
-      try {
-        this.relatedBeritaLoading = true;
-        const result = await berita.get(id);
-        this.kategori_berita = result.data.kategori_berita;
-        const recommendResult = await berita.getByCat(
-          4,
-          this.kategori_berita,
-          1
-        );
-        this.relatedBeritaLoading = false;
-
-        if (recommendResult instanceof Error) {
-          this.errorMessage =
-            "Gagal mendapatkan berita dengan topik sama karena " +
-            recommendResult.cause;
-          return;
-        }
-
-        recommendResult.data.forEach((element) => {
-          element.url_gambar = BASE_URL + "/" + element.url_gambar;
-          this.relatedBerita.push(element);
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async likeBerita() {
-      try {
-        if (this.isLoggedIn) {
-          this.old_likes = this.jumlah_likes;
-          const kategoriBerita = await kategori.getByName(this.kategori_berita);
-          const likeResult = await pembacaAct.like(
-            this.$route.params.id,
-            kategoriBerita.data.id_kategori,
-            store.getters["user/getToken"]
-          );
-
-          if (likeResult instanceof Error) {
-            this.errorMessage =
-              "Gagal menyukai berita karena " + likeResult.cause;
-            return;
-          }
-
-          this.refreshValue();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async getLikeState(id) {
-      try {
-        const token = store.getters["user/getToken"];
-
-        if (token.localeCompare("") != 0) {
-          const result = await pembacaAct.isLiked(
-            store.getters["user/getToken"],
-            id
-          );
-
-          if (result instanceof Error) {
-            this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-            return;
-          }
-
-          const valResult = await berita.get(id);
-
-          if (valResult instanceof Error) {
-            this.beritaNotExist();
-            return;
-          }
-
-          this.isLiked = result.data;
-          this.jumlah_likes = valResult.data.jumlah_likes;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async saveBerita() {
-      try {
-        if (this.isLoggedIn) {
-          const saveResult = await pembacaAct.saveBerita(
-            this.$route.params.id,
-            store.getters["user/getToken"]
-          );
-
-          if (saveResult instanceof Error) {
-            this.errorMessage =
-              "Gagal menyimpan berita karena " + saveResult.cause;
-            return;
-          }
-
-          this.refreshValue();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async getSaveState(id) {
-      try {
-        const token = store.getters["user/getToken"];
-
-        if (token.localeCompare("") != 0) {
-          const result = await pembacaAct.isSaved(token, id);
-
-          if (result instanceof Error) {
-            this.errorMessage = "Gagal menyukai berita karena " + result.cause;
-            return;
-          }
-
-          this.isSaved = result.data;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
+            this.isLiked = false;
+            this.isSaved = false;
+            this.relatedBeritaLoading = false;
+            this.contentDesc = "";
+        },
     
-    onBeritaSelected(id, judul) {
-        const judul_berita = judul.toLowerCase().split(' ').join('-');
-        window.open(`/berita/${id}/${judul_berita}`, "_blank");
+        async refreshValue() {
+            this.getLikeState(this.$route.params.id);
+            this.getSaveState(this.$route.params.id);
+        },
 
-        this.incrementViewer(id);
-        this.refreshValue();
-    },
+        async getBeritabyId(id) {
+            try {
+                this.isLoading = true;
+                const result = await berita.get(id);
 
-    beritaNotExist() {
-      this.$router
-        .push({
-          path: `/`,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+                if (result instanceof Error) {
+                    this.beritaNotExist();
+                    throw result;
+                }
 
-    clearTags(str) {
-      let html = str;
-      let div = document.createElement("div");
-      div.innerHTML = html;
-      let text = div.textContent || div.innerText || "";
-      return text;
-    },
-  },
+                this.isLoading = false;
+                
+                if (result.data.url_gambar) {
+                    this.urlTemp = BASE_URL + `/` + result.data.url_gambar;
+                    this.urlGambar = await this.getImageObj(this.urlTemp);
+                }
+
+                this.isExist = true;
+                this.id = result.data.id_berita;
+                this.judul = result.data.judul;
+                this.artikel = result.data.artikel;
+                this.waktu_publikasi = result.data.waktu_publikasi;
+                this.url_gambar = result.data.url_gambar;
+                this.kategori_berita = result.data.kategori_berita;
+                this.jumlah_reader = result.data.jumlah_reader;
+                this.jumlah_likes = result.data.jumlah_likes;
+                this.jurnalis = result.data.jurnalis;
+                this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async getImageObj(ImageUrl) {
+            try {
+                const path = require("path");
+                const result = await fetch(ImageUrl);
+
+                if (result instanceof Error) throw result;
+                const blobObj = await result.blob();
+
+                if (blobObj instanceof Error) throw blobObj;
+                return new File([blobObj], path.basename(ImageUrl), {
+                type: blobObj.type,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async incrementViewer(id) {
+            try {
+                const result = await berita.incrementViewer(id);
+
+                if (result instanceof Error) {
+                this.errorMessage = "Gagal menambahkan viewer karena " + result.cause;
+                return;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async retrieveRelatedBerita(id) {
+            try {
+                this.relatedBeritaLoading = true;
+                const result = await berita.get(id);
+                this.kategori_berita = result.data.kategori_berita;
+                const recommendResult = await berita.getByCat(
+                4,
+                this.kategori_berita,
+                1
+                );
+                this.relatedBeritaLoading = false;
+
+                if (recommendResult instanceof Error) {
+                this.errorMessage =
+                    "Gagal mendapatkan berita dengan topik sama karena " +
+                    recommendResult.cause;
+                return;
+                }
+
+                recommendResult.data.forEach((element) => {
+                element.url_gambar = BASE_URL + "/" + element.url_gambar;
+                this.relatedBerita.push(element);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async likeBerita() {
+            try {
+                if (this.isLoggedIn) {
+                this.old_likes = this.jumlah_likes;
+                const kategoriBerita = await kategori.getByName(this.kategori_berita);
+                const likeResult = await pembacaAct.like(
+                    this.$route.params.id,
+                    kategoriBerita.data.id_kategori,
+                    store.getters["user/getToken"]
+                );
+
+                if (likeResult instanceof Error) {
+                    this.errorMessage =
+                    "Gagal menyukai berita karena " + likeResult.cause;
+                    return;
+                }
+
+                this.refreshValue();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async getLikeState(id) {
+            try {
+                const token = store.getters["user/getToken"];
+
+                if (token.localeCompare("") != 0) {
+                const result = await pembacaAct.isLiked(
+                    store.getters["user/getToken"],
+                    id
+                );
+
+                if (result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                const valResult = await berita.get(id);
+
+                if (valResult instanceof Error) {
+                    this.beritaNotExist();
+                    return;
+                }
+
+                this.isLiked = result.data;
+                this.jumlah_likes = valResult.data.jumlah_likes;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async saveBerita() {
+            try {
+                if (this.isLoggedIn) {
+                const saveResult = await pembacaAct.saveBerita(
+                    this.$route.params.id,
+                    store.getters["user/getToken"]
+                );
+
+                if (saveResult instanceof Error) {
+                    this.errorMessage =
+                    "Gagal menyimpan berita karena " + saveResult.cause;
+                    return;
+                }
+
+                this.refreshValue();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async getSaveState(id) {
+            try {
+                const token = store.getters["user/getToken"];
+
+                if (token.localeCompare("") != 0) {
+                const result = await pembacaAct.isSaved(token, id);
+
+                if (result instanceof Error) {
+                    this.errorMessage = "Gagal menyukai berita karena " + result.cause;
+                    return;
+                }
+
+                this.isSaved = result.data;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        
+        onBeritaSelected(id, judul) {
+            const judul_berita = judul.toLowerCase().split(' ').join('-');
+            window.open(`/berita/${id}/${judul_berita}`, "_blank");
+
+            this.incrementViewer(id);
+            this.refreshValue();
+        },
+
+        beritaNotExist() {
+            this.$router
+                .push({
+                path: `/`,
+                })
+                .catch((err) => {
+                console.error(err);
+                });
+        },
+
+        clearTags(str) {
+            let html = str;
+            let div = document.createElement("div");
+            div.innerHTML = html;
+            let text = div.textContent || div.innerText || "";
+            return text;
+        }
+    }
 };
 </script>
 
