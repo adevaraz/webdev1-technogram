@@ -8,6 +8,7 @@
             :src="berita.url_gambar"
             :isLoading="isLoading"
             :zoomEffect="true"
+            :title="berita.judul"
           ></lazy-image>
         </v-col>
         <v-col cols="12" class="cols-container mt-5">

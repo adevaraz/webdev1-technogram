@@ -4,7 +4,7 @@
         <v-col class="pa-0" cols="4">
             <v-row class="justify-center" >
                 <v-col cols="5" >
-                    <div class="img-container" :style="backgroundImg"></div>
+                    <div class="img-container" :style="backgroundImg" :title="berita.judul"></div>
                 </v-col>
             </v-row>
             <v-row class="justify-center">

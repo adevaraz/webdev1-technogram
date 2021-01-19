@@ -1,6 +1,6 @@
 <template>
   <div :class="imageParentClass">
-    <div :class="imageClass" :style="background">
+    <div :class="imageClass" :style="background" :title="this.title">
       <v-progress-circular
         class="progressbar"
         v-if="isImageLoading"
@@ -20,6 +20,10 @@ export default {
   },
   props: {
     src: {
+      type: String,
+      default: "",
+    },
+    title: {
       type: String,
       default: "",
     },
