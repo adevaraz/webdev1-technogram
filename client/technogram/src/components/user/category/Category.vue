@@ -78,39 +78,44 @@ export default {
     htmlAttrs: {
       lang: "id",
     },
-    methods: {
-        retrieveCategory(){
-            this.isLoading = true;
-            categoryApi.retrieveAll()
-                .then(response => {
-                    response.data.forEach((element) => {
-                        element.url_gambar_kategori = BASE_URL + "/" + element.url_gambar_kategori;
-                        this.kategori.push(element);
-                    });
-                    this.isLoading = false;
-                })
-                .catch(e => {
-                    console.log(e);
-                    this.isLoading = false;
-                });
-        },
-        onCategorySelected(cat) {
-            this.$router
-                .push({
-                    name: "search-result",
-                    query: {
-                        q: cat.nama_kategori,
-                    }
-                })
-                .catch((err) => {
-                    err;
-                });
-        },
+  },
+
+  methods: {
+    retrieveCategory(){
+      this.isLoading = true;
+      categoryApi.retrieveAll()
+        .then(response => {
+            response.data.forEach((element) => {
+                element.url_gambar_kategori = BASE_URL + "/" + element.url_gambar_kategori;
+                this.kategori.push(element);
+            });
+            this.isLoading = false;
+        })
+        .catch(e => {
+            console.log(e);
+            this.isLoading = false;
+        });
     },
-    mounted(){
-        this.retrieveCategory();
+
+    onCategorySelected(cat) {
+      this.$router
+        .push({
+            name: "search-result",
+            query: {
+                q: cat.nama_kategori,
+            }
+        })
+        .catch((err) => {
+            err;
+        });
     },
-    computed: {
+  },
+
+  mounted(){
+      this.retrieveCategory();
+  },
+
+  computed: {
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
         return true;
@@ -118,7 +123,7 @@ export default {
       return false;
     },
   },
-}
+};
 </script>
 
 <style scoped>
