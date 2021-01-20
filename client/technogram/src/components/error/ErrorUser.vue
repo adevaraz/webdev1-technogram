@@ -21,7 +21,7 @@
       <v-row>
         <v-col align="center" justify="center">
           <div class="text-h6 font-weight-medium">
-            Silahkan Hubungi Tim Technogram jika ada Kendala :)
+            Silahkan hubungi email <a>id.technogram@gmail.com</a> jika ada kendala :)
           </div>
         </v-col>
       </v-row>
@@ -56,5 +56,10 @@ a {
 
 .layout {
   background-color: rgb(251, 251, 251);
+}
+
+#vector {
+  width: 100%;
+  max-width: 30rem;
 }
 </style>

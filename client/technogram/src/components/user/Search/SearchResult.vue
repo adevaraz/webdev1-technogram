@@ -44,10 +44,6 @@ export default {
     },
   },
 
-  props: {
-      onBeritaSelected: Function
-  },
-
   data() {
     return {
         isError: false,
