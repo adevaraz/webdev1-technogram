@@ -322,11 +322,6 @@ export default {
       this.contentDesc = "";
     },
 
-    // async refreshValue() {
-    //   this.getLikeState(this.$route.params.id);
-    //   this.getSaveState(this.$route.params.id);
-    // },
-
     async getBeritabyId(id) {
       try {
         this.isLoading = true;
