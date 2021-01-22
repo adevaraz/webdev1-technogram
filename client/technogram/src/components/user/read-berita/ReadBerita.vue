@@ -239,7 +239,6 @@ export default {
       isLiked: false,
       likeClick : 0,
       isSaved: false,
-      saveClick : 0,
       relatedBeritaLoading: false,
       errorMessage: "",
       isLoginDialogShown: false,
@@ -319,7 +318,6 @@ export default {
       this.isLiked = false;
       this.likeClick = 0;
       this.isSaved = false;
-      this.saveClick = 0;
       this.relatedBeritaLoading = false;
       this.contentDesc = "";
     },
