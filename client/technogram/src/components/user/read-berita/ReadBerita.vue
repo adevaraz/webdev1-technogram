@@ -12,7 +12,7 @@
       v-else-if="isExist"
       :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
     >
-      <v-sheet :class="isMobile ? 'mx-3' : 'mx-8 px-10'">
+      <v-sheet :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
         <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
         <p class="worksans-font">{{ date }}</p>
 
@@ -166,7 +166,7 @@
         </div>
       </v-sheet>
 
-      <div class="my-16">
+      <div :class="isMobile? 'my-4 max-width-rec' : 'my-16'">
         <h3 class="worksans-font red-text">Rekomendasi</h3>
         <v-progress-circular
           class="small-progressbar"
@@ -551,6 +551,10 @@ export default {
   font-family: "Work Sans", sans-serif;
 }
 
+.max-width-read {
+  max-width: 1080px;
+}
+
 .act-item {
   cursor: pointer;
 }
@@ -609,5 +613,34 @@ export default {
   display: block;
   margin: 10px 10;
   line-height: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    #header img {
+      width: 100%;
+      height: auto;
+    }
+
+    .max-width-read {
+      max-width: 300px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .max-width-read {
+      max-width: 600px;
+    }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+    .max-width-read {
+      max-width: 900px;
+    }
+}
+
+@media screen and (width: 768px){
+    .max-width-rec {
+      max-width: 680px;
+    }
 }
 </style>
