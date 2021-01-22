@@ -211,6 +211,7 @@ export default {
   },
 
   created() {
+    this.resetData();
     this.incrementViewer(this.$route.params.id);
     this.getBeritabyId(this.$route.params.id);
     this.getLikeState(this.$route.params.id);
@@ -236,7 +237,9 @@ export default {
       isLoading: false,
       isExist: false,
       isLiked: false,
+      likeClick : 0,
       isSaved: false,
+      saveClick : 0,
       relatedBeritaLoading: false,
       errorMessage: "",
       isLoginDialogShown: false,
@@ -314,15 +317,17 @@ export default {
       this.urlGambar = null;
       this.isLoading = false;
       this.isLiked = false;
+      this.likeClick = 0;
       this.isSaved = false;
+      this.saveClick = 0;
       this.relatedBeritaLoading = false;
       this.contentDesc = "";
     },
 
-    async refreshValue() {
-      this.getLikeState(this.$route.params.id);
-      this.getSaveState(this.$route.params.id);
-    },
+    // async refreshValue() {
+    //   this.getLikeState(this.$route.params.id);
+    //   this.getSaveState(this.$route.params.id);
+    // },
 
     async getBeritabyId(id) {
       try {
@@ -419,7 +424,16 @@ export default {
     async likeBerita() {
       try {
         if (this.isLoggedIn) {
-          this.old_likes = this.jumlah_likes;
+          this.likeClick += 1;
+
+          if(this.likeClick%2 === 1) {
+            this.jumlah_likes += 1;
+          } else {
+            this.jumlah_likes -= 1;
+          }
+
+          this.isLiked = !this.isLiked;
+
           const kategoriBerita = await kategori.getByName(this.kategori_berita);
           const likeResult = await pembacaAct.like(
             this.$route.params.id,
@@ -432,8 +446,6 @@ export default {
               "Gagal menyukai berita karena " + likeResult.cause;
             return;
           }
-
-          this.refreshValue();
         }
       } catch (error) {
         console.error(error);
@@ -455,15 +467,7 @@ export default {
             return;
           }
 
-          const valResult = await berita.get(id);
-
-          if (valResult instanceof Error) {
-            this.beritaNotExist();
-            return;
-          }
-
           this.isLiked = result.data;
-          this.jumlah_likes = valResult.data.jumlah_likes;
         }
       } catch (error) {
         console.error(error);
@@ -473,6 +477,8 @@ export default {
     async saveBerita() {
       try {
         if (this.isLoggedIn) {
+          this.isSaved = !this.isSaved;
+
           const saveResult = await pembacaAct.saveBerita(
             this.$route.params.id,
             store.getters["user/getToken"]
@@ -483,8 +489,6 @@ export default {
               "Gagal menyimpan berita karena " + saveResult.cause;
             return;
           }
-
-          this.refreshValue();
         }
       } catch (error) {
         console.error(error);
@@ -513,9 +517,6 @@ export default {
     onBeritaSelected(id, judul) {
       const judul_berita = judul.toLowerCase().split(" ").join("-");
       window.open(`/berita/${id}/${judul_berita}`, "_blank");
-
-      this.incrementViewer(id);
-      this.refreshValue();
     },
 
     beritaNotExist() {
