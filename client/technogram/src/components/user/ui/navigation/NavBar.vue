@@ -499,12 +499,8 @@ nav .header .right .btn {
 
 @media screen and (max-width: 960px) {
   .navbar {
-    max-height: 6rem;
+    max-height: 22rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
-  }
-
-  nav .header {
-    border-bottom: none;
   }
 
   nav .header .middle .logo img {
