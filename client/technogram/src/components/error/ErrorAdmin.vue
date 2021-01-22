@@ -49,12 +49,17 @@ export default {
 
 <style>
 a {
-    text-decoration: none;
-    color: black;
-    font-size: 12px;
+  text-decoration: none;
+  color: black;
+  font-size: 12px;
 }
 
 .layout {
   background-color: rgb(251, 251, 251);
+}
+
+#vector {
+  width: 100%;
+  max-width: 30rem;
 }
 </style>

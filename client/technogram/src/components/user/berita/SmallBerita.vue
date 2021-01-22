@@ -12,7 +12,7 @@
           ></lazy-image>
         </div>
       </v-col>
-      <v-col class="pa-0" cols="7" offset="1" align-self="start">
+      <v-col class="pa-1" cols="6" offset="1" align-self="start">
         <v-row class="justify-start">
           <v-col cols="11" class="pa-0 ma-0">
             <h2
