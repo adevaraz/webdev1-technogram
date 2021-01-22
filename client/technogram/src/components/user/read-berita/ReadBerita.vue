@@ -12,7 +12,7 @@
       v-else-if="isExist"
       :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
     >
-      <v-sheet :class="isMobile ? 'mx-3' : 'mx-10 px-12'">
+      <v-sheet :class="isMobile ? 'mx-3' : 'mx-8 px-10'">
         <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
         <p class="worksans-font">{{ date }}</p>
 
@@ -141,12 +141,13 @@
 
         <div id="content" class="worksans-font">
           <div id="header">
-            <v-img
+            <img
               v-if="this.urlTemp != null"
               :src="urlTemp"
               :aspect-ratio="16 / 9"
               contain
               class="grey darken-4"
+              :alt="this.judul"
             />
           </div>
 
@@ -165,7 +166,7 @@
         </div>
       </v-sheet>
 
-      <div class="px-2 mx-2 my-16">
+      <div class="my-16">
         <h3 class="worksans-font red-text">Rekomendasi</h3>
         <v-progress-circular
           class="small-progressbar"
@@ -203,13 +204,6 @@ const AuthUser = () => import("../auth/AuthUser");
 const Share = () => import("./Share");
 
 export default {
-  // metaInfo: {
-  //   title: `Baca Berita - Technogram`,
-  //   htmlAttrs: {
-  //     lang: "id",
-  //   },
-  // },
-
   components: {
     SmallBerita,
     AuthUser,
@@ -578,6 +572,11 @@ export default {
   text-align: center;
 }
 
+#header img {
+    width: 100%;
+    height: auto;
+}
+
 .progressbar {
   position: absolute;
   left: 50%;
@@ -591,7 +590,8 @@ export default {
 
 .break-words {
   word-wrap: break-word;
-  max-width: 300px;
+  width: 100%;
+  height: auto;
 }
 
 .small-progressbar {
@@ -609,12 +609,5 @@ export default {
   display: block;
   margin: 10px 10;
   line-height: 20px;
-}
-
-@media screen and (max-width: 600px) {
-    #header img {
-        width: 100%;
-        height: auto;
-    }
 }
 </style>
