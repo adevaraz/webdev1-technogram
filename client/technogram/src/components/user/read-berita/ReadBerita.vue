@@ -62,6 +62,7 @@
                   class="act-item img-btn mr-1"
                   src="../../../assets/icons/heart-empty.svg"
                   @click="isLoginDialogShown = !isLoginDialogShown"
+                  alt="empty heart icon"
                 />
                 <p class="text-caption text-left mr-3 worksans-font">
                   {{ jumlah_likes }} suka
@@ -111,6 +112,7 @@
                   class="act-item img-btn"
                   src="../../../assets/icons/unsaved-icon.svg"
                   @click="isLoginDialogShown = !isLoginDialogShown"
+                  alt="unbookmarked icon"
                 />
               </div>
             </div>
@@ -599,6 +601,7 @@ export default {
 
 .responsive-img ::v-deep img {
   width: 100%;
+  height: auto;
 }
 
 .article ::v-deep br {
@@ -606,5 +609,12 @@ export default {
   display: block;
   margin: 10px 10;
   line-height: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    #header img {
+        width: 100%;
+        height: auto;
+    }
 }
 </style>
