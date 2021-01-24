@@ -12,7 +12,7 @@
       v-else-if="isExist"
       :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
     >
-      <v-sheet :class="isMobile ? 'mx-3' : 'mx-8 px-10'">
+      <v-sheet :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
         <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
         <p class="worksans-font">{{ date }}</p>
 
@@ -166,7 +166,7 @@
         </div>
       </v-sheet>
 
-      <div class="my-16">
+      <div :class="isMobile? 'my-4 max-width-rec' : 'my-16'">
         <h3 class="worksans-font red-text">Rekomendasi</h3>
         <v-progress-circular
           class="small-progressbar"
@@ -211,6 +211,7 @@ export default {
   },
 
   created() {
+    this.resetData();
     this.incrementViewer(this.$route.params.id);
     this.getBeritabyId(this.$route.params.id);
     this.getLikeState(this.$route.params.id);
@@ -236,6 +237,7 @@ export default {
       isLoading: false,
       isExist: false,
       isLiked: false,
+      likeClick : 0,
       isSaved: false,
       relatedBeritaLoading: false,
       errorMessage: "",
@@ -314,14 +316,10 @@ export default {
       this.urlGambar = null;
       this.isLoading = false;
       this.isLiked = false;
+      this.likeClick = 0;
       this.isSaved = false;
       this.relatedBeritaLoading = false;
       this.contentDesc = "";
-    },
-
-    async refreshValue() {
-      this.getLikeState(this.$route.params.id);
-      this.getSaveState(this.$route.params.id);
     },
 
     async getBeritabyId(id) {
@@ -419,7 +417,16 @@ export default {
     async likeBerita() {
       try {
         if (this.isLoggedIn) {
-          this.old_likes = this.jumlah_likes;
+          this.likeClick += 1;
+
+          if(this.likeClick%2 === 1) {
+            this.jumlah_likes += 1;
+          } else {
+            this.jumlah_likes -= 1;
+          }
+
+          this.isLiked = !this.isLiked;
+
           const kategoriBerita = await kategori.getByName(this.kategori_berita);
           const likeResult = await pembacaAct.like(
             this.$route.params.id,
@@ -432,8 +439,6 @@ export default {
               "Gagal menyukai berita karena " + likeResult.cause;
             return;
           }
-
-          this.refreshValue();
         }
       } catch (error) {
         console.error(error);
@@ -455,15 +460,7 @@ export default {
             return;
           }
 
-          const valResult = await berita.get(id);
-
-          if (valResult instanceof Error) {
-            this.beritaNotExist();
-            return;
-          }
-
           this.isLiked = result.data;
-          this.jumlah_likes = valResult.data.jumlah_likes;
         }
       } catch (error) {
         console.error(error);
@@ -473,6 +470,8 @@ export default {
     async saveBerita() {
       try {
         if (this.isLoggedIn) {
+          this.isSaved = !this.isSaved;
+
           const saveResult = await pembacaAct.saveBerita(
             this.$route.params.id,
             store.getters["user/getToken"]
@@ -483,8 +482,6 @@ export default {
               "Gagal menyimpan berita karena " + saveResult.cause;
             return;
           }
-
-          this.refreshValue();
         }
       } catch (error) {
         console.error(error);
@@ -513,9 +510,6 @@ export default {
     onBeritaSelected(id, judul) {
       const judul_berita = judul.toLowerCase().split(" ").join("-");
       window.open(`/berita/${id}/${judul_berita}`, "_blank");
-
-      this.incrementViewer(id);
-      this.refreshValue();
     },
 
     beritaNotExist() {
@@ -549,6 +543,10 @@ export default {
 
 .worksans-font {
   font-family: "Work Sans", sans-serif;
+}
+
+.max-width-read {
+  max-width: 1080px;
 }
 
 .act-item {
@@ -609,5 +607,34 @@ export default {
   display: block;
   margin: 10px 10;
   line-height: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    #header img {
+      width: 100%;
+      height: auto;
+    }
+
+    .max-width-read {
+      max-width: 300px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .max-width-read {
+      max-width: 600px;
+    }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+    .max-width-read {
+      max-width: 900px;
+    }
+}
+
+@media screen and (width: 768px){
+    .max-width-rec {
+      max-width: 680px;
+    }
 }
 </style>
