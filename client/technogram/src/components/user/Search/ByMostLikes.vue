@@ -1,21 +1,25 @@
 <template>
   <v-container>
-    <virtual-list 
-      ref="virtual-scroller" 
-      class="list-infinite scroll-touch item" 
-      :page-mode="true" 
-      :data-key="'id_berita'" 
-      :data-sources="mostLikedBerita" 
-      :data-component="itemComponent" 
-      v-on:tobottom="onScrollToBottom" 
-      :keeps="20">
+    <virtual-list
+      ref="virtual-scroller"
+      class="list-infinite scroll-touch item"
+      :page-mode="true"
+      :data-key="'id_berita'"
+      :data-sources="mostLikedBerita"
+      :data-component="itemComponent"
+      v-on:tobottom="onScrollToBottom"
+      :keeps="20"
+    >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="popularLoading">
-          <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            color="#E52B38"
+          ></v-progress-circular>
         </div>
         <div class="text-center" v-if="isEndOfList">
           <h3>Tidak ada item lagi &#128512;</h3>
-         </div>
+        </div>
       </div>
     </virtual-list>
   </v-container>
@@ -33,7 +37,7 @@ export default {
   },
   data() {
     return {
-      itemComponent : MostLikesItem,
+      itemComponent: MostLikesItem,
       mostLikedBerita: [],
       isError: false,
       errorMessage: "",
@@ -43,23 +47,29 @@ export default {
     };
   },
   watch: {
-    '$route' : function () {
+    $route: function () {
       this.mostLikedBerita = [];
-      this.pageNum = 1
-      this.isEndOfList = false
+      this.pageNum = 1;
+      this.isEndOfList = false;
       this.retrieveMostLikedBerita();
     },
   },
 
   methods: {
     onScrollToBottom() {
-      if(!this.popularLoading && !this.isEndOfList) {
-        this.retrieveMostLikedBerita();
+      if (this.pageNum != 1) {
+        if (!this.popularLoading && !this.isEndOfList) {
+          this.retrieveMostLikedBerita();
+        }
       }
     },
     async retrieveMostLikedBerita() {
       this.popularLoading = true;
-      const result = await beritaApi.popularBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
+      const result = await beritaApi.popularBerita(
+        NEWS_PERCALL,
+        this.$route.query.q,
+        this.pageNum
+      );
       this.pageNum++;
       this.popularLoading = false;
       if (result instanceof Error) {
@@ -67,8 +77,8 @@ export default {
         this.errorMessage = "Gagal mendapatkan berita karena " + result.cause;
         return;
       }
-      if(result.data.length <= 0) {
-        if(this.isEndOfList) {
+      if (result.data.length <= 0) {
+        if (this.isEndOfList) {
           return;
         }
         this.isEndOfList = true;
@@ -78,7 +88,7 @@ export default {
         this.mostLikedBerita.push(element);
       });
     },
-  }
+  },
 };
 </script>
 
@@ -101,7 +111,7 @@ export default {
 }
 
 .item {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 960px) {
