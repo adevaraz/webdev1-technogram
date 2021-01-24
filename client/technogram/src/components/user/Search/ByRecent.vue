@@ -1,21 +1,25 @@
 <template>
   <v-container>
-    <virtual-list 
-      ref="virtual-scroller" 
-      class="list-infinite scroll-touch item" 
-      :page-mode="true" 
-      :data-key="'id_berita'" 
-      :data-sources="recentBerita" 
-      :data-component="itemComponent" 
-      v-on:tobottom="onScrollToBottom" 
-      :keeps="20">
+    <virtual-list
+      ref="virtual-scroller"
+      class="list-infinite scroll-touch item"
+      :page-mode="true"
+      :data-key="'id_berita'"
+      :data-sources="recentBerita"
+      :data-component="itemComponent"
+      v-on:tobottom="onScrollToBottom"
+      :keeps="20"
+    >
       <div slot="footer">
         <div class="loader itemStillExist" v-if="recentLoading">
-          <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
+          <v-progress-circular
+            indeterminate
+            color="#E52B38"
+          ></v-progress-circular>
         </div>
         <div class="text-center" v-if="isEndOfList">
           <h3>Tidak ada item lagi &#128512;</h3>
-         </div>
+        </div>
       </div>
     </virtual-list>
   </v-container>
@@ -32,39 +36,45 @@ export default {
   },
   data() {
     return {
-      itemComponent : RecentItem,
+      itemComponent: RecentItem,
       recentBerita: [],
       isError: false,
       errorMessage: "",
       recentLoading: false,
       pageNum: 1,
       isEndOfList: false,
-      countLoading : 0,
+      countLoading: 0,
     };
   },
   watch: {
     $route: function () {
       this.recentBerita = [];
-      this.isEndOfList = false
-      this.pageNum = 1
+      this.isEndOfList = false;
+      this.pageNum = 1;
       this.retrieveRecentBerita();
     },
   },
 
   methods: {
     onScrollToBottom() {
-      this.countLoading++;
-      if(!this.popularLoading && !this.isEndOfList) {
-        if(this.countLoading < 2) {
-          this.retrieveRecentBerita();
-        } else {
-          this.countLoading = 0;
+      if (this.pageNum != 1) {
+        this.countLoading++;
+        if (!this.popularLoading && !this.isEndOfList) {
+          if (this.countLoading < 2) {
+            this.retrieveRecentBerita();
+          } else {
+            this.countLoading = 0;
+          }
         }
       }
     },
     async retrieveRecentBerita() {
       this.recentLoading = true;
-      const result = await beritaApi.recentBerita(NEWS_PERCALL, this.$route.query.q, this.pageNum);
+      const result = await beritaApi.recentBerita(
+        NEWS_PERCALL,
+        this.$route.query.q,
+        this.pageNum
+      );
       this.pageNum++;
       if (result instanceof Error) {
         this.isError = true;
@@ -73,8 +83,8 @@ export default {
         return;
       }
       this.recentLoading = false;
-      if(result.data.length <= 0) {
-        if(this.isEndOfList) {
+      if (result.data.length <= 0) {
+        if (this.isEndOfList) {
           return;
         }
         this.isEndOfList = true;
@@ -84,8 +94,8 @@ export default {
         this.recentBerita.push(element);
       });
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -107,7 +117,7 @@ export default {
 }
 
 .item {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 960px) {
