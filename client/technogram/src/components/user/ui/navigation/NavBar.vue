@@ -37,8 +37,11 @@
             </div>
 
             <div class="loggedin" v-if="isLoggedIn">
+
               <div class="">
+                
                 <img
+                  v-click-outside="onClickOutsideNotif"
                   class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
                   src="../../../../assets/icons/bell.svg"
@@ -47,7 +50,12 @@
                 <div class="notification" v-if="showNotification">
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img class="navbar-item img-btn" @click="showProfile = !showProfile" src="../../../../assets/icons/profile.svg" alt="profile icon" />
+                  <img 
+                      class="navbar-item img-btn" 
+                       v-click-outside="onClickOutsideProfile"
+                      @click="showProfile = !showProfile" 
+                      src="../../../../assets/icons/profile.svg" 
+                      alt="profile icon" />
                   <div class="profile" v-if="showProfile">
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
@@ -233,6 +241,12 @@ export default {
     ...mapActions({
       loggedInToggle: "user/loginToogle",
     }),
+    onClickOutsideNotif () {
+        this.showNotification = false;
+    },
+    onClickOutsideProfile () {
+        this.showProfile = false;
+    },
     handleScroll() {
       if (!this.isMobile) {
         if (window.top.scrollY > 100) {
