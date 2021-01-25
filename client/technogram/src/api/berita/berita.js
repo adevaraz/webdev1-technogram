@@ -102,6 +102,27 @@ const recentBerita = async ( perPage , key , page ) => {
     }
 }
 
+const getAllBerita = async () => {
+    try {
+        const getUrl = BERITA_URL + '/all-news';
+        const result = await axios.get(getUrl, {timeout:TIMEOUT});
+        let news = result.data;
+        let arrResult = [];
+        news.data.forEach((newsItem) => {
+            if(newsItem.waktu_publikasi != null) {
+                arrResult.push({
+                    id: newsItem.id_berita,
+                    judul: newsItem.judul.toLowerCase().split(" ").join("-")
+                });
+            }
+        });
+        console.log(arrResult);
+        return arrResult;
+    } catch(err) {
+        return ErrorHandler.errorHandler(err);
+    }
+};
+
 const popularBerita = async ( perPage , key , page ) => {
     try{
         const recentURL = BERITA_URL + '/most-liked'
@@ -195,5 +216,6 @@ export default{
     popularBerita,
     getByCat,
     savedBeritaList,
-    getUserNotificatedNews
+    getUserNotificatedNews,
+    getAllBerita
 };
