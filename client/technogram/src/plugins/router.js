@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import routes from '../routes.js';
+import { routes } from '../routes.js';
 import NProgress from 'nprogress';
 
 NProgress.configure({ showSpinner: false });
