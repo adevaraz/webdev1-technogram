@@ -1,4 +1,6 @@
-export default [
+import berita from "../src/api/berita/berita";
+
+export const routes = [
     {
         path : '/', 
         component: () => import("./components/user/UserMain.vue"),
@@ -49,8 +51,13 @@ export default [
         },
         {
             path : '/berita/:id/:judul',
+            meta : {
+                sitemap : {
+                    slugs : async () => await berita.getAllBerita(),
+                }
+            },
             component : () => import("./components/user/read-berita/ReadBerita"),
-            name : 'read-berita'
+            name : 'read-berita',
         },
         {
             path : '/notifcation',
@@ -74,7 +81,8 @@ export default [
     },
 
     { 
-        path : '/admin', 
+        path : '/admin',
+        meta: { sitemap: { ignoreRoute: true } }, 
         component : () => import("./components/admin/Admin.vue"),
         children: [
         {
@@ -115,6 +123,7 @@ export default [
     ]},
     { 
         path : '/admin/signin',
+        meta: { sitemap: { ignoreRoute: true } },
         name : 'admin-signin',
         component : () => import("./components/admin/log-in/LoginAdmin.vue")
     },
