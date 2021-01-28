@@ -7,7 +7,8 @@ import 'nprogress/nprogress.css'
 import VirtualList from 'vue-virtual-scroll-list'
 import VueAnalytics from 'vue-analytics';
 import VueMeta from 'vue-meta'
- 
+import './registerServiceWorker'
+
 Vue.use(VueMeta, {
   // optional pluginOptions
   refreshOnceOnNavigation: true

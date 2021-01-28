@@ -1,5 +1,4 @@
 require = require('esm')(module);
-// const { list } = require('./src/plugins/router');
 const { routes } = require('./src/routes'); 
 
 module.exports = {
