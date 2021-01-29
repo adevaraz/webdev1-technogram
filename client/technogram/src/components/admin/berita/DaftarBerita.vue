@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import daftarBerita from "../../../api/admin/daftarberita";
+import daftarBerita from "../../../repository/interactor/admin/daftarberita";
 import { store } from "../../../store/index";
 export default {
   data() {

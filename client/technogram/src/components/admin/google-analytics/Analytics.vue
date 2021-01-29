@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Auth from "../../../api/admin/auth";
+import Auth from "../../../repository/interactor/admin/auth";
 export default {
     data: () => ({
         isLoading: false,

@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import Auth from "../../../api/pembaca/auth";
+import Auth from "../../../repository/interactor/pembaca/auth";
 // import NavDrawer from "../ui/navigation/NavDrawer.vue";
 import { mapGetters, mapActions } from "vuex";
 // import { store } from "../../../store/index";

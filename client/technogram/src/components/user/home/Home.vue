@@ -44,11 +44,11 @@
 </template>
 
 <script>
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const RecentVirtualScroll = () => import("./RecentVirtualScroll.vue");
 const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
 const DekstopHomeHeader = () => import("./DekstopHomeHeader");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 export default {
   metaInfo: {
     title: "Beranda",

@@ -1,4 +1,4 @@
-import Admin from '../../api/admin/auth'
+import Admin from '../../repository/interactor/admin/auth'
 import StatusType from '../StatusTypeConst'
 const AdminModule = {
     namespaced: true,

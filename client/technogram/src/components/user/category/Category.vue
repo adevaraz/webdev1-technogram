@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import categoryApi from "../../../api/kategori/daftarKategori"
-import { BASE_URL } from "../../../api/const";
+import categoryApi from "../../../repository/interactor/kategori/daftarKategori"
+import { BASE_URL } from "../../../repository/interactor/const";
 
 export default {
   metaInfo: {

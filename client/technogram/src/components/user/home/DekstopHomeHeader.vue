@@ -50,7 +50,7 @@
 
 <script>
 
-import categoryApi from "../../../api/kategori/daftarKategori";
+import categoryApi from "../../../repository/interactor/kategori/daftarKategori";
 
 const BeritaCategorySection = () => import("./BeritaCategorySection.vue");
 const DescriptiveBerita = () => import("../berita/DescriptiveBerita.vue");

@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import daftarPembaca from "../../../api/admin/daftarPembaca";
+import daftarPembaca from "../../../repository/interactor/admin/daftarPembaca";
 import { store } from "../../../store/index";
 export default {
   data() {
