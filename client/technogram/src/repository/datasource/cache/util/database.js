@@ -1,5 +1,5 @@
 import {openDB} from 'idb/with-async-ittr'
-import {BERITA_STORE_NAME , CURRENT_VERSION , DATABASE_NAME} from "./databaseConst";
+import {BERITA_STORE_NAME, CURRENT_VERSION, DATABASE_NAME, KATEGORI_STORE_NAME} from "./databaseConst";
 
 // eslint-disable-next-line no-unused-vars
 export const initDB = () => {
@@ -9,9 +9,16 @@ export const initDB = () => {
     return openDB(DATABASE_NAME , CURRENT_VERSION , {
 
         upgrade(database) {
-            database.createObjectStore(BERITA_STORE_NAME ,  {
+            const store =database.createObjectStore(BERITA_STORE_NAME ,  {
                 keyPath : 'id_berita',
-                autoIncrement : true
+                autoIncrement : false
+            })
+            store.createIndex("timestamp" , 'timestamp' , {unique : false})
+            store.createIndex("jumlah_likes" , 'jumlah_likes' , {unique : false})
+
+            database.createObjectStore(KATEGORI_STORE_NAME , {
+                keyPath : 'id_kategori',
+                autoIncrement : false
             })
         }
     })

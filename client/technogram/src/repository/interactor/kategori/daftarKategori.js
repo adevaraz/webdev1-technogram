@@ -1,6 +1,13 @@
 import kategoriNetworkSource from '../../datasource/api/kategori/daftarKategori'
+import kategoriCacheSource from "../../datasource/cache/kategori"
+import SaveGetter from "../SaveGetter";
 const retrieveAll = async() => {
-    return kategoriNetworkSource.retrieveAll()
+    return SaveGetter(
+        kategoriNetworkSource.retrieveAll,
+        kategoriCacheSource.getAllKategori,
+        kategoriCacheSource.insertBunchOfKategori,
+        "Sukses mendapat semua kateogri"
+    )
 
 }
 const addKategori = async(data, token) => {
