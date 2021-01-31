@@ -93,8 +93,8 @@ export default {
       },
     },
     onBeritaSelected : {
-            type : Function,
-        },
+      type : Function,
+    },
   },
   computed: {
     onHoverClass() {
