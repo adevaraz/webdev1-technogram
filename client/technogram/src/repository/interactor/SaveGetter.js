@@ -1,5 +1,9 @@
 export default async (netwrokGetCall , cacheGetCall , cacheSaveCall , messageIfDataFromCache) => {
-    const isIndexeDBExist =  true
+    //check whether the browser supports indexeddb or not 
+    let isIndexeDBExist =  true;
+    if(!indexedDB) {
+        isIndexeDBExist = false;
+    }
     //Doing network call
     const networkResult = await netwrokGetCall()
 
