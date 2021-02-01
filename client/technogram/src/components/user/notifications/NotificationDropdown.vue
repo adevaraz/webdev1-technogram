@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const SmallBerita = () => import("../berita/SmallBerita.vue");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
 export default {
   components: {

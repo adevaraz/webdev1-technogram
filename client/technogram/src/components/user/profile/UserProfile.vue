@@ -44,8 +44,8 @@
 
 <script>
 const UserProfileItem = () => import("./UserProfileItem.vue");
-import beritaApi from "../../../api/berita/berita";
-import { BASE_URL } from "../../../api/const";
+import beritaApi from "../../../repository/interactor/berita/berita";
+import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
 const NEWS_PERCALL = 5;
 

@@ -118,7 +118,7 @@ const ProfileDropDown = () => import("../../profile/ProfileDropDown.vue");
 const NavDrawer = () => import("./NavDrawer.vue");
 const Search = () => import("../../Search/Search");
 
-import categoriesData from "../../../../api/kategori/daftarKategori"
+import categoriesData from "../../../../repository/interactor/kategori/daftarKategori"
 import { mapActions } from "vuex";
 
 import AuthUser from "./../../auth/AuthUser.vue";

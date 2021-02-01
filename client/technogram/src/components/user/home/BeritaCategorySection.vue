@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const InsideImageBerita = () => import("../berita/InsideImageBerita.vue");
 const TextOnlyBerita = () => import("../berita/TextOnlyBerita.vue");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 export default {
   components: { TextOnlyBerita, InsideImageBerita },
   created() {

@@ -132,8 +132,8 @@
 </template>
 
 <script>
-import { BASE_URL } from "../../../api/const";
-import berita from "../../../api/berita/berita";
+import { BASE_URL } from "../../../repository/interactor/const";
+import berita from "../../../repository/interactor/berita/berita";
 import { store } from "../../../store/index";
 export default {
   name: "edit-berita",

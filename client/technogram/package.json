@@ -14,10 +14,12 @@
     "core-js": "^3.6.5",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "idb": "^6.0.0",
     "js-cookie": "^2.2.1",
     "mini-toastr": "^0.8.1",
     "nprogress": "^0.2.0",
     "path": "^0.12.7",
+    "register-service-worker": "^1.7.1",
     "sitemap-webpack-plugin": "^1.0.0",
     "socket.io-client": "^3.0.1",
     "vue": "^2.6.11",
@@ -36,17 +38,19 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "^4.5.11",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "vue-cli-plugin-sitemap": "~2.3.0",
+    "vue-cli-plugin-sitemap": "^2.3.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "browser": true
     },
     "extends": [
       "plugin:vue/essential",

@@ -41,7 +41,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import verifApi from "../../../api/pembaca/verification";
+import verifApi from "../../../repository/interactor/pembaca/verification";
 
 export default {
   metaInfo: {

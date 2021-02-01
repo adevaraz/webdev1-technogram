@@ -24,7 +24,7 @@ const NavBar = () => import("./ui/navigation/NavBar.vue");
 const NotificationToast = () => import("./ui/modals/NotificationToast.vue");
 import openSocket from "socket.io-client";
 import { mapGetters } from "vuex";
-import { BASE_URL } from "../../api/const.js";
+import { BASE_URL } from "../../repository/interactor/const.js";
 import { store } from "../../store/index";
 //import LoginUser from "./LoginUser.vue";
 

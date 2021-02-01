@@ -23,8 +23,8 @@
 
 <script>
 const RecentHomeItem = () => import("./RecentVirtualScrollItem");
-import beritaApi from "../../../api/berita/berita";
-import { BASE_URL } from "../../../api/const";
+import beritaApi from "../../../repository/interactor/berita/berita";
+import { BASE_URL } from "../../../repository/interactor/const";
 const NEWS_PERCALL = 10;
 export default {
   created() {

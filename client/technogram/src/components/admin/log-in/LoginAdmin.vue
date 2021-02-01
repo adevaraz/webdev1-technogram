@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import Auth from "../../../api/admin/auth";
+import Auth from "../../../repository/interactor/admin/auth";
 import { mapActions } from "vuex";
 export default {
   data() {

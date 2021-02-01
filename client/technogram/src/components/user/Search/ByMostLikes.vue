@@ -27,9 +27,9 @@
 
 <script>
 //const PRIVIEW_MAX_WORDS = 70
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const MostLikesItem = () => import("./SearchResultItem");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 const NEWS_PERCALL = 5;
 export default {
   created() {

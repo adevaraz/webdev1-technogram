@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import Auth from "../../../api/pembaca/auth";
+import Auth from "../../../repository/interactor/pembaca/auth";
 import { mapActions } from "vuex";
 
 export default {

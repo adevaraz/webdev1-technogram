@@ -36,7 +36,7 @@
 
 <script>
 import { store } from "../../../store/index";
-import personalize from "../../../api/personalization/personalization.js";
+import personalize from "../../../repository/interactor/personalization/personalization.js";
 export default {
   metaInfo: {
     title: "Personalisasi",

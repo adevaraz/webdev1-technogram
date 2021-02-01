@@ -44,11 +44,11 @@
 </template>
 
 <script>
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const RecentVirtualScroll = () => import("./RecentVirtualScroll.vue");
 const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
 const DekstopHomeHeader = () => import("./DekstopHomeHeader");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 export default {
   metaInfo: {
     title: "Beranda",
@@ -107,7 +107,17 @@ export default {
 
     onBeritaSelected(id, judul) {
       const judul_berita = judul.toLowerCase().split(' ').join('-');
-      window.open(`/berita/${id}/${judul_berita}`, "_blank"); 
+      if(this.isMobile) {
+        this.$router
+          .push({
+            path: `/berita/${id}/${judul_berita}`
+          })
+          .catch((err) => {
+          err;
+        });
+      } else {
+        window.open(`/berita/${id}/${judul_berita}`, "_blank");
+      }
     },
   },
 

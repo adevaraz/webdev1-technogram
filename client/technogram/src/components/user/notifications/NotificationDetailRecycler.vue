@@ -15,8 +15,8 @@
 
 <script>
 const NotificationItem = () => import("./NotificationItem.vue");
-import beritaApi from "../../../api/berita/berita";
-import { BASE_URL } from "../../../api/const";
+import beritaApi from "../../../repository/interactor/berita/berita";
+import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
 const NEWS_PERCALL = 10;
 export default {
