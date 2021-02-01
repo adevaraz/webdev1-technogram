@@ -1,4 +1,4 @@
-import User from "../../api/pembaca/auth";
+import User from "../../repository/interactor/pembaca/auth";
 import StatusType from "../StatusTypeConst";
 
 const UserModule = {

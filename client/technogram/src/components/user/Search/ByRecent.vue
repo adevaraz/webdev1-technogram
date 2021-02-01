@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import beritaApi from "../../../api/berita/berita";
+import beritaApi from "../../../repository/interactor/berita/berita";
 const RecentItem = () => import("./SearchResultItem");
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 const NEWS_PERCALL = 5;
 export default {
   created() {

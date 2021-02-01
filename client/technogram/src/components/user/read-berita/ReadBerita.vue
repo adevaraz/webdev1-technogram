@@ -192,13 +192,13 @@
 </template>
 
 <script>
-import { BASE_URL } from "../../../api/const";
+import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
 import { mapGetters } from "vuex";
 
-import berita from "../../../api/berita/berita";
-import pembacaAct from "../../../api/pembaca/actions";
-import kategori from "../../../api/kategori/daftarKategori";
+import berita from "../../../repository/interactor/berita/berita";
+import pembacaAct from "../../../repository/interactor/pembaca/actions";
+import kategori from "../../../repository/interactor/kategori/daftarKategori";
 const SmallBerita = () => import("../berita/SmallBerita.vue");
 const AuthUser = () => import("../auth/AuthUser");
 const Share = () => import("./Share");

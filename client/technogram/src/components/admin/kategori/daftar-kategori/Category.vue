@@ -113,8 +113,8 @@
 </template>
 
 <script>
-import { BASE_URL } from "../../../../api/const";
-import categoriesData from "../../../../api/kategori/daftarKategori"
+import { BASE_URL } from "../../../../repository/interactor/const";
+import categoriesData from "../../../../repository/interactor/kategori/daftarKategori"
 import { store } from '../../../../store/index'
 export default {
   data: () => ({

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import {TIMEOUT, KATEGORI_URL, BERITA_URL, USER_URL, BASE_URL, ADMIN_ROLE , USER_ROLE} from '../const'
 import ErrorHandler from '../errorHandler'
-
 const getAllKategori = async () => {
     try {
         const kategoriUrl = KATEGORI_URL + "/get";
@@ -98,6 +97,7 @@ const recentBerita = async ( perPage , key , page ) => {
         });
         return result.data;
     }catch(err){
+        console.log(err)
         return ErrorHandler.errorHandler(err);
     }
 }

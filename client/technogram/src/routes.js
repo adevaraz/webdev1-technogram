@@ -1,4 +1,4 @@
-import berita from "../src/api/berita/berita";
+import berita from "./repository/datasource/api/berita/berita";
 
 export const routes = [
     {

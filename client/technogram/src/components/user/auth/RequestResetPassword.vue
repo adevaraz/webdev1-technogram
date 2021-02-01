@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import UserAuth from "../../../api/pembaca/auth";
+import UserAuth from "../../../repository/interactor/pembaca/auth";
 export default {
   data() {
     return {

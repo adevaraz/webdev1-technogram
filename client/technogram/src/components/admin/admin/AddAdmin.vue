@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import Admin from "../../../api/admin/admin"
+import Admin from "../../../repository/interactor/admin/admin"
 import { store } from "../../../store/index";
 export default {
   data() {
