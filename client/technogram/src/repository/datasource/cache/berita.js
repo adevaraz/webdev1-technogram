@@ -78,10 +78,20 @@ const popularBerita = async (_perPage, key, page) => {
 
 }
 
+const get = async (id) => {
+    try {
+        const db = await initDB();
+        return await db.get(BERITA_STORE_NAME, id);
+    } catch (_) {
+        _;
+    }
+}
+
 export default {
     insertBerita ,
     insertBunchOfBerita,
     getAllBerita,
     recentBerita,
-    mostLikedBerita: popularBerita
+    mostLikedBerita: popularBerita,
+    get
 }

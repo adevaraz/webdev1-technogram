@@ -28,7 +28,17 @@ const update = async (idBerita, data, token) => {
 };
 
 const get = async (id) => {
-    return await beritaNetworkSource.get(id)
+    // return await beritaNetworkSource.get(id)
+    return await SaveGetter(
+        async () => {
+            return await beritaNetworkSource.get(id);
+        },
+        async () => {
+            return await beritaCacheSource.get(id);
+        },
+        beritaCacheSource.insertBerita,
+        "Success get one berita from cache"
+    )
 };
 
 const incrementViewer = async (id) => {
