@@ -2,9 +2,12 @@ import {initDB} from './util/database'
 import {BERITA_STORE_NAME} from './util/databaseConst'
 
 const insertBerita = async (newBerita) => {
-    const db = await initDB();
-    await db.put(BERITA_STORE_NAME , newBerita);
-
+    try{
+        const db = await initDB();
+        await db.put(BERITA_STORE_NAME , newBerita);
+    }catch (_){
+        console.log(_)
+    }
 }
 
 const insertBunchOfBerita = async (newBeritas) => {
@@ -81,9 +84,9 @@ const popularBerita = async (_perPage, key, page) => {
 const get = async (id) => {
     try {
         const db = await initDB();
-        return await db.get(BERITA_STORE_NAME, id);
+        return await db.get(BERITA_STORE_NAME , IDBKeyRange.only(parseInt(id)));
     } catch (_) {
-        _;
+        console.log(_);
     }
 }
 
