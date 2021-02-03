@@ -201,6 +201,7 @@ col-12 {
 }
 .worksans-font {
   font-family: "Work Sans", sans-serif;
+  font-display: swap;
 }
 .content {
   padding: 5rem;

@@ -211,7 +211,6 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 
 col-12 {
   padding-top: 0;

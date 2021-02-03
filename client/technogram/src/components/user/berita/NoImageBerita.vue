@@ -13,12 +13,12 @@
         <v-row class="fill-height">
           <v-col cols="12" class="pa-0 ma-0">
             <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-category text-capitalize">
+              <h2 class="news-category text-capitalize">
                 {{ berita.kategori_berita || "" }}
               </h2>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-title" :class="onHoverClass">
+              <h2 class="news-title" :class="onHoverClass">
                 {{ berita.judul || "" }}
               </h2>
             </v-col>
@@ -86,12 +86,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-
-/* .playfair-font {
-  font-family: "Playfair Display", serif;
-} */
 
 .worksans-font {
   font-family: "Work Sans", sans-serif;

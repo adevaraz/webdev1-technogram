@@ -24,7 +24,7 @@
             <v-row class="pa-1 pl-5 pt-0 pb-3">
               <v-col cols="8" class="cols-container">
                 <h2
-                  class="playfair-font news-tittle clickable-text text-uppercase"
+                  class="news-tittle clickable-text text-uppercase"
                 >
                   {{ berita.judul || "" }}
                 </h2>
@@ -122,11 +122,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-/* .playfair-font {
-  font-family: "Playfair Display", serif;
-} */
 
 .parent {
   width: 100%;

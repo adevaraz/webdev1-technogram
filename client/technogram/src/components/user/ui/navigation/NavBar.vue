@@ -438,6 +438,7 @@ nav .header .middle .logo img {
 
 nav .header .middle .toogle img {
   width: 6.5rem;
+  height: auto;
 }
 
 /* Right section */

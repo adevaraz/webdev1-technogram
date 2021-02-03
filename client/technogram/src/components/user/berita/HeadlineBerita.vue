@@ -12,7 +12,7 @@
           ></lazy-image>
         </v-col>
         <v-col cols="12" class="cols-container mt-5">
-          <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass + ' ' + titleOrientation">{{ berita.judul || "" }}</h2>
+          <h2 class="news-tittle clickable-text text-uppercase" :class="onHoverClass + ' ' + titleOrientation">{{ berita.judul || "" }}</h2>
         </v-col>
         <v-col cols="12">
           <v-row class="align-center" align-self="end">
@@ -107,11 +107,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
-/* .playfair-font {
-  font-family: "Playfair Display", serif;
-} */
 
 .worksans-font {
   font-family: "Work Sans", sans-serif;

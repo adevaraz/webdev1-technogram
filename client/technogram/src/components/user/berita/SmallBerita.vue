@@ -16,7 +16,7 @@
         <v-row class="justify-start">
           <v-col cols="11" class="pa-0 ma-0">
             <h2
-              class="playfair-font news-title clickable-text"
+              class="news-title clickable-text"
               :class="onHoverClass"
             >
               {{ berita.judul || "" }}

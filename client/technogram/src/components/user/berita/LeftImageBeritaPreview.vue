@@ -98,9 +98,11 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
 .playfair-font {
   font-family: "Playfair Display", serif;
 }
+
 .middle-border {
   background: rgb(112, 112, 112, 0.3);
   width: 55%;
