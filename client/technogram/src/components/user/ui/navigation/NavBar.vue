@@ -519,6 +519,7 @@ nav .header .right .btn {
 
   nav .header .middle .logo img {
     width: 6rem;
+    height: auto;
   }
 
   .burger {
