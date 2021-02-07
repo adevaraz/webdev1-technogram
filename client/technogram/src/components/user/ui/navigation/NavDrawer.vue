@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container :style="{background : currentTheme.background}">
     <v-row>
       <v-col cols="12">
         <v-text-field
@@ -8,6 +8,7 @@
           placeholder="Masukan kata kunci pencarian disini ...."
           prepend-inner-icon="mdi-magnify"
           v-on:keydown.enter="onSearch(key)"
+          :color="currentTheme.primary"
         ></v-text-field>
       </v-col>
       <v-col cols="12" v-if="isLoggedIn">
@@ -25,7 +26,7 @@
                   alt="profile icon"
                 />
               </v-col>
-              <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1">
+              <v-col cols="11" class="pa-0 ma-0 pl-5 pl-xs-1"  :style="{color : currentTheme.onBackground}">
                 <div class="username-text">{{ username }}</div>
                 <div class="email-text">{{ email }}</div>
               </v-col>
@@ -37,11 +38,23 @@
               small
               class="worksans-font text-none"
               @click="$router.push({ name: 'profile' })"
+              :style="{color : currentTheme.onBackground}"
               >Berita Tersimpan</v-btn
             >
-            <v-btn text small class="worksans-font text-none" @click="signOut()"
+            <v-btn text small class="worksans-font text-none" @click="signOut()"  :style="{color : currentTheme.onBackground}"
               >Keluar</v-btn
             >
+
+            <v-switch
+              v-model="localIsDark"
+              class="px-4"
+              inset
+              :color="currentTheme.toggleColor"
+            >
+              <template v-slot:label>
+                <span :style="{color : currentTheme.onBackground}">Dark Mode</span>
+              </template>
+            </v-switch>
           </v-col>
         </v-row>
       </v-col>
@@ -49,10 +62,9 @@
         <auth-user v-if="isLoginDialogShown" :onDialogClosed="()=>{isLoginDialogShown = false}"></auth-user>
           <v-btn
             class="login-btn"
-            color="#E52B38"
+            :color="currentTheme.primary"
             small
             @click="isLoginDialogShown = !isLoginDialogShown"
-          
             >Masuk</v-btn
           >
       </v-col>
@@ -60,7 +72,7 @@
         <div class="border-btm mt-1"></div>
       </v-col>
       <v-col v-for="(menu, index) in menus" cols="6" :key="menu.id">
-        <v-btn text small :class="menuClass(index)" @click="onClicked(index)">{{
+        <v-btn text small :class="menuClass(index)" @click="onClicked(index)" :style="{color : currentTheme.onBackground}">{{
           menu.name
         }}</v-btn>
       </v-col>
@@ -98,12 +110,14 @@ export default {
       username: "",
       email: "",
       isLoginDialogShown : false,
+      localIsDark: false
     };
   },
 
   methods: {
     ...mapActions({
       loggedInToggle: "user/loginToogle",
+      toogleTheme : "theme/toogleDark"
     }),
     menuClass(index) {
       const basicClass =
@@ -136,6 +150,8 @@ export default {
     ...mapGetters({
       getUsername: "user/getUsername",
       getEmail: "user/getUserEmail",
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
     }),
   },
   watch: {
@@ -145,10 +161,15 @@ export default {
     getEmail(value) {
       this.email = value;
     },
+    localIsDark(value){
+      if(value === this.isDark) return;
+      this.toogleTheme()
+    }
   },
 
   mounted() {
     this.getUserData();
+    this.localIsDark = this.isDark;
   },
 };
 </script>
