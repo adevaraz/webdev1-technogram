@@ -1,20 +1,21 @@
 <template v-slot:activator="{ on, attrs }">
     
-  <div :class="navbarClass">
+  <div :class="navbarClass" :style="{background : currentTheme.backgroundVariant}">
     <nav>
       <div class="header">
         <div class="left">
           <div
             ref="greetingText"
             class="greeting-text font-weight-bold"
+            :style="{color : currentTheme.onBackgroundVariant}"
             v-if="!isMobile"
           >
             {{ getGreetings }}
           </div>
           <div @click="slideDrawer" ref="burger" class="burger" v-else>
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
+            <div class="line1" :style="{background : currentTheme.onBackgroundVariant}"></div>
+            <div class="line2" :style="{background : currentTheme.onBackgroundVariant}"></div>
+            <div class="line3" :style="{background : currentTheme.onBackgroundVariant}"></div>
           </div>
         </div>
         
@@ -88,6 +89,7 @@
           text
           small
           class="text-capitalize"
+          :style="{color : currentTheme.onBackgroundVariant}"
           :class="menuClass(index)"
           v-for="(menu, index) in menus"
           :key="menu.routerName"
@@ -98,7 +100,7 @@
       </div>
     </nav>
     <transition :name="transitionName">
-      <div class="drawer" v-if="shouldShowDrawer">
+      <div class="drawer" v-if="shouldShowDrawer" :style="{background : currentTheme.background}">
         <nav-drawer
           :onSearch="onSearch"
           :menus="menus"
@@ -120,6 +122,7 @@ const Search = () => import("../../Search/Search");
 
 import categoriesData from "../../../../repository/interactor/kategori/daftarKategori"
 import { mapActions } from "vuex";
+import {mapGetters} from "vuex"
 
 import AuthUser from "./../../auth/AuthUser.vue";
 
@@ -207,6 +210,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     getGreetings() {
       const MORNING = this.currentTime > 0 && this.currentTime < 11;
       const NOON = this.currentTime > 11 && this.currentTime < 14;

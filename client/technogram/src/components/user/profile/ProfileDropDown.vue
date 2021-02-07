@@ -10,10 +10,16 @@
     <v-list dense nav>
       <v-list-item-content>
         <v-list-item-title
-          class="profile-item"
-          @click="$router.push({ name: 'profile' })"
+            class="profile-item"
+            @click="$router.push({ name: 'profile' })"
         >Berita Tersimpan</v-list-item-title>
-
+        <v-list-item-content>
+          <v-switch
+              v-model="localIsDark"
+              class="profile-item"
+              label="Ubah Mode Warna"
+              inset/>
+        </v-list-item-content>
         <v-list-item-content>
           <v-list-item-title class="profile-item" @click="signOut()">Keluar</v-list-item-title>
         </v-list-item-content>
@@ -23,12 +29,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { store } from "../../../store/index";
+import {mapGetters} from "vuex";
+import {store} from "../../../store/index";
+import {mapActions} from "vuex";
 
 export default {
   created() {
     this.getUserData();
+    this.localIsDark = this.isDark
   },
 
   data: () => ({
@@ -36,19 +44,23 @@ export default {
     userEmail: "",
     isLoading: false,
     childMessage: false,
+    localIsDark :  false,
     items: [
-      { title: "Saved News", route: "profile" },
-      { title: "Sign Out", route: "log-out" },
+      {title: "Saved News", route: "profile"},
+      {title: "Sign Out", route: "log-out"},
     ],
     error: [
       {
         message: "",
         isError: false,
       },
-   ],
-}),
+    ],
+  }),
 
   methods: {
+    ...mapActions({
+      toogleTheme : "theme/toogleDark"
+    }),
     getUserData() {
       this.username = store.getters["user/getUsername"];
       this.userEmail = store.getters["user/getUserEmail"];
@@ -74,25 +86,30 @@ export default {
       }
     }
   },
-    computed: {
-      ...mapGetters({
-        getUsername: "user/getUsername",
-        getEmail: "user/getUserEmail",
-      }),
+  computed: {
+    ...mapGetters({
+      getUsername: "user/getUsername",
+      getEmail: "user/getUserEmail",
+      isDark : "theme/getIsDark"
+    }),
+  },
+  watch: {
+    getUsername(value) {
+      this.username = value;
     },
-    watch: {
-      getUsername(value) {
-        this.username = value;
-      },
-      getEmail(value) {
-        this.email = value;
-      },
+    getEmail(value) {
+      this.email = value;
     },
+    localIsDark(value){
+      if(value === this.isDark) return;
+      this.toogleTheme()
+    }
+  },
 
-    mounted() {
-      this.getUserData();
-    },
-  
+  mounted() {
+    this.getUserData();
+  },
+
 };
 </script>
 
@@ -100,13 +117,16 @@ export default {
 .notification-header {
   border-bottom: 1px solid #d9d9d9;
 }
+
 .profile-item {
   cursor: pointer;
 }
+
 .more {
   cursor: pointer;
   border-top: 1px solid #eeeeee;
 }
+
 .more:hover {
   background: rgb(214, 214, 214);
 }

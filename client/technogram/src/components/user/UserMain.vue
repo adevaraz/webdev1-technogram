@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="{background : currentTheme.background }">
     <transition name="slide" mode="out-in">
       <notification-toast
         class="notification-toast"
@@ -25,6 +25,7 @@ const NotificationToast = () => import("./ui/modals/NotificationToast.vue");
 import openSocket from "socket.io-client";
 import { mapGetters } from "vuex";
 import { BASE_URL } from "../../repository/interactor/const.js";
+import {mapActions} from "vuex";
 import { store } from "../../store/index";
 //import LoginUser from "./LoginUser.vue";
 
@@ -32,6 +33,7 @@ const NOTIFICATION_TIME = 4000;
 
 export default {
   created() {
+    this.synchronizeTheme()
     if (this.isLoggedIn && this.mostLikedCategory !== "") {
       this.initSocket();
     }
@@ -67,6 +69,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      synchronizeTheme : 'theme/sychronizeCurrentTheme'
+    }),
     resetNotificatoin() {
       this.notification.message = "";
       this.notification.shouldShowNotification = false;
@@ -122,6 +127,7 @@ export default {
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn",
       mostLikedCategory: "user/getMostLikedKategori",
+      currentTheme : "theme/getCurrentColor"
     }),
     observableShouldShowNotification() {
       return this.notification.shouldShowNotification;

@@ -31,7 +31,7 @@
       <v-col class="pa-0 mt-1" cols="8" >
         <v-row class="justify ml-4">
           <v-col cols="9" class="pa-0 ma-0">
-            <h1 class="news-title">
+            <h1 class="news-title" :style="{color : currentTheme.onBackground}">
               {{berita.judul || ''}}
             </h1>
           </v-col>
@@ -42,7 +42,7 @@
           </v-col>
           <v-col cols="9" class=" ma-0 mt-3">
             <v-row class="justify">
-              <v-col cols="6" class="pa-0 ma-0">
+              <v-col cols="6" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
                 <h3 class="work-sans news-writer text-start">oleh {{berita.jurnalis || ''}}</h3>
               </v-col>
               <v-col cols="6" class="pa-0 mx-auto">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 export default {
   props : {
     berita : {
@@ -72,6 +73,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     backgroundImg() {
       return `background-image: url('${this.berita.url_gambar}')`;
     },

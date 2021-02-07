@@ -1,10 +1,11 @@
 <template>
-  <v-app>
+  <v-app :style="{background : currentTheme.background}">
     <router-view></router-view>
   </v-app>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
@@ -24,6 +25,11 @@ export default {
       lang: "id",
     },
   },
+  computed : {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    })
+  }
 };
 </script>
 
