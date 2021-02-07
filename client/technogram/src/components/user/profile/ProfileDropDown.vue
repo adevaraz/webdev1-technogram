@@ -1,27 +1,31 @@
 <template>
   <v-container>
-    <v-list-item>
+    <v-list-item :style="{background : currentTheme.backgroundVariant}">
       <v-list-item-content>
-        <v-list-item-title>{{ username }}</v-list-item-title>
-        <v-list-item-subtitle>{{ userEmail }}</v-list-item-subtitle>
+        <v-list-item-title :style="{color : currentTheme.onBackgroundVariant}">{{ username }}</v-list-item-title>
+        <v-list-item-subtitle :style="{color : currentTheme.onBackgroundVariant}">{{ userEmail }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
-    <v-list dense nav>
+    <v-list dense nav :style="{background : currentTheme.backgroundVariant}">
       <v-list-item-content>
         <v-list-item-title
             class="profile-item"
             @click="$router.push({ name: 'profile' })"
+            :style="{color : currentTheme.onBackgroundVariant}"
         >Berita Tersimpan</v-list-item-title>
-        <v-list-item-content>
           <v-switch
               v-model="localIsDark"
-              class="profile-item"
-              label="Ubah Mode Warna"
-              inset/>
-        </v-list-item-content>
+              class="profile-item px-1"
+              inset
+              :color="currentTheme.toggleColor"
+          >
+            <template v-slot:label>
+              <span :style="{color : currentTheme.onBackgroundVariant}">Dark Mode</span>
+            </template>
+          </v-switch>
         <v-list-item-content>
-          <v-list-item-title class="profile-item" @click="signOut()">Keluar</v-list-item-title>
+          <v-list-item-title class="profile-item" @click="signOut()" :style="{color : currentTheme.onBackgroundVariant}">Keluar</v-list-item-title>
         </v-list-item-content>
       </v-list-item-content>
     </v-list>
@@ -90,7 +94,8 @@ export default {
     ...mapGetters({
       getUsername: "user/getUsername",
       getEmail: "user/getUserEmail",
-      isDark : "theme/getIsDark"
+      isDark : "theme/getIsDark",
+      currentTheme : "theme/getCurrentColor"
     }),
   },
   watch: {

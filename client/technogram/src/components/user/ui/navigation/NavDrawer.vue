@@ -44,6 +44,17 @@
             <v-btn text small class="worksans-font text-none" @click="signOut()"  :style="{color : currentTheme.onBackground}"
               >Keluar</v-btn
             >
+
+            <v-switch
+              v-model="localIsDark"
+              class="px-4"
+              inset
+              :color="currentTheme.toggleColor"
+            >
+              <template v-slot:label>
+                <span :style="{color : currentTheme.onBackground}">Dark Mode</span>
+              </template>
+            </v-switch>
           </v-col>
         </v-row>
       </v-col>
@@ -99,12 +110,14 @@ export default {
       username: "",
       email: "",
       isLoginDialogShown : false,
+      localIsDark: false
     };
   },
 
   methods: {
     ...mapActions({
       loggedInToggle: "user/loginToogle",
+      toogleTheme : "theme/toogleDark"
     }),
     menuClass(index) {
       const basicClass =
@@ -137,7 +150,8 @@ export default {
     ...mapGetters({
       getUsername: "user/getUsername",
       getEmail: "user/getUserEmail",
-      currentTheme : "theme/getCurrentColor"
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
     }),
   },
   watch: {
@@ -147,10 +161,15 @@ export default {
     getEmail(value) {
       this.email = value;
     },
+    localIsDark(value){
+      if(value === this.isDark) return;
+      this.toogleTheme()
+    }
   },
 
   mounted() {
     this.getUserData();
+    this.localIsDark = this.isDark;
   },
 };
 </script>

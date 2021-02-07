@@ -11,7 +11,8 @@ const Light = {
     onBackground : "#000000",
     onSurface : "#000000",
     onError : "#FFFFFF",
-    onBackgroundVariant : "#000000"
+    onBackgroundVariant : "#000000",
+    toggleColor : "#FFFFFF"
 }
 
 const Dark = {
@@ -25,7 +26,8 @@ const Dark = {
     onSurface : "#FFFFFF",
     onError : "#FFFFFF",
     backgroundVariant : "#3C3D40",
-    onBackgroundVariant : "#FFFFFF"
+    onBackgroundVariant : "#FFFFFF",
+    toggleColor : "#525357"
 }
 
 const ThemeModule = {
