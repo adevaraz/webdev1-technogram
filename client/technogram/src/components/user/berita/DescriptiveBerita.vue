@@ -23,7 +23,11 @@
         </h6>
       </v-col>
       <v-col cols="12" class="pa-0 mt-1">
-        <h5 class="text-capitalize title-text" :class="onHoverClass">
+        <h5
+          class="text-capitalize title-text" 
+          :class="onHoverClass"
+          :style="{color : currentTheme.onBackgroundVariant}"
+        >
           {{ berita.judul || "" }}
         </h5>
       </v-col>
@@ -38,6 +42,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: {
     LazyImage,
@@ -56,6 +61,9 @@ export default {
         },
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     date() {
       //Format : 'Friday, 09/10/2020 15:49'
       const fullDate = new Date(this.berita.waktu_publikasi);

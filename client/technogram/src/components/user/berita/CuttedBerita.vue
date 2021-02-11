@@ -37,12 +37,17 @@
         <h2
           class="playfair-font news-tittle clickable-text text-uppercase"
           :class="onHoverClass"
+          :style="{color : currentTheme.onBackgroundVariant}"
         >
           {{ berita.judul || "" }}
         </h2>
       </v-col>
       <v-col cols="8" class="pa-0 mt-3">
-        <h3 class="news-writer clickable-text" :class="onHoverClass">
+        <h3
+          class="news-writer clickable-text" 
+          :class="onHoverClass"
+          :style="{color : currentTheme.onBackgroundVariant}"
+        >
           oleh {{ berita.jurnalis || "" }}
         </h3>
       </v-col>
@@ -52,6 +57,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: {
     LazyImage,
@@ -97,6 +103,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     onHoverClass() {
       if (this.isOnHover) {
         return "hover";

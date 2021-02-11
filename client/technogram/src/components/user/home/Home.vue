@@ -25,6 +25,7 @@
           :class="
             isMobile ? 'playfair-font text-start' : 'playfair-font text-center'
           "
+          :style="{color : currentTheme.onBackgroundVariant}"
         >
           Berita Terbaru
         </h1>
@@ -49,6 +50,7 @@ const RecentVirtualScroll = () => import("./RecentVirtualScroll.vue");
 const MobileHomeHeader = () => import("./MobileHomeHeader.vue");
 const DekstopHomeHeader = () => import("./DekstopHomeHeader");
 import { BASE_URL } from "../../../repository/interactor/const";
+import {mapGetters} from "vuex"
 export default {
   metaInfo: {
     title: "Beranda",
@@ -122,6 +124,9 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
         return true;

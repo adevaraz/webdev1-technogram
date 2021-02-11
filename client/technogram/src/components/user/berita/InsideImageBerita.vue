@@ -25,6 +25,7 @@
               <v-col cols="8" class="cols-container">
                 <h2
                   class="playfair-font news-tittle clickable-text text-uppercase"
+                  :style="{color : currentTheme.onBackground}"
                 >
                   {{ berita.judul || "" }}
                 </h2>
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 const LazyImage = () => import("../ui/LazyImage.vue");
 export default {
   components: {
@@ -91,6 +93,9 @@ export default {
     onBeritaSelected: Function
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     onHoverClass() {
       if (this.isOnHover) {
         return "hover";

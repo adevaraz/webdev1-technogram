@@ -12,13 +12,22 @@
           ></lazy-image>
         </v-col>
         <v-col cols="12" class="cols-container mt-5">
-          <h2 class="playfair-font news-tittle clickable-text text-uppercase" :class="onHoverClass + ' ' + titleOrientation">{{ berita.judul || "" }}</h2>
+          <h2 
+            class="playfair-font news-tittle clickable-text text-uppercase" 
+            :class="onHoverClass + ' ' + titleOrientation"
+            :style="{color : currentTheme.onBackgroundVariant}"
+          >
+            {{ berita.judul || "" }}
+          </h2>
         </v-col>
         <v-col cols="12">
           <v-row class="align-center" align-self="end">
             <v-col cols="6" class="cols-container">
-              <p class="worksans-font news-writer clickable-text" :class="onHoverClass">
-                oleh {{ berita.jurnalis || "" }}
+              <p 
+                class="worksans-font news-writer clickable-text" 
+                :class="onHoverClass"
+                :style="{color : currentTheme.onBackgroundVariant}">
+                  oleh {{ berita.jurnalis || "" }}
               </p>
             </v-col>
             <v-col cols="6" class="cols-container pt-1">
@@ -33,6 +42,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: {
     LazyImage,
@@ -76,6 +86,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     onHoverClass(){
       if(this.isOnHover){
         return 'hover';

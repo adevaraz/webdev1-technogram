@@ -18,19 +18,31 @@
               </h2>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-title" :class="onHoverClass">
-                {{ berita.judul || "" }}
+              <h2 
+                class="playfair-font news-title" 
+                :class="onHoverClass"
+                :style="{color : currentTheme.onBackgroundVariant}">
+                  {{ berita.judul || "" }}
               </h2>
             </v-col>
           </v-col>
           <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
             <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-writer" :class="onHoverClass">
-                oleh {{ berita.jurnalis || "" }}
+              <h3
+                class="worksans-font news-writer" 
+                :class="onHoverClass"
+                :style="{color : currentTheme.onBackgroundVariant}">
+                  oleh {{ berita.jurnalis || "" }}
               </h3>
             </v-col>
             <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-time" :class="onHoverClass">{{ date }}</h3>
+              <h3
+                class="worksans-font news-time" 
+                :class="onHoverClass"
+                :style="{color : currentTheme.onBackgroundVariant}"
+              >
+                {{ date }}
+              </h3>
             </v-col>
           </v-col>
         </v-row>
@@ -41,6 +53,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: { LazyImage },
   props: {
@@ -65,6 +78,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     backgroundImg() {
       return `background-image: url('${this.berita.url_gambar}')`;
     },

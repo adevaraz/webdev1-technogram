@@ -12,6 +12,7 @@
             <h2
               class="playfair-font news-title clickable-text"
               :class="onHoverClass"
+              :style="{color : currentTheme.onBackground}"
             >
               {{ berita.judul || "" }}
             </h2>
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
 
@@ -124,6 +126,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     date() {
       return processDate(new Date(this.berita.waktu_publikasi), this.timeMode);
     },
