@@ -12,12 +12,13 @@
       v-else-if="isExist"
       :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
     >
-      <v-sheet :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
-        <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
-        <p class="worksans-font">{{ date }}</p>
+      <v-sheet :style="{background : currentTheme.background}" :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
+        <h1 class="text-capitalize playfair-font" >{{ judul }}</h1>
+        <p class="worksans-font" >{{ date }}</p>
 
         <!-- Information section -->
         <v-card
+        :style="{background : currentTheme.background}"
           :class="
             isMobile
               ? 'd-flex flex-wrap mb-3 max-width-50'
@@ -26,7 +27,7 @@
           flat
           tile
         >
-          <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
+          <h4 class="mr-auto" :text="currentTheme.onPrimary" >oleh {{ jurnalis }}</h4>
 
           <div :class="isMobile ? 'd-flex flex-row my-3' : 'd-flex flex-row'">
             <div id="like">
@@ -157,6 +158,7 @@
                 ? 'article responsive-img break-words'
                 : 'article responsive-img'
             "
+            
             v-html="artikel"
           ></div>
 
@@ -194,7 +196,7 @@
 <script>
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
-import { mapGetters } from "vuex";
+import { mapActions,mapGetters } from "vuex";
 
 import berita from "../../../repository/interactor/berita/berita";
 import pembacaAct from "../../../repository/interactor/pembaca/actions";
@@ -297,10 +299,15 @@ export default {
 
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn",
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
     }),
   },
 
   methods: {
+    ...mapActions({
+      toogleTheme : "theme/toogleDark"
+    }),
     resetData() {
       this.id = 0;
       this.judul = "";
