@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid :style="{background : currentTheme.backgroundVariant}">
     <virtual-list ref="virtual-scroller" class="list-infinite scroll-touch" :page-mode="true" :data-key="'id'" :data-sources="items" :data-component="itemComponent" v-on:tobottom="onScrollToBottom" :keeps="20">
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
@@ -18,6 +18,7 @@ const NotificationItem = () => import("./NotificationItem.vue");
 import beritaApi from "../../../repository/interactor/berita/berita";
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
+import { mapGetters } from "vuex";
 const NEWS_PERCALL = 10;
 export default {
   created() {
@@ -61,6 +62,11 @@ export default {
       });
     },
   },
+  computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+    }),
+  }
 };
 </script>
 
