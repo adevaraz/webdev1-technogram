@@ -5,7 +5,7 @@
         <v-row>
             <v-col>
                 <v-row>
-                    <h1>
+                    <h1 :style="{color : currentTheme.onBackground}">
                         Kategori Berita
                     </h1>
                 </v-row>
@@ -42,6 +42,7 @@
 <script>
 import categoryApi from "../../../repository/interactor/kategori/daftarKategori"
 import { BASE_URL } from "../../../repository/interactor/const";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   metaInfo: {
@@ -61,6 +62,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      toogleTheme : "theme/toogleDark"
+    }),
+    
     retrieveCategory(){
       this.isLoading = true;
       categoryApi.retrieveAll()
@@ -102,7 +107,19 @@ export default {
       }
       return false;
     },
+
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
+    })
   },
+
+  watch: {
+    localIsDark(value) {
+      if(value === this.isDark) return;
+      this.toogleTheme();
+    }
+  }
 };
 </script>
 
