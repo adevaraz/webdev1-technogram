@@ -48,7 +48,10 @@
                   src="../../../../assets/icons/bell.svg"
                   alt="notification bell icon"
                 />
-                <div class="notification" v-if="showNotification">
+                <div
+                  class="notification" v-if="showNotification"
+                  :style="{background : currentTheme.backgroundVariant}"
+                >
                   <notification-dropdown></notification-dropdown>
                 </div>
                   <img 
@@ -57,7 +60,10 @@
                       @click="showProfile = !showProfile" 
                       src="../../../../assets/icons/profile.svg" 
                       alt="profile icon" />
-                  <div class="profile" v-if="showProfile">
+                  <div
+                    class="profile" v-if="showProfile"
+                    :style="{background : currentTheme.backgroundVariant}"
+                  >
                     <profile-drop-down v-on:childToParent="onChildClick"></profile-drop-down>
                   </div>
               </div>
@@ -620,7 +626,6 @@ nav .header .right .btn {
 .profile {
   background: white;
   position: absolute;
-  height: 200px;
   width: 200px;
   padding: 1rem;
   right: 2%;
@@ -629,16 +634,6 @@ nav .header .right .btn {
 
 .login-btn{
   color:white;
-}
-
-.profile{
-  background: white;
-  position: absolute;
-  height:200px;
-  width: 200px;
-  padding:1rem;
-  right: 2%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.356);
 }
 
 .progress-bar {

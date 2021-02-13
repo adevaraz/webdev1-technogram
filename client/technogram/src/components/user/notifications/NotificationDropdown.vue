@@ -1,9 +1,17 @@
 <template>
-  <v-container>
+  <v-container :style="{background : currentTheme.backgroundVariant}">
     <v-row>
       <v-col cols="12">
-        <h3 class="notification-header">Notification</h3>
+        <h3 
+          :style="{ color: currentTheme.onBackground}"
+        >
+          Notification
+        </h3>
       </v-col>
+      <div
+        class="notification-border"
+      >
+      </div>
       <v-col cols="12" align-self="center" v-if="isLoading">
         <v-row class="justify-center">
           <v-progress-circular
@@ -30,8 +38,16 @@
           class="item"
         ></small-berita>
       </v-col>
+      <div
+        class="notification-border"
+      >
+      </div>
       <v-col cols="12" class="pa-1 text-center more" v-if="!isLoading">
-        <h3 @click="$router.push({ name: 'notification' })" v-if="isMoreExist">
+        <h3 
+          @click="$router.push({ name: 'notification' })"
+          v-if="isMoreExist"
+          :style="{ color: currentTheme.onBackground }"
+        >
           More
         </h3>
       </v-col>
@@ -44,6 +60,7 @@ import beritaApi from "../../../repository/interactor/berita/berita";
 const SmallBerita = () => import("../berita/SmallBerita.vue");
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
+import { mapGetters } from "vuex";
 export default {
   components: {
     SmallBerita,
@@ -92,12 +109,19 @@ export default {
       window.open(`/berita/${id}/${judul_berita}`, "_blank");
     },
   },
+  computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+    }),
+  }
 };
 </script>
 
 <style scoped>
-.notification-header {
-  border-bottom: 1px solid #d9d9d9;
+.notification-border {
+  background: #bab4b8b9;
+  width: 100%;
+  height: 2px;
 }
 
 .item {
@@ -105,10 +129,9 @@ export default {
 }
 .more {
   cursor: pointer;
-  border-top: 1px solid #eeeeee;
 }
 
 .more:hover {
-  background: rgb(214, 214, 214);
+  background: #bab4b8b9;
 }
 </style>

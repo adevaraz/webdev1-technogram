@@ -1,8 +1,13 @@
 <template>
-  <v-container>
+  <v-container :style="{background : currentTheme.background }">
     <v-row :class="isMobile ? 'content-mobile' : 'content'">
       <v-col md="12" offset-md="12" align="center">
-        <h1 class="playfair-font">Kategori mana yang suka Anda baca?</h1>
+        <h1 
+          class="playfair-font"
+          :style="{ color: currentTheme.onBackground }"
+        >
+          Kategori mana yang suka Anda baca?
+        </h1>
       </v-col>
 
       <v-btn-toggle
@@ -10,6 +15,7 @@
         v-model="toggleButton"
         multiple
         class="toggle"
+        :style="{background : currentTheme.background }"
       >
         <v-col class="column" md="6" offset-md="3">
           <v-btn
@@ -37,6 +43,7 @@
 <script>
 import { store } from "../../../store/index";
 import personalize from "../../../repository/interactor/personalization/personalization.js";
+import { mapGetters } from "vuex";
 export default {
   metaInfo: {
     title: "Personalisasi",
@@ -54,6 +61,9 @@ export default {
     isMobile() {
       return this.$vuetify.breakpoint.xs ? true : false;
     },
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+    }),
   },
   methods: {
     async AddPersonalize() {

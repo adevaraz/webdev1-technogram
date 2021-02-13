@@ -1,11 +1,11 @@
 <template>
-  <v-container fluid>
+  <v-container fluid :style="{background : currentTheme.backgroundVariant}">
     <virtual-list ref="virtual-scroller" class="list-infinite scroll-touch" :page-mode="true" :data-key="'id'" :data-sources="items" :data-component="itemComponent" v-on:tobottom="onScrollToBottom" :keeps="20">
       <div slot="footer">
         <div class="loader itemStillExist" v-if="isLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center" v-if="isEndOfList">
+        <div class="no-item text-center" v-if="isEndOfList" :style="{ color: currentTheme.onBackground }">
           <h3>Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
@@ -18,6 +18,7 @@ const NotificationItem = () => import("./NotificationItem.vue");
 import beritaApi from "../../../repository/interactor/berita/berita";
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
+import { mapGetters } from "vuex";
 const NEWS_PERCALL = 10;
 export default {
   created() {
@@ -61,6 +62,11 @@ export default {
       });
     },
   },
+  computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+    }),
+  }
 };
 </script>
 
@@ -71,7 +77,7 @@ export default {
 }
 
 .no-item {
-  border-top: 1px solid black;
+  border-top: 1px solid #bab4b8b9;
 }
 
 .list-infinite::-webkit-scrollbar {
