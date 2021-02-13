@@ -22,7 +22,7 @@
         <div class="content-inside-image">
           <slot name="content">
             <v-row>
-              <v-col cols="3" class="content px-4 py-1" align-self="end">
+              <v-col cols="3" class="content px-4 py-1" align-self="end" :style="{background : currentTheme.backgroundVariant}">
                 <h3
                   class="news-kategori clickable-text text-center"
                 >
