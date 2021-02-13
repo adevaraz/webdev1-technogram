@@ -40,6 +40,7 @@
 const ByRecent = () => import("./ByRecent");
 const ByMostLikes = () => import("./ByMostLikes");
 import {mapGetters} from "vuex"
+
 export default {
   metaInfo: {
     title: "Hasil Pencarian",

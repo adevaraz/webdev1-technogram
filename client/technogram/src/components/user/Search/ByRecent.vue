@@ -18,7 +18,7 @@
           ></v-progress-circular>
         </div>
         <div class="text-center" v-if="isEndOfList">
-          <h3>Tidak ada item lagi &#128512;</h3>
+          <h3 :style="{color : currentTheme.onBackgroundVariant}">Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
     </virtual-list>
@@ -29,11 +29,14 @@
 import beritaApi from "../../../repository/interactor/berita/berita";
 const RecentItem = () => import("./SearchResultItem");
 import { BASE_URL } from "../../../repository/interactor/const";
+import {mapGetters} from "vuex";
 const NEWS_PERCALL = 5;
+
 export default {
   created() {
     this.retrieveRecentBerita();
   },
+  
   data() {
     return {
       itemComponent: RecentItem,
@@ -46,6 +49,7 @@ export default {
       countLoading: 0,
     };
   },
+
   watch: {
     $route: function () {
       this.recentBerita = [];
@@ -53,6 +57,12 @@ export default {
       this.pageNum = 1;
       this.retrieveRecentBerita();
     },
+  },
+
+  computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor"
+    })
   },
 
   methods: {

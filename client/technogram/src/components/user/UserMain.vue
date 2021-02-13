@@ -33,6 +33,7 @@ const NOTIFICATION_TIME = 4000;
 
 export default {
   created() {
+    this.synchronizeTheme(this.getUsername);
     if (this.isLoggedIn && this.mostLikedCategory !== "") {
       this.initSocket();
     }

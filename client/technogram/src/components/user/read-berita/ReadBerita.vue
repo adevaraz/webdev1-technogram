@@ -33,10 +33,17 @@
             <div id="like">
               <div class="d-flex flex-row" v-if="isLoggedIn">
                 <img
-                  v-if="!isLiked"
+                  v-if="!isLiked && isDark"
                   v-on:click="likeBerita()"
                   class="act-item img-btn mr-1"
-                  src="../../../assets/icons/heart-empty.svg"
+                  src="../../../assets/icons/heart-empty-w.svg"
+                  alt="empty heart icon"
+                />
+                <img
+                  v-else-if="!isLiked && !isDark"
+                  v-on:click="likeBerita()"
+                  class="act-item img-btn mr-1"
+                  src="../../../assets/icons/heart-empty-g.svg"
                   alt="empty heart icon"
                 />
                 <img
@@ -61,8 +68,16 @@
                   "
                 ></auth-user>
                 <img
+                  v-if="isDark"
                   class="act-item img-btn mr-1"
-                  src="../../../assets/icons/heart-empty.svg"
+                  src="../../../assets/icons/heart-empty-w.svg"
+                  @click="isLoginDialogShown = !isLoginDialogShown"
+                  alt="empty heart icon"
+                />
+                <img
+                  v-else
+                  class="act-item img-btn mr-1"
+                  src="../../../assets/icons/heart-empty-g.svg"
                   @click="isLoginDialogShown = !isLoginDialogShown"
                   alt="empty heart icon"
                 />
@@ -75,9 +90,17 @@
 
             <div id="view" class="d-flex flex-row">
               <img
+                v-if="isDark"
                 class="act-item mr-1"
                 style="height: 13px"
-                src="../../../assets/icons/view.svg"
+                src="../../../assets/icons/view-w.svg"
+                alt="eye icon"
+              />
+              <img
+                v-else
+                class="act-item mr-1"
+                style="height: 13px"
+                src="../../../assets/icons/view-g.svg"
                 alt="eye icon"
               />
               <p class="text-caption text-left mr-3 worksans-font"
@@ -89,17 +112,31 @@
             <div id="save">
               <div class="d-flex flex-row" v-if="isLoggedIn">
                 <img
-                  v-if="!isSaved"
+                  v-if="!isSaved && isDark"
                   v-on:click="saveBerita()"
                   class="act-item img-btn"
-                  src="../../../assets/icons/unsaved-icon.svg"
+                  src="../../../assets/icons/unsaved-icon-w.svg"
                   alt="unbookmarked icon"
+                />
+                <img
+                  v-else-if="!isSaved && !isDark"
+                  v-on:click="saveBerita()"
+                  class="act-item img-btn"
+                  src="../../../assets/icons/unsaved-icon-g.svg"
+                  alt="unbookmarked icon"
+                />
+                <img
+                  v-else-if="isSaved && isDark"
+                  v-on:click="saveBerita()"
+                  class="act-item img-btn"
+                  src="../../../assets/icons/saved-icon-w.svg"
+                  alt="bookmarked icon"
                 />
                 <img
                   v-else
                   v-on:click="saveBerita()"
                   class="act-item img-btn"
-                  src="../../../assets/icons/saved-icon.svg"
+                  src="../../../assets/icons/saved-icon-g.svg"
                   alt="bookmarked icon"
                 />
               </div>
@@ -113,8 +150,16 @@
                   "
                 ></auth-user>
                 <img
+                  v-if="isDark"
                   class="act-item img-btn"
-                  src="../../../assets/icons/unsaved-icon.svg"
+                  src="../../../assets/icons/unsaved-icon-w.svg"
+                  @click="isLoginDialogShown = !isLoginDialogShown"
+                  alt="unbookmarked icon"
+                />
+                <img
+                  v-else
+                  class="act-item img-btn"
+                  src="../../../assets/icons/unsaved-icon-g.svg"
                   @click="isLoginDialogShown = !isLoginDialogShown"
                   alt="unbookmarked icon"
                 />
@@ -122,7 +167,7 @@
             </div>
 
             <div id="share">
-              <div class="d-flex flex-row ml-3">
+              <div class="d-flex flex-row ml-3" :style="{color : currentTheme.backgroundVariant}">
                 <share
                   v-if="share"
                   :onDialogClosed="
@@ -133,9 +178,17 @@
                   :judul_berita="judul"
                 ></share>
                 <img
+                  v-if="isDark"
                   class="act-item img-btn"
                   @click="share = !share"
-                  src="../../../assets/icons/share.svg"
+                  src="../../../assets/icons/share-w.svg"
+                  alt="share icon"
+                />
+                <img
+                  v-else
+                  class="act-item img-btn"
+                  @click="share = !share"
+                  src="../../../assets/icons/share-g.svg"
                   alt="share icon"
                 />
               </div>
@@ -378,7 +431,6 @@ export default {
         this.replaceSpan()
       
       
-        console.log(this.artikel)
       } catch (error) {
         console.error(error);
       }

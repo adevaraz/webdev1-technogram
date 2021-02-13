@@ -60,7 +60,7 @@ export const routes = [
             name : 'read-berita',
         },
         {
-            path : '/notifcation',
+            path : '/notification',
             component : () => import("./components/user/notifications/NotificationDetail.vue") ,
             name : 'notification'
         },

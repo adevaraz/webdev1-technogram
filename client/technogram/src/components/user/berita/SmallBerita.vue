@@ -122,9 +122,7 @@ export default {
     timeMode: {
       type: String,
       default: "",
-    },
-
-    onBeritaSelected: Function
+    }
   },
   data() {
     return {
@@ -137,6 +135,20 @@ export default {
     },
     onLeave() {
       this.isOnHover = false;
+    },
+    onBeritaSelected(id, judul) {
+      const judul_berita = judul.toLowerCase().split(' ').join('-');
+      if(this.isMobile) {
+        this.$router
+          .push({
+            path: `/berita/${id}/${judul_berita}`
+          })
+          .catch((err) => {
+          err;
+        });
+      } else {
+        window.open(`/berita/${id}/${judul_berita}`, "_blank");
+      }
     }
   },
   computed: {
@@ -152,10 +164,14 @@ export default {
       }
       return "";
     },
-    ...mapGetters({
-      currentTheme: "theme/getCurrentColor",
-    }),
-  },
+    
+    isMobile() {
+      if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
+        return true;
+      }
+      return false;
+    }
+  }
 };
 </script>
 

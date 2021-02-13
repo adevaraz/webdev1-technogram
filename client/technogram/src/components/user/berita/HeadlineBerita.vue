@@ -28,7 +28,7 @@
                   oleh {{ berita.jurnalis || "" }}
               </p>
             </v-col>
-            <v-col cols="6" class="cols-container pt-1">
+            <v-col cols="6" class="cols-container pt-1" :style="{color : currentTheme.onBackground}">
               <p class="worksans-font news-time text-end clickable-text" :class="onHoverClass">{{ date || "" }}</p>
             </v-col>
           </v-row>
