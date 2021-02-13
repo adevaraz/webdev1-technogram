@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialog">
-        <v-card max-height="1080px">
+        <v-card max-height="1080px" :style="{background : currentTheme.backgroundVariant}">
             <v-card-title></v-card-title>
             <v-card-text>
                 <v-container d-block>
@@ -13,6 +13,24 @@
                 </div>
                 <div class="d-flex flex-row search" align-center>
                     <v-text-field
+                        v-if="isDark"
+                        dark
+                        color= "#e52b38"
+                        v-model="key"
+                        placeholder="Masukkan kata kunci..."
+                        prepend-inner-icon="mdi-magnify"
+                        v-on:keydown.enter="
+                            $router.push({
+                                name: 'recent-result',
+                                query: { q: key },
+                            });
+                            dialog = false;
+                        "
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        v-else
+                        color= "#e52b38"
                         v-model="key"
                         placeholder="Masukkan kata kunci..."
                         prepend-inner-icon="mdi-magnify"
@@ -33,6 +51,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
     props: {
         onDialogClosed : Function
@@ -42,7 +61,13 @@ export default {
         key : ''
     }),
     methods: {
-    }
+    },
+    computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
+    }),
+  }
 }
 </script>
 
