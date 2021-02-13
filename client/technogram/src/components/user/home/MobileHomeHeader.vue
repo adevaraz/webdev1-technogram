@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-col cols="12">
+    <v-col cols="12" :style="{color : currentTheme.onBackground}">
       <h1
         class= "playfair-font text-start"
       >
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 const HeadlineBerita = () => import("../berita/HeadlineBerita.vue");
 const SmallBerita = () => import("../berita/SmallBerita.vue");
 export default {
@@ -86,6 +87,11 @@ export default {
             type : Boolean,
             default : false
         }
+    },
+    computed: {
+      ...mapGetters({
+        currentTheme : "theme/getCurrentColor"
+      }),
     }
 }
 </script>
