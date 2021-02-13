@@ -8,7 +8,7 @@
     <v-row>
       <v-col class="pl-3 pt-0" cols="12" align-self="start">
         <v-row class="justify-start">
-          <v-col cols="11" class="pa-0 ma-0">
+          <v-col cols="11" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
             <h2
               class="playfair-font news-title clickable-text"
               :class="onHoverClass"
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
 
@@ -124,6 +125,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     date() {
       return processDate(new Date(this.berita.waktu_publikasi), this.timeMode);
     },

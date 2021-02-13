@@ -15,7 +15,12 @@
         </v-carousel>
       </v-col>
       <v-col cols="12" class="mt-10">
-        <h3 class="playfair-font text-capitalize">Berita Terpopuler</h3>
+        <h3 
+          class="playfair-font text-capitalize"
+          :style="{color : currentTheme.onBackground}"
+        >
+          Berita Terpopuler
+          </h3>
       </v-col>
       <v-col
         cols="4"
@@ -51,7 +56,7 @@
 <script>
 
 import categoryApi from "../../../repository/interactor/kategori/daftarKategori";
-
+import {mapGetters} from "vuex"
 const BeritaCategorySection = () => import("./BeritaCategorySection.vue");
 const DescriptiveBerita = () => import("../berita/DescriptiveBerita.vue");
 const CuttedBerita = () => import("../berita/CuttedBerita.vue");
@@ -94,6 +99,11 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
+  }
 };
 </script>
 

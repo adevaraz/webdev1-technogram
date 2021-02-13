@@ -14,7 +14,7 @@
       </v-col>
       <v-col class="pa-1" cols="6" offset="1" align-self="start">
         <v-row class="justify-start">
-          <v-col cols="11" class="pa-0 ma-0">
+          <v-col cols="11" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
             <h2
               class="playfair-font news-title clickable-text"
               :class="onHoverClass"
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 const LazyImage = () => import("../ui/LazyImage.vue");
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
@@ -132,6 +133,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     date() {
       return processDate(new Date(this.berita.waktu_publikasi), this.timeMode);
     },
