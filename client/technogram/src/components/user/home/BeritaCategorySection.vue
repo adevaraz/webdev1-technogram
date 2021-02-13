@@ -1,8 +1,11 @@
 <template>
   <v-container class="px-1">
     <v-row>
-      <v-col cols="6" class="pa-0 pb-3">
-        <h2 class="title-text text-start text-capitalize" style="cursor:pointer;">
+      <v-col cols="6" class="pa-0 pb-3" :style="{color : currentTheme.onBackground}">
+        <h2
+          class="title-text text-start text-capitalize" 
+          style="cursor:pointer;"
+        >
           {{ categoryTitle }}
         </h2>
       </v-col>
@@ -47,6 +50,7 @@ import beritaApi from "../../../repository/interactor/berita/berita";
 const InsideImageBerita = () => import("../berita/InsideImageBerita.vue");
 const TextOnlyBerita = () => import("../berita/TextOnlyBerita.vue");
 import { BASE_URL } from "../../../repository/interactor/const";
+import {mapGetters} from "vuex"
 export default {
   components: { TextOnlyBerita, InsideImageBerita },
   created() {
@@ -64,6 +68,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     categoryTitle() {
       const category = this.category;
       return category[0].toUpperCase() + category.slice(1).toLowerCase();

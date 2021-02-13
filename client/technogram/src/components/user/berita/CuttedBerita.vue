@@ -22,7 +22,7 @@
         <div class="content-inside-image">
           <slot name="content">
             <v-row>
-              <v-col cols="3" class="content px-4 py-1" align-self="end">
+              <v-col cols="3" class="content px-4 py-1" align-self="end" :style="{background : currentTheme.backgroundVariant}">
                 <h3
                   class="news-kategori clickable-text text-center"
                 >
@@ -33,7 +33,7 @@
           </slot>
         </div>
       </v-col>
-      <v-col cols="8" class="pa-0 mt-3">
+      <v-col cols="8" class="pa-0 mt-3" :style="{ color: currentTheme.onBackground }">
         <h2
           class="playfair-font news-tittle clickable-text text-uppercase"
           :class="onHoverClass"
@@ -41,8 +41,11 @@
           {{ berita.judul || "" }}
         </h2>
       </v-col>
-      <v-col cols="8" class="pa-0 mt-3">
-        <h3 class="news-writer clickable-text" :class="onHoverClass">
+      <v-col cols="8" class="pa-0 mt-3" :style="{ color: currentTheme.onBackground }">
+        <h3
+          class="news-writer clickable-text" 
+          :class="onHoverClass"
+        >
           oleh {{ berita.jurnalis || "" }}
         </h3>
       </v-col>
@@ -52,6 +55,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: {
     LazyImage,
@@ -111,6 +115,9 @@ export default {
       const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
       return `${day} ${date} ${time}`;
     },
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
   },
 };
 </script>
@@ -149,13 +156,11 @@ export default {
 .news-tittle {
   font-size: 1.2rem;
   font-weight: 900;
-  color: black;
 }
 
 .news-writer {
   font-weight: 400;
   font-size: 0.8rem;
-  color: black;
 }
 
 .content-inside-image {

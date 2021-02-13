@@ -17,20 +17,29 @@
                 {{ berita.kategori_berita || "" }}
               </h2>
             </v-col>
-            <v-col cols="12" class="pa-0 ma-0">
-              <h2 class="playfair-font news-title" :class="onHoverClass">
-                {{ berita.judul || "" }}
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
+              <h2 
+                class="playfair-font news-title" 
+                :class="onHoverClass">
+                  {{ berita.judul || "" }}
               </h2>
             </v-col>
           </v-col>
           <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
-            <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-writer" :class="onHoverClass">
-                oleh {{ berita.jurnalis || "" }}
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
+              <h3
+                class="worksans-font news-writer" 
+                :class="onHoverClass">
+                  oleh {{ berita.jurnalis || "" }}
               </h3>
             </v-col>
-            <v-col cols="12" class="pa-0 ma-0">
-              <h3 class="worksans-font news-time" :class="onHoverClass">{{ date }}</h3>
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
+              <h3
+                class="worksans-font news-time" 
+                :class="onHoverClass"
+              >
+                {{ date }}
+              </h3>
             </v-col>
           </v-col>
         </v-row>
@@ -41,6 +50,7 @@
 
 <script>
 const LazyImage = () => import("../ui/LazyImage.vue");
+import {mapGetters} from "vuex"
 export default {
   components: { LazyImage },
   props: {
@@ -65,6 +75,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     backgroundImg() {
       return `background-image: url('${this.berita.url_gambar}')`;
     },
@@ -111,7 +124,6 @@ export default {
 }
 
 .news-title {
-  color: black;
   font-weight: 600;
   font-size: 1.5rem;
   cursor: pointer;
