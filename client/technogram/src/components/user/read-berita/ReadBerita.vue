@@ -378,7 +378,6 @@ export default {
         this.replaceSpan()
       
       
-        console.log(this.artikel)
       } catch (error) {
         console.error(error);
       }
