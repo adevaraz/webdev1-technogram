@@ -33,7 +33,6 @@ const NOTIFICATION_TIME = 4000;
 
 export default {
   created() {
-    this.synchronizeTheme()
     if (this.isLoggedIn && this.mostLikedCategory !== "") {
       this.initSocket();
     }
@@ -70,7 +69,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      synchronizeTheme : 'theme/sychronizeCurrentTheme'
+      synchronizeTheme : 'theme/sychronizeCurrentTheme',
+      toogleTheme : "theme/toogleDark"
     }),
     resetNotificatoin() {
       this.notification.message = "";
@@ -127,7 +127,9 @@ export default {
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn",
       mostLikedCategory: "user/getMostLikedKategori",
-      currentTheme : "theme/getCurrentColor"
+      currentTheme : "theme/getCurrentColor",
+      getUsername: "user/getUsername",
+      isDark: "theme/getIsDark",
     }),
     observableShouldShowNotification() {
       return this.notification.shouldShowNotification;
@@ -136,8 +138,12 @@ export default {
   watch: {
     isLoggedIn(value) {
       if (value) {
+        this.synchronizeTheme(this.getUsername);
         this.initSocket();
       } else {
+        if(this.isDark) {
+          this.toogleTheme("No Login Theme");
+        }
         this.disconnectSocket();
       }
     },
