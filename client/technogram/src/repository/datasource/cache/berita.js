@@ -38,15 +38,15 @@ const recentBerita = async (_perPage, key, page) => {
         const currentPage = page || 1;
         const perPage = _perPage || 5;
         const offset = (currentPage-1) * perPage;
-        const searchKey = key || ""
+        const searchKey = key || "";
 
-        const result = []
+        const result = [];
         const db = await initDB();
         let cursor = await db.transaction(BERITA_STORE_NAME , 'readonly').store.index('timestamp').openCursor(null , "prev");
         while(cursor){
             const berita = cursor.value
-            if(berita.judul.includes(searchKey) || berita.kategori_berita === searchKey){
-                result.push(berita)
+            if(berita.judul.toLowerCase().includes(searchKey.toLowerCase()) || berita.kategori_berita.toLowerCase() === searchKey.toLowerCase()){
+                result.push(berita);
             }
             cursor = await cursor.continue();
         }

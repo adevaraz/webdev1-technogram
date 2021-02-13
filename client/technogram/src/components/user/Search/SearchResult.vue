@@ -1,5 +1,5 @@
 <template>
-  <v-container d-block>
+  <v-container d-block :style="{background : currentTheme.background}">
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
       <v-row
         align-center
@@ -14,6 +14,7 @@
               $router.push({ name: 'recent-result', query: { q: key } });
               currentView = 'ByRecent';
             "
+            :style="{color : currentTheme.onBackgroundVariant}"
             >Terbaru</a
           >
           <a
@@ -21,7 +22,9 @@
               currentView = 'ByMostLikes';
               $router.push({ name: 'mostlikes-result', query: { q: key } });
             "
-            class="mx-4 link link-color mt-n2"
+            class="mx-4 link link-color mt-n2 "
+            :style="{color : currentTheme.onBackgroundVariant}"
+            
             >Paling Disukai</a
           >
         </v-col>
@@ -36,6 +39,7 @@
 <script>
 const ByRecent = () => import("./ByRecent");
 const ByMostLikes = () => import("./ByMostLikes");
+import {mapGetters} from "vuex"
 export default {
   metaInfo: {
     title: "Hasil Pencarian",
@@ -73,6 +77,9 @@ export default {
       }
       return false;
     },
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor",
+    }),
   },
 };
 </script>

@@ -6,7 +6,7 @@
           <v-col cols="11" class="pa-0 ma-0">
             <h2
               class="news-title"
-              :style="{ color: currentTheme.onBackground }"
+              :style="{ color: currentTheme.onBackgroundVariant }"
             >
               {{ berita.judul || "" }}
             </h2>
@@ -69,6 +69,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+
 export default {
   props: {
     berita: {
@@ -104,6 +105,10 @@ export default {
         .replaceAll(splitRegex, "");
       return wordOnlyArticle.substring(0, this.previewMaxWord);
     },
+    
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor",
+    })
   },
 };
 </script>
@@ -111,6 +116,7 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+
 .playfair-font {
   font-family: "Playfair Display", serif;
 }

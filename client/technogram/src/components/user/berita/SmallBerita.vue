@@ -44,6 +44,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+
 const LazyImage = () => import("../ui/LazyImage.vue");
 const TIME_MODE_RECENT = "TIME_MODE_RECENT";
 const TIME_MODE_DETAIL = "TIME_MODE_DETAIL";
@@ -139,6 +140,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     date() {
       return processDate(new Date(this.berita.waktu_publikasi), this.timeMode);
     },
