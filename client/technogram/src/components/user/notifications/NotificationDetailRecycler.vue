@@ -5,7 +5,7 @@
         <div class="loader itemStillExist" v-if="isLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center" v-if="isEndOfList">
+        <div class="no-item text-center" v-if="isEndOfList" :style="{ color: currentTheme.onBackground }">
           <h3>Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default {
 }
 
 .no-item {
-  border-top: 1px solid black;
+  border-top: 1px solid #bab4b8b9;
 }
 
 .list-infinite::-webkit-scrollbar {

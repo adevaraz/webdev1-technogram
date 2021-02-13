@@ -3,13 +3,26 @@
     <v-row>
       <v-col cols="12">
         <v-text-field
-          v-model="key"
-          class="text-caption"
-          placeholder="Masukan kata kunci pencarian disini ...."
-          prepend-inner-icon="mdi-magnify"
-          v-on:keydown.enter="onSearch(key)"
-          :color="currentTheme.primary"
-        ></v-text-field>
+            v-if="isDark"
+            dark
+            color= "#e52b38"
+            class="text-caption"
+            v-model="key"
+            placeholder="Masukkan kata kunci..."
+            prepend-inner-icon="mdi-magnify"
+            v-on:keydown.enter="onSearch(key)"
+        >
+        </v-text-field>
+        <v-text-field
+            v-else
+            color= "#e52b38"
+            class="text-caption"
+            v-model="key"
+            placeholder="Masukkan kata kunci..."
+            prepend-inner-icon="mdi-magnify"
+            v-on:keydown.enter="onSearch(key)"
+        >
+        </v-text-field>
       </v-col>
       <v-col cols="12" v-if="isLoggedIn">
         <v-row>
