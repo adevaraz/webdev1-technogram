@@ -55,13 +55,13 @@ const ThemeModule = {
         }
     },
     actions : {
-        toogleDark({commit , state}){
+        toogleDark({commit , state}, username){
             const isNewThemeDark = !state.isDark;
-            localStorage.setItem(CURRENT_THEME_KEY , JSON.stringify(isNewThemeDark))
+            localStorage.setItem(CURRENT_THEME_KEY + username, JSON.stringify(isNewThemeDark))
             commit('SET_IS_DARK' , isNewThemeDark);
         },
-        sychronizeCurrentTheme({commit}){
-            commit('SET_IS_DARK' , JSON.parse(localStorage.getItem(CURRENT_THEME_KEY)) || false)
+        sychronizeCurrentTheme({commit}, username){
+            commit('SET_IS_DARK' , JSON.parse(localStorage.getItem(CURRENT_THEME_KEY + username)) || false)
         }
     }
 

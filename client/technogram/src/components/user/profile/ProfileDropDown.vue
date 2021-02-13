@@ -107,7 +107,7 @@ export default {
     },
     localIsDark(value){
       if(value === this.isDark) return;
-      this.toogleTheme()
+      this.toogleTheme(this.getUsername)
     }
   },
 

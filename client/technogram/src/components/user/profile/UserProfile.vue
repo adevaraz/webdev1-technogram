@@ -3,12 +3,16 @@
     <v-row class="pa-xs-3 pa-sm-3 px-md-10 px-xl-10 px-lg-10">
       <v-col cols="12" :class="isMobile ? 'mt-n3 mb-n5' : ''">
         <h1
+          :style="{ color: currentTheme.onBackground }"
           :class="isMobile ? 'title-font ml-n2' : 'title-font save-page-title'"
         >
           Saved Articles
         </h1>
       </v-col>
-      <div :class="isMobile ? 'middle-border-mobile' : 'middle-border'"></div>
+      <div
+        :class="isMobile ? 'middle-border-mobile' : 'middle-border'"
+        :style="{ background: currentTheme.backgroundVariant }"
+      ></div>
       <v-col cols="12">
         <v-row :class="isMobile ? 'pa-0' : 'justify-center'">
           <virtual-list
@@ -32,7 +36,9 @@
                 class="no-item justify-center text-center"
                 v-if="isEndOfList"
               >
-                <h3>Tidak ada item lagi &#128512;</h3>
+                <h3 :style="{ color: currentTheme.onBackground }">
+                  Tidak ada item lagi &#128512;
+                </h3>
               </div>
             </div>
           </virtual-list>
@@ -47,6 +53,7 @@ const UserProfileItem = () => import("./UserProfileItem.vue");
 import beritaApi from "../../../repository/interactor/berita/berita";
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
+import { mapGetters } from "vuex";
 const NEWS_PERCALL = 5;
 
 export default {
@@ -114,6 +121,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      currentTheme: "theme/getCurrentColor",
+    }),
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
         return true;

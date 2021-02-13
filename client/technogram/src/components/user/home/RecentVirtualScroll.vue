@@ -13,7 +13,11 @@
         <div class="loader itemStillExist" v-if="isLoading">
           <v-progress-circular indeterminate color="#E52B38"></v-progress-circular>
         </div>
-        <div class="no-item text-center mt-5" v-if="isEndOfList">
+        <div 
+          class="no-item text-center mt-5" 
+          v-if="isEndOfList"
+          :style="{color : currentTheme.onBackgroundVariant}"
+        >
           <h3>Tidak ada item lagi &#128512;</h3>
         </div>
       </div>
@@ -25,6 +29,7 @@
 const RecentHomeItem = () => import("./RecentVirtualScrollItem");
 import beritaApi from "../../../repository/interactor/berita/berita";
 import { BASE_URL } from "../../../repository/interactor/const";
+import {mapGetters} from "vuex"
 const NEWS_PERCALL = 10;
 export default {
   created() {
@@ -41,6 +46,9 @@ export default {
     };
   },
   computed : {
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
     isMobile() {
       if (this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.xs) {
         return true;

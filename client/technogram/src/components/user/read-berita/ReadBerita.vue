@@ -12,12 +12,13 @@
       v-else-if="isExist"
       :class="isMobile ? 'd-flex flex-wrap mb-6' : 'd-flex flex-col mb-6'"
     >
-      <v-sheet :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
-        <h1 class="text-capitalize playfair-font">{{ judul }}</h1>
-        <p class="worksans-font">{{ date }}</p>
+      <v-sheet :style="{background : currentTheme.background}" :class="isMobile ? 'mx-2' : 'pr-16 max-width-read'">
+        <h1 class="text-capitalize playfair-font"  :style="{color : currentTheme.onBackgroundVariant}">{{ judul }}</h1>
+        <p class="worksans-font" :style="{color : currentTheme.primaryVariant}">{{ date }}</p>
 
         <!-- Information section -->
         <v-card
+        :style="{background : currentTheme.background}"
           :class="
             isMobile
               ? 'd-flex flex-wrap mb-3 max-width-50'
@@ -26,7 +27,7 @@
           flat
           tile
         >
-          <h4 class="mr-auto">oleh {{ jurnalis }}</h4>
+          <h4 class="mr-auto" :style="{color : currentTheme.onBackgroundVariant}">oleh {{ jurnalis }}</h4>
 
           <div :class="isMobile ? 'd-flex flex-row my-3' : 'd-flex flex-row'">
             <div id="like">
@@ -45,7 +46,8 @@
                   src="../../../assets/icons/heart-filled.svg"
                   alt="filled heart icon"
                 />
-                <p class="text-caption text-left mr-3 worksans-font">
+                <p class="text-caption text-left mr-3 worksans-font"
+                :style="{color : currentTheme.onBackgroundVariant}">
                   {{ jumlah_likes }} suka
                 </p>
               </div>
@@ -64,7 +66,8 @@
                   @click="isLoginDialogShown = !isLoginDialogShown"
                   alt="empty heart icon"
                 />
-                <p class="text-caption text-left mr-3 worksans-font">
+                <p class="text-caption text-left mr-3 worksans-font"
+                :style="{color : currentTheme.onBackgroundVariant}">
                   {{ jumlah_likes }} suka
                 </p>
               </div>
@@ -77,7 +80,8 @@
                 src="../../../assets/icons/view.svg"
                 alt="eye icon"
               />
-              <p class="text-caption text-left mr-3 worksans-font">
+              <p class="text-caption text-left mr-3 worksans-font"
+              :style="{color : currentTheme.onBackgroundVariant}">
                 {{ jumlah_reader }} pembaca
               </p>
             </div>
@@ -152,17 +156,22 @@
           </div>
 
           <div
-            :class="
-              isMobile
-                ? 'article responsive-img break-words'
-                : 'article responsive-img'
-            "
-            v-html="artikel"
+            
+          :class = "[
+            
+          isMobile && isDark? 'article responsive-img break-words dark':'',  
+          !isMobile && isDark? 'article responsive-img dark': '', 
+          isMobile && !isDark? 'article responsive-img break-words':'',  
+          !isMobile && !isDark? 'article responsive-img':''
+          
+          ]"
+          v-html = "artikel"
           ></div>
 
-          <h3 class="grey--text text--darken-2">Ditulis oleh</h3>
-          <h4>{{ jurnalis }}</h4>
-          <p>{{ deskripsi_jurnalis }}</p>
+          <h3 :style="{color : currentTheme.onBackgroundVariant}"
+          >Ditulis oleh</h3>
+          <h4 :style="{color : currentTheme.primaryVariant}">{{ jurnalis }}</h4>
+          <p :style="{color : currentTheme.onBackgroundVariant}">{{ deskripsi_jurnalis }}</p>
         </div>
       </v-sheet>
 
@@ -183,6 +192,7 @@
           <small-berita
             v-if="berita.id_berita != id"
             class="act-item"
+            :style="{color : currentTheme.onBackgroundVariant}"
             :berita="berita"
           ></small-berita>
         </div>
@@ -194,7 +204,7 @@
 <script>
 import { BASE_URL } from "../../../repository/interactor/const";
 import { store } from "../../../store/index";
-import { mapGetters } from "vuex";
+import { mapActions,mapGetters } from "vuex";
 
 import berita from "../../../repository/interactor/berita/berita";
 import pembacaAct from "../../../repository/interactor/pembaca/actions";
@@ -269,6 +279,7 @@ export default {
       this.retrieveRelatedBerita(this.$route.params.id);
       this.getLikeState(this.$route.params.id);
       this.getSaveState(this.$route.params.id);
+     
     },
   },
 
@@ -276,7 +287,7 @@ export default {
     computedJudul() {
       return this.judul;
     },
-
+  
     date() {
       // Format : DayName, DD/MM/YYYY HH:MM
       const fullDate = new Date(this.waktu_publikasi);
@@ -297,10 +308,23 @@ export default {
 
     ...mapGetters({
       isLoggedIn: "user/isLoggedIn",
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
     }),
   },
 
   methods: {
+    ...mapActions({
+      toogleTheme : "theme/toogleDark"
+    }),
+      replaceSpan(){
+      this.artikel = this.artikel.replaceAll('<span style="background-color: transparent; color: rgb(0, 0, 0);">',"");
+      this.artikel = this.artikel.replaceAll('<span style="color: rgb(0, 0, 0);">',"");
+      this.artikel = this.artikel.replaceAll('<span style="color: rgb(0, 0, 0); background-color: transparent;">',"");
+      this.artikel = this.artikel.replaceAll('<em style="background-color: transparent; color: rgb(0, 0, 0);">',"");
+      this.artikel = this.artikel.replaceAll('</span>',"");
+      
+    },
     resetData() {
       this.id = 0;
       this.judul = "";
@@ -321,7 +345,6 @@ export default {
       this.relatedBeritaLoading = false;
       this.contentDesc = "";
     },
-
     async getBeritabyId(id) {
       try {
         this.isLoading = true;
@@ -351,6 +374,11 @@ export default {
         this.jumlah_likes = result.data.jumlah_likes;
         this.jurnalis = result.data.jurnalis;
         this.deskripsi_jurnalis = result.data.deskripsi_jurnalis;
+        
+        this.replaceSpan()
+      
+      
+        console.log(this.artikel)
       } catch (error) {
         console.error(error);
       }
@@ -615,8 +643,17 @@ export default {
 .article ::v-deep br {
   content: " ";
   display: block;
-  margin: 10px 10;
-  line-height: 20px;
+  margin: 120px 10;
+  line-height: 10px;
+}
+.dark ::v-deep p {
+  content: " ";
+  color : white;
+}
+
+.dark ::v-deep li {
+  content: " ";
+  color : white;
 }
 
 @media screen and (max-width: 600px) {
