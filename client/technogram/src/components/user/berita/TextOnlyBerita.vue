@@ -8,11 +8,10 @@
     <v-row>
       <v-col class="pl-3 pt-0" cols="12" align-self="start">
         <v-row class="justify-start">
-          <v-col cols="11" class="pa-0 ma-0">
+          <v-col cols="11" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
             <h2
               class="playfair-font news-title clickable-text"
               :class="onHoverClass"
-              :style="{color : currentTheme.onBackground}"
             >
               {{ berita.judul || "" }}
             </h2>

@@ -22,11 +22,10 @@
           {{ berita.kategori_berita || "" }}
         </h6>
       </v-col>
-      <v-col cols="12" class="pa-0 mt-1">
+      <v-col cols="12" class="pa-0 mt-1" :style="{color : currentTheme.onBackground}">
         <h5
           class="text-capitalize title-text" 
           :class="onHoverClass"
-          :style="{color : currentTheme.onBackgroundVariant}"
         >
           {{ berita.judul || "" }}
         </h5>

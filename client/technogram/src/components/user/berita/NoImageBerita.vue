@@ -17,29 +17,26 @@
                 {{ berita.kategori_berita || "" }}
               </h2>
             </v-col>
-            <v-col cols="12" class="pa-0 ma-0">
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
               <h2 
                 class="playfair-font news-title" 
-                :class="onHoverClass"
-                :style="{color : currentTheme.onBackgroundVariant}">
+                :class="onHoverClass">
                   {{ berita.judul || "" }}
               </h2>
             </v-col>
           </v-col>
           <v-col cols="12" class="pa-0 ma-0 mb-1 mt-8">
-            <v-col cols="12" class="pa-0 ma-0">
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
               <h3
                 class="worksans-font news-writer" 
-                :class="onHoverClass"
-                :style="{color : currentTheme.onBackgroundVariant}">
+                :class="onHoverClass">
                   oleh {{ berita.jurnalis || "" }}
               </h3>
             </v-col>
-            <v-col cols="12" class="pa-0 ma-0">
+            <v-col cols="12" class="pa-0 ma-0" :style="{color : currentTheme.onBackground}">
               <h3
                 class="worksans-font news-time" 
                 :class="onHoverClass"
-                :style="{color : currentTheme.onBackgroundVariant}"
               >
                 {{ date }}
               </h3>
@@ -127,7 +124,6 @@ export default {
 }
 
 .news-title {
-  color: black;
   font-weight: 600;
   font-size: 1.5rem;
   cursor: pointer;

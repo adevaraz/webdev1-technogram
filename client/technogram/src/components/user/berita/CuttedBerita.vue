@@ -33,20 +33,18 @@
           </slot>
         </div>
       </v-col>
-      <v-col cols="8" class="pa-0 mt-3">
+      <v-col cols="8" class="pa-0 mt-3" :style="{ color: currentTheme.onBackground }">
         <h2
           class="playfair-font news-tittle clickable-text text-uppercase"
           :class="onHoverClass"
-          :style="{color : currentTheme.onBackgroundVariant}"
         >
           {{ berita.judul || "" }}
         </h2>
       </v-col>
-      <v-col cols="8" class="pa-0 mt-3">
+      <v-col cols="8" class="pa-0 mt-3" :style="{ color: currentTheme.onBackground }">
         <h3
           class="news-writer clickable-text" 
           :class="onHoverClass"
-          :style="{color : currentTheme.onBackgroundVariant}"
         >
           oleh {{ berita.jurnalis || "" }}
         </h3>
@@ -103,9 +101,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({
-      currentTheme : "theme/getCurrentColor"
-    }),
     onHoverClass() {
       if (this.isOnHover) {
         return "hover";
@@ -120,6 +115,9 @@ export default {
       const time = `${fullDate.getHours()}:${fullDate.getMinutes()}`;
       return `${day} ${date} ${time}`;
     },
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor"
+    }),
   },
 };
 </script>
@@ -158,13 +156,11 @@ export default {
 .news-tittle {
   font-size: 1.2rem;
   font-weight: 900;
-  color: black;
 }
 
 .news-writer {
   font-weight: 400;
   font-size: 0.8rem;
-  color: black;
 }
 
 .content-inside-image {

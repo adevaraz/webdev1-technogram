@@ -1,11 +1,10 @@
 <template>
   <v-container class="px-1">
     <v-row>
-      <v-col cols="6" class="pa-0 pb-3">
+      <v-col cols="6" class="pa-0 pb-3" :style="{color : currentTheme.onBackground}">
         <h2
           class="title-text text-start text-capitalize" 
           style="cursor:pointer;"
-          :style="{color : currentTheme.onBackground}"
         >
           {{ categoryTitle }}
         </h2>
