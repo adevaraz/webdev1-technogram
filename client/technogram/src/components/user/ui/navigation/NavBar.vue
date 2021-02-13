@@ -21,7 +21,8 @@
         
         <div class="middle">
           <div ref="logo" class="logo">
-            <img src="../../../../assets/technogram-logo.svg" alt="technogram logo" />
+            <img v-if="isDark" src="../../../../assets/technogram-logo-w.svg" alt="technogram logo white" />
+            <img v-else src="../../../../assets/technogram-logo-b.svg" alt="technogram logo black" />
           </div>
         </div>
 
@@ -30,9 +31,17 @@
             <div class="search-icon">
               <search v-if="isSearchDialogShown" :onDialogClosed=" () => { isSearchDialogShown = false }"> </search>
               <img
+                v-if="isDark"
                 class="navbar-item img-btn"
                 @click="isSearchDialogShown = !isSearchDialogShown"
-                src="../../../../assets/icons/search-icon.svg"
+                src="../../../../assets/icons/search-icon-w.svg"
+                alt="magnifier icon"
+              />
+              <img
+                v-else
+                class="navbar-item img-btn"
+                @click="isSearchDialogShown = !isSearchDialogShown"
+                src="../../../../assets/icons/search-icon-g.svg"
                 alt="magnifier icon"
               />
             </div>
@@ -40,12 +49,20 @@
             <div class="loggedin" v-if="isLoggedIn">
 
               <div class="">
-                
-                <img
+                <img 
+                  v-if="isDark"
                   v-click-outside="onClickOutsideNotif"
                   class="navbar-item img-btn"
                   @click="showNotification = !showNotification"
-                  src="../../../../assets/icons/bell.svg"
+                  src="../../../../assets/icons/bell-w.svg"
+                  alt="notification bell icon"
+                />
+                <img
+                  v-else
+                  v-click-outside="onClickOutsideNotif"
+                  class="navbar-item img-btn"
+                  @click="showNotification = !showNotification"
+                  src="../../../../assets/icons/bell-g.svg"
                   alt="notification bell icon"
                 />
                 <div
@@ -54,12 +71,22 @@
                 >
                   <notification-dropdown></notification-dropdown>
                 </div>
-                  <img 
-                      class="navbar-item img-btn" 
-                       v-click-outside="onClickOutsideProfile"
-                      @click="showProfile = !showProfile" 
-                      src="../../../../assets/icons/profile.svg" 
-                      alt="profile icon" />
+                  <img
+                    v-if="isDark"
+                    class="navbar-item img-btn" 
+                    v-click-outside="onClickOutsideProfile"
+                    @click="showProfile = !showProfile" 
+                    src="../../../../assets/icons/profile-w.svg" 
+                    alt="profile icon"
+                  />
+                  <img
+                    v-else
+                    class="navbar-item img-btn" 
+                    v-click-outside="onClickOutsideProfile"
+                    @click="showProfile = !showProfile" 
+                    src="../../../../assets/icons/profile-g.svg" 
+                    alt="profile icon"
+                  />
                   <div
                     class="profile" v-if="showProfile"
                     :style="{background : currentTheme.backgroundVariant}"
@@ -82,8 +109,16 @@
           </div>
           <div class="navigation" v-if="isMobile && isLoggedIn">
             <img
+              v-if="isDark"
               class="navbar-item img-btn"
-              src="../../../../assets/icons/bell.svg"
+              src="../../../../assets/icons/bell-w.svg"
+              @click="$router.push({ name: 'notification' })"
+              alt="notification bell icon"
+            />
+            <img
+              v-else
+              class="navbar-item img-btn"
+              src="../../../../assets/icons/bell-g.svg"
               @click="$router.push({ name: 'notification' })"
               alt="notification bell icon"
             />
@@ -217,7 +252,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentTheme : "theme/getCurrentColor"
+      currentTheme : "theme/getCurrentColor",
+      isDark: "theme/getIsDark"
     }),
     getGreetings() {
       const MORNING = this.currentTime > 0 && this.currentTime < 11;

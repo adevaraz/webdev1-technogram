@@ -35,7 +35,7 @@
               >
                 <img
                   class="item img-btn"
-                  src="../../../../assets/icons/profile.svg"
+                  src="../../../../assets/icons/profile-g.svg"
                   alt="profile icon"
                 />
               </v-col>

@@ -6,6 +6,13 @@
                 <v-container d-block>
                 <div class="d-flex flex-row-reverse cross-icon">
                     <img
+                        v-if="isDark"
+                        class="cross-icon"
+                        @click="onDialogClosed"
+                        src="../../../assets/icons/cross-w.svg"
+                    />
+                    <img
+                        v-else
                         class="cross-icon"
                         @click="onDialogClosed"
                         src="../../../assets/icons/cross.svg"

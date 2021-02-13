@@ -1,20 +1,29 @@
 <template>
-  <v-dialog v-model="dialog" :width="!isMobile? '400': '250'" >
-    <v-card  height="360">
+  <v-dialog v-model="dialog" :width="!isMobile? '400': '250'">
+    <v-card  height="360" :style="{background : currentTheme.backgroundVariant}">
       <v-container>
         <div id="content">
           <div class="d-flex flex-row-reverse cross-icon">
             <img
+              v-if="isDark"
               :class="!isMobile? 'cross-icon': 'img-btn'"
               @click="onDialogClosed"
-              src="../../../assets/icons/cross.svg"/>
+              src="../../../assets/icons/cross-w.svg"
+            />
+            <img
+              v-else
+              :class="!isMobile? 'cross-icon': 'img-btn'"
+              @click="onDialogClosed"
+              src="../../../assets/icons/cross.svg"
+            />
           </div>
-          <v-list>
+          <v-list :style="{background : currentTheme.backgroundVariant}">
             <v-btn v-if="!isMobile"
               color="#E52B38"
               class="ma-2 white--text"
               @click="onClickCopyBtn"
-              width="250px">
+              width="250px"
+            >
                 <img class="img-btn mr-2" src="../../../assets/icons/link.svg" />
                 Salin Tautan
             </v-btn>
@@ -79,7 +88,7 @@
                 <img class="img-btn-small mr-2" src="../../../assets/icons/facebook.svg" />
                 Bagikan di Facebook 
             </v-btn>
-            <v-list-item-content :class="!isMobile? 'pt-2 pb-0 ml-15': 'pt-2 pb-0 ml-1'" align="center">
+            <v-list-item-content :class="!isMobile? 'pt-2 pb-0 ml-15': 'pt-2 pb-0 ml-1'" align="center" :style="{background : currentTheme.backgroundVariant}">
               <v-alert
                 :value="alert"
                 transition="slide-y-transition"
@@ -100,6 +109,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   src:"https://platform.twitter.com/widgets.js",
   created() {
@@ -147,6 +158,11 @@ export default {
       }
       return false;
     },
+
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor",
+      isDark : "theme/getIsDark"
+    })
   },
 }
 </script>
