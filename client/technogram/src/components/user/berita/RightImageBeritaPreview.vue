@@ -4,7 +4,7 @@
       <v-col class="pa-0" cols="8" align-self="center">
         <v-row class="justify-center">
           <v-col cols="11" class="pa-0 ma-0">
-            <h2 class="news-title">
+            <h2 class="news-title" :style="{color : currentTheme.onBackgroundVariant}">
               {{berita.judul || ''}}
             </h2>
           </v-col>
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props : {
     berita : {
@@ -84,7 +86,10 @@ export default {
       const wordOnlyArticle = rawHtmlArticle.toString().replaceAll(splitRegex , "");
       return wordOnlyArticle.substring(0 , this.previewMaxWord);
      
-    }
+    },
+    ...mapGetters({
+      currentTheme : "theme/getCurrentColor",
+    })
   }
 };
 </script>
