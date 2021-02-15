@@ -21,5 +21,10 @@ module.exports = {
         manifestOptions: {
             background_color: "#ffffff"
         }
+    },
+    configureWebpack: {
+        output: {
+            crossOriginLoading: 'anonymous'
+        }
     }
 }
